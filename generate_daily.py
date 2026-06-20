@@ -25,6 +25,8 @@ CATEGORY_LABELS = {
     "paper": "论文研究",
     "tip": "技巧与观点",
 }
+# Reverse mapping: Chinese label → English slug (API now uses Chinese labels)
+LABEL_TO_SLUG = {v: k for k, v in CATEGORY_LABELS.items()}
 CATEGORY_ORDER = ["ai-models", "ai-products", "industry", "paper", "tip"]
 CATEGORY_COLORS = {
     "ai-models": "#6366f1",
@@ -74,36 +76,44 @@ def fmt_time(dt_str):
         return dt_str or ""
 
 
-def source_class(url):
-    s = (url or "").lower()
-    if "x.com" in s or "twitter" in s:
+def source_class(source_name):
+    s = (source_name or "").lower()
+    if "x：" in s or "twitter" in s or s.startswith("x:"):
         return "source-x"
-    if "mp.weixin" in s:
+    if "公众号" in s or "wechat" in s or "微信" in s:
         return "source-wechat"
     if "github" in s:
         return "source-gh"
-    if any(x in s for x in ["marktechpost", "cloudflare", "dwarkesh", "elastic"]):
+    if any(x in s for x in ["marktechpost", "cloudflare", "dwarkesh", "elastic", "rss"]):
         return "source-blog"
-    if any(x in s for x in ["news.ycombinator", "hn."]):
+    if any(x in s for x in ["hacker news", "hn ", "buzzing", "eff"]):
         return "source-hn"
     return "source-media"
 
 
-def source_label(url):
-    s = (url or "").lower()
-    if "x.com" in s or "twitter" in s:
+def short_source(source_name):
+    """Extract a 2-4 char label from the full sourceName."""
+    s = (source_name or "").lower()
+    if "x：" in s or s.startswith("x:"):
         return "X"
-    if "mp.weixin" in s:
+    if "公众号" in s:
         return "公众号"
     if "github" in s:
         return "GitHub"
     if "marktechpost" in s:
         return "博客"
+    if "rss" in s:
+        return "RSS"
     if "arxiv" in s:
         return "arXiv"
-    if "hn." in s or "news.ycombinator" in s:
+    if "hacker news" in s or "buzzing" in s:
         return "HN"
-    return "链接"
+    # Fallback: first word up to 4 chars
+    words = source_name.split()
+    if words:
+        first = words[0].rstrip("：:")
+        return first[:6]
+    return "来源"
 
 
 def summarize(text, max_len=60):
@@ -151,7 +161,8 @@ def generate_html(data, date_str):
     sections = data.get("sections", [])
     items_by_cat = {}
     for sec in sections:
-        cat = sec.get("category", "")
+        label = sec.get("label", "")
+        cat = LABEL_TO_SLUG.get(label, "")
         items_by_cat[cat] = sec.get("items", [])
 
     cat_counts = {cat: len(items_by_cat.get(cat, [])) for cat in CATEGORY_ORDER}
@@ -165,6 +176,24 @@ def generate_html(data, date_str):
     except Exception:
         display_date = date_str
 
+    # Compute relative time from daily window
+    window_relative = ""
+    try:
+        w_end_str = data.get("windowEnd", "")
+        w_end = datetime.fromisoformat(w_end_str.replace("Z", "+00:00"))
+        w_end_bj = w_end.astimezone(timezone(timedelta(hours=8)))
+        now_bj = datetime.now(timezone(timedelta(hours=8)))
+        diff_hours = int((now_bj - w_end_bj).total_seconds() // 3600)
+        if diff_hours <= 0:
+            window_relative = "今天上午"
+        elif diff_hours < 24:
+            window_relative = f"{diff_hours} 小时前"
+        else:
+            days = diff_hours // 24
+            window_relative = f"{days} 天前"
+    except Exception:
+        window_relative = ""
+
     # ── Build card HTML (global numbering) ──
     cards_parts = {}  # cat -> list of card html strings
     global_idx = 0
@@ -176,15 +205,17 @@ def generate_html(data, date_str):
             summary = esc_html(summarize(item.get("summary", ""), 60))
             url = item.get("sourceUrl") or item.get("url", "#")
             url_attr = esc_attr(url)
-            source = esc_html(source_label(url))
-            time_str = fmt_time(item.get("publishedAt", item.get("createdAt", "")))
-            sc = source_class(url)
+            source_name = item.get("sourceName", "")
+            source_short = esc_html(short_source(source_name))
+            source = esc_html(source_name)
+            time_str = window_relative
+            sc = source_class(source_name)
             card = (
                 f'<article class="card" data-reveal>\n'
                 f'  <span class="card-num">{global_idx}</span>\n'
                 f'  <div class="card-top">\n'
                 f'    <h3 class="card-title">{title}</h3>\n'
-                f'    <span class="card-source {sc}">{source}</span>\n'
+                f'    <span class="card-source {sc}">{source_short}</span>\n'
                 f'  </div>\n'
                 f'  <p class="card-summary">{summary}</p>\n'
                 f'  <div class="card-footer">\n'
@@ -396,7 +427,7 @@ def generate_html(data, date_str):
 
       var sections=[],navLinks=document.querySelectorAll('.nav-link');
       document.querySelectorAll('.section').forEach(function(s){ sections.push({id:s.id,el:s}); });
-      function highlightNav(){ requestAnimationFrame(function(){ var y=window.scrollY+120,cur=sections[0]&&sections[0].id; for(var i=sections.length-1;i>=0;i--) if(sections[i].el.offsetTop<=y){cur=sections[i].id;break;} navLinks.forEach(function(l){ l.style.color=l.getAttribute('href')==='#'+cur?'var(--accent)':'','background':''; }); }); }
+      function highlightNav(){ requestAnimationFrame(function(){ var y=window.scrollY+120,cur=sections[0]&&sections[0].id; for(var i=sections.length-1;i>=0;i--) if(sections[i].el.offsetTop<=y){cur=sections[i].id;break;} navLinks.forEach(function(l){ var a=l.getAttribute('href')==='#'+cur; l.style.color=a?'var(--accent)':''; l.style.background=a?'rgba(255,107,53,.08)':''; }); }); }
       window.addEventListener('scroll',highlightNav,{passive:true});
     })();"""
 
