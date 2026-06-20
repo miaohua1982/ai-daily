@@ -485,7 +485,7 @@
 
       var sections=[],navLinks=document.querySelectorAll('.nav-link');
       document.querySelectorAll('.section').forEach(function(s){ sections.push({id:s.id,el:s}); });
-      function highlightNav(){ requestAnimationFrame(function(){ var y=window.scrollY+120,cur=sections[0]&&sections[0].id; for(var i=sections.length-1;i>=0;i--) if(sections[i].el.offsetTop<=y){cur=sections[i].id;break;} navLinks.forEach(function(l){ l.style.color=l.getAttribute('href')==='#'+cur?'var(--accent)':'','background':''; }); }); }
+      function highlightNav(){ requestAnimationFrame(function(){ var y=window.scrollY+120,cur=sections[0]&&sections[0].id; for(var i=sections.length-1;i>=0;i--) if(sections[i].el.offsetTop<=y){cur=sections[i].id;break;} navLinks.forEach(function(l){ var a=l.getAttribute('href')==='#'+cur; l.style.color=a?'var(--accent)':''; l.style.background=a?'rgba(255,107,53,.08)':''; }); }); }
       window.addEventListener('scroll',highlightNav,{passive:true});
     })();</script>
 
