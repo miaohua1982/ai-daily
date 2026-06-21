@@ -15,8 +15,8 @@ from pathlib import Path
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 API_BASE = "https://aihot.virxact.com/api/public"
 OUTPUT_DIR = Path(__file__).parent
-ARCHIVE_DIR = OUTPUT_DIR / "archive"
-INDEX_FILE = OUTPUT_DIR / "index.html"
+ARCHIVE_DIR = OUTPUT_DIR / "news-archive"
+INDEX_FILE = OUTPUT_DIR / "daily_news.html"
 
 CATEGORY_LABELS = {
     "ai-models": "模型发布/更新",
@@ -491,7 +491,7 @@ def main():
     html = generate_html(data, actual_date)
 
     INDEX_FILE.write_text(html, encoding="utf-8")
-    print(f"[INFO] Written index.html ({len(html)} bytes)")
+    print(f"[INFO] Written daily_news.html ({len(html)} bytes)")
 
     archive_file = ARCHIVE_DIR / f"{actual_date}.html"
     archive_file.write_text(html, encoding="utf-8")
@@ -499,7 +499,7 @@ def main():
 
     import subprocess
     cwd = str(OUTPUT_DIR)
-    subprocess.run(["git", "add", "index.html", f"archive/{actual_date}.html"], cwd=cwd, check=False)
+    subprocess.run(["git", "add", "daily_news.html", f"news-archive/{actual_date}.html"], cwd=cwd, check=False)
     result = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=cwd, capture_output=True)
     if result.returncode != 0:
         msg = f"chore: update daily dashboard {actual_date}"
