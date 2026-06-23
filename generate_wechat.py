@@ -353,10 +353,10 @@ def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
     draw.rectangle([0, h - 6, w, h], fill=(255, 107, 53))
 
     try:
-        font_title = _find_chinese_font(64)
+        font_title = _find_chinese_font(58)
         font_date = _find_chinese_font(28)
         font_label = _find_chinese_font(26)
-        font_num = _find_chinese_font(80)
+        font_num = _find_chinese_font(70)
         font_unit = _find_chinese_font(24)
         font_foot = _find_chinese_font(20)
     except Exception:
