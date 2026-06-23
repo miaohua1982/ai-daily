@@ -1,0 +1,54 @@
+name: Publish to WeChat Draft
+
+on:
+  schedule:
+    # Beijing time 07:00 = UTC 23:00
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-wechat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install Pillow
+
+      - name: Generate and publish WeChat draft
+        run: python generate_wechat.py
+        env:
+          WECHAT_APPID: ${{ secrets.WECHAT_APPID }}
+          WECHAT_APPSECRET: ${{ secrets.WECHAT_APPSECRET }}
+
+      - name: Notify success via Server酱
+        if: success()
+        run: |
+          curl -s "https://sctapi.ftqq.com/${{ secrets.SERVERCHAN_SENDKEY }}.send" \
+            -d "title=📰 AI 情报日报草稿已生成" \
+            -d "desp=## 微信草稿已自动生成
+
+          打开「订阅号助手」小程序
+          → 发表 → 草稿 → 手机预览
+          → 确认排版无误 → 点击发表
+
+          每人核查一次，良心出品 ❤️"
+
+      - name: Notify failure via Server酱
+        if: failure()
+        run: |
+          curl -s "https://sctapi.ftqq.com/${{ secrets.SERVERCHAN_SENDKEY }}.send" \
+            -d "title=❌ 微信草稿生成失败" \
+            -d "desp=请前往 GitHub Actions 查看详细日志：
+          https://github.com/miaohua1982/ai-daily/actions"
