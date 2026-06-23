@@ -353,12 +353,12 @@ def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
     draw.rectangle([0, h - 6, w, h], fill=(255, 107, 53))
 
     try:
-        font_title = _find_chinese_font(56)
-        font_date = _find_chinese_font(24)
-        font_label = _find_chinese_font(24)
-        font_num = _find_chinese_font(72)
-        font_unit = _find_chinese_font(22)
-        font_foot = _find_chinese_font(18)
+        font_title = _find_chinese_font(64)
+        font_date = _find_chinese_font(28)
+        font_label = _find_chinese_font(26)
+        font_num = _find_chinese_font(80)
+        font_unit = _find_chinese_font(24)
+        font_foot = _find_chinese_font(20)
     except Exception:
         font_title = font_date = font_label = font_num = font_unit = font_foot = ImageFont.load_default()
 
@@ -408,16 +408,39 @@ def _find_chinese_font(size: int):
         # macOS
         "/System/Library/Fonts/PingFang.ttc",
         "/System/Library/Fonts/Hiragino Sans GB.ttc",
-        # Ubuntu (GitHub Actions)
-        "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+        # Ubuntu 24.04 — noto-cjk (opentype or truetype)
         "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Medium.ttc",
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+        "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+        "/usr/share/fonts/truetype/noto/NotoSansCJK-Medium.ttc",
+        # Ubuntu older — noto-cjk package
         "/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
+        "/usr/share/fonts/noto-cjk/NotoSansMonoCJK-Regular.ttc",
+        # WenQuanYi (lightweight fallback)
         "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+        "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",
+        # DroidSans
         "/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf",
+        # Generic Noto fallback
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
     ]
     for path in candidates:
         if Path(path).exists():
             return ImageFont.truetype(path, size)
+    # Last resort: scan system with fc-list
+    try:
+        import subprocess
+        out = subprocess.check_output(
+            ["fc-list", ":lang=zh", "-f", "%{{file}}\\n"],
+            timeout=3, text=True
+        )
+        for line in out.strip().split("\n"):
+            line = line.strip()
+            if line and Path(line).exists():
+                return ImageFont.truetype(line, size)
+    except Exception:
+        pass
     return ImageFont.load_default()
 
 

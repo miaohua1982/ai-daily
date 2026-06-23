@@ -24,7 +24,10 @@ jobs:
           python-version: '3.13'
 
       - name: Install dependencies
-        run: pip install Pillow
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          pip install Pillow
 
       - name: Generate and publish WeChat draft
         run: python generate_wechat.py
