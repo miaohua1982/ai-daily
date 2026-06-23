@@ -33,6 +33,6 @@ craft/
 daily_news.html
 papers.html
 
-# Archive folders (generated daily, no need to track in repo)
-news-archive/
-papers-archive/
+# Archive folders (keep directory structure, ignore generated HTML)
+news-archive/*.html
+papers-archive/*.html
