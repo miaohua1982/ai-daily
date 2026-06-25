@@ -328,74 +328,142 @@ _FOOT_SECTION = """\
 # ── Cover image generation ─────────────────────────────────────
 
 def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
-    """Generate a simple cover image for the WeChat draft. Returns PNG bytes."""
+    """Generate a polished cover image — background first, then text overlay."""
     try:
         from PIL import Image, ImageDraw, ImageFont
     except ImportError:
         print("[WARN] Pillow not available, using fallback cover", file=sys.stderr)
         return _fallback_cover_bytes()
 
-    w, h = 900, 410
-    img = Image.new("RGB", (w, h), (255, 245, 235))
+    W, H = 900, 380
+
+    # ═══════════════════════════════════════════════════════════
+    # STEP 1 — Build the base image (background + decorations)
+    # ═══════════════════════════════════════════════════════════
+    img = Image.new("RGB", (W, H), (244, 246, 250))
     draw = ImageDraw.Draw(img)
 
-    # Warm gradient background
-    for x in range(0, w):
-        t = x / w
-        r = int(255 - t * 15)
-        g = int(245 - t * 20)
-        b = int(235 - t * 20)
-        draw.line([(x, 0), (x, h)], fill=(r, g, b))
+    # 1a. Vertical gradient — clean white to warm cream (top→bottom)
+    for y in range(H):
+        t = y / H
+        r = int(244 + t * 6)
+        g = int(246 + t * 4)
+        b = int(250 - t * 8)
+        draw.line([(0, y), (W, y)], fill=(r, g, b))
 
-    # Top orange stripe
-    draw.rectangle([0, 0, w, 6], fill=(255, 107, 53))
-    # Bottom orange stripe
-    draw.rectangle([0, h - 6, w, h], fill=(255, 107, 53))
+    # 1b. Top-right warm wash (sunlight feel)
+    for y in range(0, 170):
+        for x in range(W // 2, W):
+            dist = ((x - W) ** 2 + (y - 20) ** 2) ** 0.5
+            alpha = max(0, 1 - dist / 520)
+            if alpha > 0.02:
+                r2 = int(244 + alpha * 11)
+                g2 = int(246 - alpha * 10)
+                b2 = int(250 - alpha * 35)
+                img.putpixel((x, y), (r2, g2, b2))
 
+    # 1c. Subtle dot-grid texture
+    spacing = 28
+    for gx in range(spacing, W, spacing):
+        for gy in range(spacing, H, spacing):
+            draw.ellipse([gx - 1, gy - 1, gx + 1, gy + 1], fill=(228, 232, 238))
+
+    # 1d. Large decorative circle — warm orange, low opacity
+    cx1, cy1, r1 = W + 150, -100, 360
+    for x in range(max(0, cx1 - r1), min(W, cx1 + r1)):
+        for y in range(max(0, cy1 - r1), min(H, cy1 + r1)):
+            if (x - cx1) ** 2 + (y - cy1) ** 2 < r1 ** 2:
+                orig = img.getpixel((x, y))
+                r, g, b = orig
+                img.putpixel((x, y), (
+                    min(255, r + 6), min(255, g + 2), max(0, b - 2)
+                ))
+
+    # 1e. Small accent circle — bottom left
+    cx2, cy2, r2 = -60, H - 100, 110
+    for x in range(max(0, cx2 - r2), min(W, cx2 + r2)):
+        for y in range(max(0, cy2 - r2), min(W, cy2 + r2)):
+            if (x - cx2) ** 2 + (y - cy2) ** 2 < r2 ** 2:
+                orig = img.getpixel((x, y))
+                r, g, b = orig
+                img.putpixel((x, y), (
+                    min(255, r + 4), min(255, g + 1), max(0, b - 3)
+                ))
+
+    # 1f. Top accent bar
+    draw.rectangle([0, 0, W, 5], fill=(255, 107, 53))
+
+    # 1g. Bottom accent bar
+    draw.rectangle([0, H - 5, W, H], fill=(255, 107, 53))
+
+    # ═══════════════════════════════════════════════════════════
+    # STEP 2 — Draw text overlay
+    # ═══════════════════════════════════════════════════════════
     try:
-        font_title = _find_chinese_font(58)
-        font_date = _find_chinese_font(28)
-        font_label = _find_chinese_font(26)
-        font_num = _find_chinese_font(70)
-        font_unit = _find_chinese_font(24)
-        font_foot = _find_chinese_font(20)
+        font_title = _find_chinese_font(54)
+        font_date = _find_chinese_font(26)
+        font_label = _find_chinese_font(24)
+        font_num = _find_chinese_font(68)
+        font_unit = _find_chinese_font(22)
+        font_foot = _find_chinese_font(18)
     except Exception:
         font_title = font_date = font_label = font_num = font_unit = font_foot = ImageFont.load_default()
 
     # ── Header ──
-    draw.text((60, 48), "AI 情报日报", fill=(40, 40, 40), font=font_title)
-    draw.text((60, 118), today, fill=(160, 130, 110), font=font_date)
-    draw.line([(60, 158), (460, 158)], fill=(255, 180, 140), width=2)
+    draw.text((55, 45), "AI 情报日报", fill=(30, 30, 40), font=font_title)
+    draw.text((55, 112), today, fill=(150, 140, 130), font=font_date)
+    draw.line([(55, 150), (440, 150)], fill=(240, 200, 170), width=2)
 
-    # ── Stats cards: left-right layout ──
-    card_y = 195
-    card_w = 370
-    card_h = 140
+    # ── Stats cards ──
+    card_y = 175
+    card_w = 375
+    card_h = 145
+
+    # Shared shadow helper
+    def _card_shadow(x1, y1, x2, y2, radius=14, offset=3):
+        sx1, sy1 = x1 + offset, y1 + offset
+        sx2, sy2 = x2 + offset, y2 + offset
+        draw.rounded_rectangle(
+            [(sx1, sy1), (sx2, sy2)], radius=radius,
+            fill=(200, 200, 210)
+        )
 
     # ---- NEWS card ----
-    nx1, ny1 = 60, card_y
+    nx1, ny1 = 50, card_y
     nx2, ny2 = nx1 + card_w, card_y + card_h
+    _card_shadow(nx1, ny1, nx2, ny2)
     draw.rounded_rectangle(
-        [(nx1, ny1), (nx2, ny2)],
-        radius=16, fill=(255, 235, 220), outline=(255, 190, 150), width=2
+        [(nx1, ny1), (nx2, ny2)], radius=14,
+        fill=(255, 252, 248), outline=(255, 220, 180), width=2
     )
-    draw.text((nx1 + 30, ny1 + 18), "NEWS", fill=(200, 130, 100), font=font_label)
-    draw.text((nx1 + 30, ny1 + 50), str(news_count), fill=(255, 107, 53), font=font_num)
-    draw.text((nx1 + 120, ny1 + 90), "则", fill=(180, 130, 110), font=font_unit)
+    # Left accent bar on card
+    draw.rectangle([nx1 + 1, ny1 + 14, nx1 + 6, ny2 - 14], fill=(255, 107, 53))
+    draw.text((nx1 + 28, ny1 + 20), "热点资讯", fill=(180, 130, 100), font=font_label)
+    # Number — measure width & center
+    ntext = str(news_count)
+    nbox = draw.textbbox((0, 0), ntext, font=font_num)
+    ntw = nbox[2] - nbox[0]
+    draw.text((nx1 + (card_w - ntw) // 2 - 30, ny1 + 48), ntext, fill=(255, 107, 53), font=font_num)
+    draw.text((nx1 + card_w // 2 + 20, ny1 + 82), "则", fill=(160, 130, 110), font=font_unit)
 
     # ---- PAPERS card ----
-    px1, py1 = nx2 + 40, card_y
+    px1, py1 = nx2 + 24, card_y
     px2, py2 = px1 + card_w, card_y + card_h
+    _card_shadow(px1, py1, px2, py2)
     draw.rounded_rectangle(
-        [(px1, py1), (px2, py2)],
-        radius=16, fill=(255, 228, 228), outline=(255, 175, 175), width=2
+        [(px1, py1), (px2, py2)], radius=14,
+        fill=(255, 250, 250), outline=(255, 200, 200), width=2
     )
-    draw.text((px1 + 30, py1 + 18), "PAPERS", fill=(190, 110, 110), font=font_label)
-    draw.text((px1 + 30, py1 + 50), str(papers_count), fill=(224, 82, 82), font=font_num)
-    draw.text((px1 + 130, py1 + 90), "篇", fill=(170, 110, 100), font=font_unit)
+    draw.rectangle([px1 + 1, py1 + 14, px1 + 6, py2 - 14], fill=(224, 82, 82))
+    draw.text((px1 + 28, py1 + 20), "精选论文", fill=(180, 100, 100), font=font_label)
+    ptext = str(papers_count)
+    pbox = draw.textbbox((0, 0), ptext, font=font_num)
+    ptw = pbox[2] - pbox[0]
+    draw.text((px1 + (card_w - ptw) // 2 - 30, py1 + 48), ptext, fill=(224, 82, 82), font=font_num)
+    draw.text((px1 + card_w // 2 + 20, py1 + 82), "篇", fill=(160, 100, 100), font=font_unit)
 
     # ── Footer ──
-    draw.text((60, 375), "由 ai-daily 自动生成 · 仅供学习参考", fill=(170, 150, 140), font=font_foot)
+    draw.text((55, 345), "由 ai-daily 自动生成 · 仅供学习参考", fill=(175, 170, 165), font=font_foot)
 
     buf = io.BytesIO()
     img.save(buf, format="PNG")
