@@ -254,6 +254,67 @@
     transform: translateX(4px);
   }
 
+  /* ── Archives ── */
+  .archives {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .archive-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .archive-group-label {
+    width: 100%;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
+    margin-bottom: 0.1rem;
+    font-family: var(--mono);
+  }
+
+  .archive-link {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: all 0.25s var(--ease-out-quart);
+    white-space: nowrap;
+  }
+
+  .archive-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--surface-hover);
+  }
+
+  .archive-link .date-num {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-right: 0.15em;
+  }
+
+  .archive-scanning {
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    font-family: var(--mono);
+    opacity: 0.6;
+  }
+
+  .archive-empty {
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+    padding: 0.35rem 0;
+  }
+
   /* ── Footer ── */
   .footer {
     display: flex;
@@ -360,6 +421,15 @@
 
     <div class="divider"></div>
 
+    <!-- Archives -->
+    <nav class="archives" id="archives-list">
+      <span class="section-label">// 归档</span>
+      <div class="archive-group" id="archive-news"></div>
+      <div class="archive-group" id="archive-papers"></div>
+    </nav>
+
+    <div class="divider"></div>
+
     <!-- Footer -->
     <footer class="footer">
       <span><span class="status-dot"></span>在线</span>
@@ -382,12 +452,88 @@
 </div>
 
 <script>
-  // Set build date
+  // ── Build date ──
   document.getElementById('build-time').textContent = new Date().toISOString().slice(0, 10);
 
-  // Gentle keyboard navigation hint on hover
-  document.querySelectorAll('.link-card').forEach((card, i) => {
-    card.addEventListener('keydown', (e) => {
+  // ── Dynamic archive scanner ──
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function fmtDate(y, m, d) { return pad(y) + '-' + pad(m) + '-' + pad(d); }
+  function weekdayCN(y, m, d) {
+    return ['日','一','二','三','四','五','六'][new Date(y, m - 1, d).getDay()];
+  }
+
+  async function probeFile(url) {
+    try {
+      const resp = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+      return resp.ok;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  async function scanArchive(prefix, label, daysBack) {
+    const groupId = 'archive-' + (prefix === 'news' ? 'news' : 'papers');
+    const group = document.getElementById(groupId);
+
+    // Label
+    const labelEl = document.createElement('div');
+    labelEl.className = 'archive-group-label';
+    labelEl.textContent = label;
+    group.appendChild(labelEl);
+
+    // Scanning indicator
+    const scanning = document.createElement('span');
+    scanning.className = 'archive-scanning';
+    scanning.textContent = '扫描中...';
+    group.appendChild(scanning);
+
+    // Build date list
+    const dates = [];
+    const today = new Date();
+    for (let i = 0; i < daysBack; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      dates.push({
+        y: d.getFullYear(),
+        m: d.getMonth() + 1,
+        d: d.getDate()
+      });
+    }
+
+    // Probe in parallel, collect results
+    const probes = dates.map(dt => {
+      const dateStr = fmtDate(dt.y, dt.m, dt.d);
+      const url = prefix + '-archive/' + dateStr + '.html';
+      return probeFile(url).then(exists => exists ? { dt, dateStr, url } : null);
+    });
+
+    const results = (await Promise.all(probes)).filter(Boolean).slice(0, 7);
+    scanning.remove();
+
+    if (results.length === 0) {
+      const empty = document.createElement('span');
+      empty.className = 'archive-empty';
+      empty.textContent = '暂无归档';
+      group.appendChild(empty);
+      return;
+    }
+
+    results.forEach(r => {
+      const wd = weekdayCN(r.dt.y, r.dt.m, r.dt.d);
+      const a = document.createElement('a');
+      a.className = 'archive-link';
+      a.href = r.url;
+      a.textContent = r.dateStr + ' 周' + wd;
+      group.appendChild(a);
+    });
+  }
+
+  scanArchive('news', '📰 AI 日报', 30);
+  scanArchive('papers', '📄 AI 论文', 30);
+
+  // ── Keyboard ──
+  document.querySelectorAll('.link-card').forEach(card => {
+    card.addEventListener('keydown', e => {
       if (e.key === 'Enter') card.click();
     });
   });

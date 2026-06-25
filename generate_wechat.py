@@ -32,9 +32,29 @@ OUTPUT_DIR = Path(__file__).parent.resolve()
 DAILY_FILE = OUTPUT_DIR / "daily_news.html"
 PAPERS_FILE = OUTPUT_DIR / "papers.html"
 
-# Env secrets (set in GitHub Actions)
-APPID = os.environ.get("WECHAT_APPID", "").strip()
-APPSECRET = os.environ.get("WECHAT_APPSECRET", "").strip()
+# ── Load secrets ───────────────────────────────────────────────
+# Priority: environment variables (GitHub Actions) > .env file (local dev)
+
+def _load_dotenv(path: Path) -> dict[str, str]:
+    """Very simple .env parser — no dependency needed."""
+    result: dict[str, str] = {}
+    if not path.is_file():
+        return result
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" in line:
+            k, v = line.split("=", 1)
+            result[k.strip()] = v.strip().strip('"').strip("'")
+    return result
+
+_dotenv = _load_dotenv(OUTPUT_DIR / ".env")
+
+APPID = os.environ.get("WECHAT_APPID") or _dotenv.get("WECHAT_APPID", "")
+APPSECRET = os.environ.get("WECHAT_APPSECRET") or _dotenv.get("WECHAT_APPSECRET", "")
+APPID = APPID.strip()
+APPSECRET = APPSECRET.strip()
 
 MAX_NEWS = 10
 MAX_PAPERS = 10
