@@ -1,0 +1,3 @@
+# Python dependencies for ai-daily
+# generate_trending.py
+pyyaml>=6.0

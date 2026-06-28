@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-Test script for generate_wechat.py
-Tests two capabilities locally:
+Test script for generate_wechat.py and generate_trending.py
+Tests capabilities locally:
   1. Cover image generation  → craft/cover.png
   2. WeChat-compatible HTML  → craft/wechat_preview.html
+  3. Trending Radar config / filtering / HTML  → craft/trending_preview.html
 
 All output goes to the craft/ folder (excluded from git).
 No WeChat API calls are made; no real credentials are needed.
 """
 
 import sys
-import os
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
@@ -29,6 +29,14 @@ from generate_wechat import (
     fetch_news,
     fetch_papers,
     _format_date_cn,
+)
+
+# ── Import from generate_trending ─────────────────────────────────
+from generate_trending import (
+    load_yaml,
+    keyword_filter,
+    dedup,
+    build_html,
 )
 
 # ── Helpers ─────────────────────────────────────────────────────
@@ -203,6 +211,192 @@ def _stub_papers() -> list[dict]:
     ]
 
 
+# ── Trending Radar stub helpers ──────────────────────────────────
+def _stub_trending_config() -> dict:
+    """Minimal config that matches the real trending_config.yaml shape."""
+    return {
+        "newsnow": {
+            "api_url": "https://newsnow.busiyi.world/api/s",
+            "sources": [
+                {"id": "weibo", "name": "微博热搜", "icon": "🔥"},
+                {"id": "zhihu", "name": "知乎热榜", "icon": "💡"},
+            ],
+        },
+        "filter": {"method": "keyword", "dedup": True},
+        "keywords": {
+            "groups": [
+                {
+                    "name": "AI 大模型",
+                    "terms": ["OpenAI", "ChatGPT", "大模型", "AI"],
+                    "exclude": ["破解"],
+                },
+                {
+                    "name": "智能汽车",
+                    "terms": ["比亚迪", "特斯拉", "自动驾驶"],
+                },
+            ]
+        },
+        "ai": {"enabled": False},
+    }
+
+
+def _stub_trending_items() -> list[dict]:
+    return [
+        {
+            "title": "OpenAI 发布 GPT-5，推理能力大幅提升",
+            "url": "https://example.com/openai-gpt5",
+            "source_id": "weibo",
+            "updatedTime": 1750992000000,
+        },
+        {
+            "title": "特斯拉 FSD 在中国开始推送",
+            "url": "https://example.com/tesla-fsd-china",
+            "source_id": "zhihu",
+            "updatedTime": 1750992000000,
+        },
+        {
+            "title": "某明星离婚登上热搜",
+            "url": "https://example.com/celebrity",
+            "source_id": "weibo",
+            "updatedTime": 1750992000000,
+        },
+        {
+            "title": "OpenAI 发布 GPT-5，推理能力大幅提升",
+            "url": "https://example.com/openai-gpt5#duplicate",
+            "source_id": "zhihu",
+            "updatedTime": 1750992000000,
+        },
+    ]
+
+
+# ── Test 3: Trending Radar config loading ─────────────────────────
+def test_trending_config() -> bool:
+    header("TEST 3 — Trending Radar config loading")
+
+    config_path = ROOT / "trending_config.yaml"
+    if not config_path.exists():
+        fail(f"Config file not found: {config_path}")
+        return False
+
+    try:
+        config = load_yaml(config_path)
+    except Exception as e:
+        fail(f"load_yaml() raised: {e}")
+        return False
+
+    required_keys = ["newsnow", "filter", "keywords"]
+    for key in required_keys:
+        if key not in config:
+            fail(f"Missing top-level key: {key}")
+            return False
+
+    ok("Config loaded successfully")
+    ok(f"Sources: {len(config['newsnow']['sources'])}")
+    ok(f"Keyword groups: {len(config['keywords']['groups'])}")
+
+    return True
+
+
+# ── Test 4: Trending Radar keyword filtering ──────────────────────
+def test_trending_keyword_filter() -> bool:
+    header("TEST 4 — Trending Radar keyword filtering")
+
+    config = _stub_trending_config()
+    items = _stub_trending_items()
+
+    try:
+        matched, unmatched = keyword_filter(items, config)
+    except Exception as e:
+        fail(f"keyword_filter() raised: {e}")
+        return False
+
+    ok(f"Matched {len(matched)} items")
+    ok(f"Unmatched {len(unmatched)} items")
+
+    group_names = {it.get("group_name") for it in matched}
+    if "AI 大模型" not in group_names:
+        fail("Expected 'AI 大模型' group in matched items")
+        return False
+    if "智能汽车" not in group_names:
+        fail("Expected '智能汽车' group in matched items")
+        return False
+
+    ok("Grouping correct: AI 大模型 / 智能汽车")
+
+    return True
+
+
+# ── Test 5: Trending Radar deduplication ─────────────────────────
+def test_trending_dedup() -> bool:
+    header("TEST 5 — Trending Radar deduplication")
+
+    items = _stub_trending_items()
+    try:
+        deduped = dedup(items)
+    except Exception as e:
+        fail(f"dedup() raised: {e}")
+        return False
+
+    ok(f"Before dedup: {len(items)}, after dedup: {len(deduped)}")
+
+    if len(deduped) >= len(items):
+        fail("Dedup did not remove duplicate URL")
+        return False
+
+    ok("Duplicate URL removed")
+    return True
+
+
+# ── Test 6: Trending Radar HTML generation ────────────────────────
+def test_trending_html() -> bool:
+    header("TEST 6 — Trending Radar HTML generation")
+
+    config = _stub_trending_config()
+    items = _stub_trending_items()
+    matched, _ = keyword_filter(items, config)
+    matched = dedup(matched)
+
+    grouped = {}
+    for it in matched:
+        gname = it.get("group_name", "全部")
+        grouped.setdefault(gname, []).append(it)
+
+    bj = datetime.now(timezone(timedelta(hours=8)))
+    try:
+        html = build_html(grouped, config, bj)
+    except Exception as e:
+        fail(f"build_html() raised: {e}")
+        return False
+
+    if not html or len(html) < 500:
+        fail(f"HTML too short ({len(html)} chars)")
+        return False
+
+    ok(f"HTML content built: {len(html):,} chars")
+
+    checks = [
+        ("title", "~/trending" in html),
+        ("group section", "AI 大模型" in html),
+        ("link card", 'class="link-card"' in html),
+        ("footer", "数据来源 NewsNow" in html),
+    ]
+
+    all_ok = True
+    for label, passed in checks:
+        if passed:
+            ok(f"Check [{label}]")
+        else:
+            fail(f"Check [{label}] FAILED")
+            all_ok = False
+
+    # Save preview
+    preview_path = CRAFT_DIR / "trending_preview.html"
+    preview_path.write_text(html, encoding="utf-8")
+    ok(f"Saved preview to: {preview_path}")
+
+    return all_ok
+
+
 # ── Preview wrapper ──────────────────────────────────────────────
 def _wrap_preview(wechat_html: str, display_date: str) -> str:
     """Wrap WeChat content in a full HTML page for local browser preview."""
@@ -281,6 +475,10 @@ def main() -> int:
 
     results["cover"] = test_cover_image()
     results["html"] = test_wechat_html()
+    results["trending_config"] = test_trending_config()
+    results["trending_filter"] = test_trending_keyword_filter()
+    results["trending_dedup"] = test_trending_dedup()
+    results["trending_html"] = test_trending_html()
 
     # Summary
     header("SUMMARY")

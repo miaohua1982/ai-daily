@@ -417,6 +417,15 @@
         </span>
         <span class="link-arrow">→</span>
       </a>
+
+      <a href="trending.html" class="link-card">
+        <span class="link-icon">&#x1F4E1;</span>
+        <span class="link-info">
+          <div class="link-title">趋势雷达</div>
+          <div class="link-desc">全网热点追踪 &middot; 关键词过滤 &middot; 智能聚合</div>
+        </span>
+        <span class="link-arrow">→</span>
+      </a>
     </nav>
 
     <div class="divider"></div>
@@ -426,6 +435,7 @@
       <span class="section-label">// 归档</span>
       <div class="archive-group" id="archive-news"></div>
       <div class="archive-group" id="archive-papers"></div>
+      <div class="archive-group" id="archive-trending"></div>
     </nav>
 
     <div class="divider"></div>
@@ -472,7 +482,7 @@
   }
 
   async function scanArchive(prefix, label, daysBack) {
-    const groupId = 'archive-' + (prefix === 'news' ? 'news' : 'papers');
+    const groupId = 'archive-' + prefix;
     const group = document.getElementById(groupId);
 
     // Label
@@ -530,6 +540,7 @@
 
   scanArchive('news', '📰 AI 日报', 30);
   scanArchive('papers', '📄 AI 论文', 30);
+  scanArchive('trending', '📡 趋势雷达', 30);
 
   // ── Keyboard ──
   document.querySelectorAll('.link-card').forEach(card => {

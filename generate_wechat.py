@@ -17,6 +17,7 @@ import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from dotenv_helper import load_dot_env
 
 # ── Configuration ──────────────────────────────────────────────
 
@@ -35,21 +36,7 @@ PAPERS_FILE = OUTPUT_DIR / "papers.html"
 # ── Load secrets ───────────────────────────────────────────────
 # Priority: environment variables (GitHub Actions) > .env file (local dev)
 
-def _load_dotenv(path: Path) -> dict[str, str]:
-    """Very simple .env parser — no dependency needed."""
-    result: dict[str, str] = {}
-    if not path.is_file():
-        return result
-    for line in path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        if "=" in line:
-            k, v = line.split("=", 1)
-            result[k.strip()] = v.strip().strip('"').strip("'")
-    return result
-
-_dotenv = _load_dotenv(OUTPUT_DIR / ".env")
+_dotenv = load_dot_env(OUTPUT_DIR / ".env")
 
 APPID = os.environ.get("WECHAT_APPID") or _dotenv.get("WECHAT_APPID", "")
 APPSECRET = os.environ.get("WECHAT_APPSECRET") or _dotenv.get("WECHAT_APPSECRET", "")

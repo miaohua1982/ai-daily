@@ -32,7 +32,9 @@ craft/
 # Generated output (rebuilt daily by workflows, no need to track)
 daily_news.html
 papers.html
+trending.html
 
 # Archive folders (keep directory structure, ignore generated HTML)
 news-archive/*.html
 papers-archive/*.html
+trending-archive/*.html
