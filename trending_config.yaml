@@ -1,0 +1,194 @@
+# Trending Radar 配置
+# 直接调用 NewsNow 公开 API，按关键词 / AI 过滤生成趋势雷达页面
+
+newsnow:
+  # 公共实例（无 SLA，适合测试）
+  api_url: "https://newsnow.busiyi.world/api/s"
+  # 自建 NewsNow 实例后，替换为：
+  # api_url: "https://your-newsnow.example.com/api/s"
+  sources:
+    # ── 综合热榜 ─────────────────────────────────────
+    - id: weibo
+      name: 微博热搜
+      icon: "🔥"
+    - id: toutiao
+      name: 今日头条
+      icon: "📰"
+
+    # ── 财经 / 金融 ──────────────────────────────────
+    - id: jin10
+      name: 金十数据
+      icon: "📊"
+    - id: cls
+      name: 财联社
+      icon: "📰"
+    - id: wallstreetcn
+      name: 华尔街见闻
+      icon: "💹"
+
+    # ── 国际 / 深度新闻 ─────────────────────────────
+    - id: cankaoxiaoxi
+      name: 参考消息
+      icon: "🌏"
+    - id: zaobao
+      name: 联合早报
+      icon: "🗞️"
+    - id: thepaper
+      name: 澎湃新闻
+      icon: "📝"
+
+filter:
+  # keyword | ai | both
+  # keyword: 本地关键词匹配（不消耗 AI Token）
+  # ai:      调用大模型打分（需要配置 ai.api_key_env）
+  # both:    先用关键词初筛，再经 AI 打分过滤
+  method: ai
+  dedup: true
+
+keywords:
+  # 关键词组，标题命中任一词即被归入该组
+  # 支持纯文字匹配（不区分大小写）
+  groups:
+    - name: "AI大模型"
+      terms:
+        - "OpenAI"
+        - "ChatGPT"
+        - "Claude"
+        - "DeepSeek"
+        - "Qwen"
+        - "通义千问"
+        - "Kimi"
+        - "豆包"
+        - "大模型"
+        - "多模态"
+        - "GPT"
+        - "LLM"
+        - "AI"
+        - "人工智能"
+      exclude:
+        - "下载"
+        - "破解"
+
+    - name: "智能汽车"
+      terms:
+        - "比亚迪"
+        - "特斯拉"
+        - "小米汽车"
+        - "自动驾驶"
+        - "智驾"
+        - "FSD"
+        - "蔚来"
+        - "小鹏"
+        - "理想"
+        - "问界"
+        - "极氪"
+        - "特斯拉 FSD"
+
+    - name: "机器人与具身智能"
+      terms:
+        - "机器人"
+        - "宇树"
+        - "智元"
+        - "人形机器人"
+        - "具身智能"
+        - "Figure"
+        - "波士顿动力"
+
+
+    - name: "财经资讯"
+      terms:
+        - "财经"
+        - "GDP"
+        - "第一产业"
+        - "第二产业"
+        - "第三产业"
+        - "制造业"
+        - "服务业"
+        - "农业"
+        - "就业"
+        - "失业率"
+        - "统计数据"
+        - "CPI"
+        - "PPI"
+        - "通货膨胀"
+        - "出口"
+        - "进口"
+        - "贸易"
+        - "关税"
+        - "美联储"
+        - "央行"
+        - "降息"
+        - "加息"
+        - "利率"
+        - "A股"
+        - "港股"
+        - "美股"
+        - "股市"
+        - "沪指"
+        - "深成指"
+        - "创业板"
+        - "科创板"
+        - "北交所"
+        - "汇率"
+        - "人民币"
+        - "美元"
+        - "欧元"
+        - "黄金"
+        - "原油"
+        - "大宗商品"
+      exclude:
+        - "娱乐"
+        - "明星"
+
+    - name: "国际局势"
+      terms:
+        - "中美贸易"
+        - "中美关系"
+        - "关税战"
+        - "贸易战"
+        - "欧洲经济"
+        - "欧盟"
+        - "俄乌"
+        - "乌克兰"
+        - "俄罗斯"
+        - "普京"
+        - "泽连斯基"
+        - "美伊"
+        - "伊朗"
+        - "以色列"
+        - "中东"
+        - "日韩"
+        - "日本"
+        - "日元"
+        - "三星"
+        - "台海"
+        - "南海"
+        - "北约"
+        - "G7"
+        - "G20"
+        - "金砖"
+        - "一带一路"
+      exclude:
+        - "娱乐"
+        - "明星"
+
+ai:
+  # 启用 AI 过滤（需要在 GitHub Secrets 或环境变量中配置 API Key）
+  # 从哪个环境变量读取 API Key
+  api_key_env: "DEEPSEEK_API_KEY"
+  # OpenAI 兼容接口
+  base_url: "https://api.deepseek.com"
+  model: "deepseek-v4-flash"
+  # 只保留评分 >= min_score 的新闻
+  min_score: 0.7
+  # 每批最多发送多少条标题给模型（防止上下文过长）
+  batch_size: 30
+  interests: |
+    我关注以下领域的重要新闻：
+    1. AI 大模型与产品：OpenAI、ChatGPT、Claude、DeepSeek、Qwen、Kimi、豆包等模型的能力演进与产品发布。
+    2. 智能汽车：比亚迪、特斯拉、小米汽车、自动驾驶、智驾技术、FSD。
+    3. 机器人与具身智能：宇树、智元、人形机器人。
+    4. 消费电子：iPhone、华为、小米、Apple、Vision Pro 等重要发布。
+    5. 财经资讯：GDP、一二三产、就业、统计数据、出口、进口、CPI、PPI、股市、汇率、大宗商品等重要经济数据和政策。
+    6. 国际局势：中美贸易、欧洲经济、俄乌局势、美伊局势、日韩经济、地缘政治等重要国际动态。
+    请对每条新闻给出 0-1 的相关性评分，1 表示高度相关，0 表示完全不相关。
