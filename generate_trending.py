@@ -11,6 +11,7 @@ import json
 import re
 import time
 import random
+from collections import defaultdict
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -227,12 +228,16 @@ def fetch_source(api_url, source_id, max_retries=3):
 
 
 def fetch_all_sources(config):
-    """顺序获取所有数据源，source 之间使用指数退避。"""
+    """顺序获取所有数据源，source 之间使用指数退避。
+    同时为每条 item 标注 source_group（来自 config 中 source 的 group 字段）。
+    """
     api_url = config["newsnow"]["api_url"]
     sources = config["newsnow"]["sources"]
+    # 建立 source_id -> group 的映射
+    group_map = {s["id"]: s.get("group", "") for s in sources}
     max_retries = config.get("newsnow", {}).get("max_retries", 3)
     items = []
-    
+
     for idx, s in enumerate(sources):
         # 第一个 source 不等待，后续 source 指数退避
         if idx > 0:
@@ -240,10 +245,14 @@ def fetch_all_sources(config):
             backoff = random.uniform(0, base_backoff)
             print(f"[INFO] Waiting {backoff:.1f}s before fetching {s['id']}...", file=sys.stderr)
             time.sleep(backoff)
-        
+
         src_items = fetch_source(api_url, s["id"], max_retries=max_retries)
+        # 为每条 item 标注 source_group
+        src_group = group_map.get(s["id"], "")
+        for it in src_items:
+            it["source_group"] = src_group
         items.extend(src_items)
-    
+
     return items
 
 
@@ -285,8 +294,12 @@ def keyword_filter(items, config):
     return result, unmatched
 
 
-def dedup(items):
-    """按 url 去重，保留首次出现。"""
+def dedup(items, config=None):
+    """
+    1. 按 url 去重，保留首次出现。
+    2. 如果配置了语义去重，在同一 source_group 内部再做 embedding 相似度去重。
+    """
+    # ── 1. URL 去重 ──────────────────────────────────
     seen = set()
     out = []
     for it in items:
@@ -297,11 +310,162 @@ def dedup(items):
         if key:
             seen.add(key)
         out.append(it)
-    return out
+
+    # ── 2. 语义去重（按 source_group 分组）────────────
+    if config is None:
+        return out
+
+    sem_cfg = config.get("filter", {}).get("semantic_dedup", {})
+    if not sem_cfg.get("enabled", False):
+        return out
+
+    api_key_env = sem_cfg.get("api_key_env", "")
+    api_key = os.environ.get(api_key_env) or _dot_env.get(api_key_env, "")
+    base_url   = sem_cfg.get("base_url", "")
+    model      = sem_cfg.get("model", "text-embedding-3-small")
+    threshold   = float(sem_cfg.get("threshold", 0.85))
+    batch_size  = int(sem_cfg.get("batch_size", 10))
+
+    if not api_key or not base_url:
+        print("[WARN] Semantic dedup enabled but embedding API key or base_url not configured", file=sys.stderr)
+        return out
+
+    # 按 source_group 分组（空字符串的 group 单独处理，不做语义去重）
+    groups = defaultdict(list)
+    no_group = []
+    for it in out:
+        sg = it.get("source_group", "")
+        if sg:
+            groups[sg].append(it)
+        else:
+            no_group.append(it)
+
+    result = list(no_group)
+    for group_name, group_items in groups.items():
+        if len(group_items) <= 1:
+            result.extend(group_items)
+            continue
+
+        # 调用 embedding API 做语义去重
+        titles = [it.get("title", "") for it in group_items]
+        embeddings = get_embeddings(titles, api_key, base_url, model, batch_size)
+        if embeddings is None or len(embeddings) != len(group_items):
+            print(f"[WARN] Semantic dedup skipped for group '{group_name}': embedding API failed", file=sys.stderr)
+            result.extend(group_items)
+            continue
+
+        keep = [True] * len(group_items)
+        removed = 0
+        for i in range(len(group_items)):
+            if not keep[i]:
+                continue
+            for j in range(i + 1, len(group_items)):
+                if not keep[j]:
+                    continue
+                sim = cosine_similarity(embeddings[i], embeddings[j])
+                if sim >= threshold:
+                    keep[j] = False
+                    removed += 1
+                    print(f"[INFO] Semantic dedup ({group_name}): drop '{titles[j][:40]}...' (sim={sim:.3f})", file=sys.stderr)
+
+        deduped = [group_items[i] for i in range(len(group_items)) if keep[i]]
+        if removed > 0:
+            print(f"[INFO] Semantic dedup ({group_name}): {len(group_items)} -> {len(deduped)}", file=sys.stderr)
+        result.extend(deduped)
+
+    return result
+
+
+def get_embeddings(texts, api_key, base_url, model, batch_size=10):
+    """
+    批量获取文本 embedding，使用 OpenAI 兼容接口。
+    部分模型（如阿里 Qwen）单次请求最多支持 batch_size 条文本，
+    因此分批发送请求，结果按顺序拼接后返回。
+    返回 list[list[float]]，失败时返回 None。
+    """
+    if not texts:
+        return []
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    url = f"{base_url.rstrip('/')}/embeddings"
+    all_embeddings = []
+    total = len(texts)
+
+    for start in range(0, total, batch_size):
+        batch = list(texts[start:start + batch_size])
+        payload = {
+            "model": model,
+            "input": batch
+        }
+        req = urllib.request.Request(
+            url, data=json.dumps(payload).encode(), headers=headers, method="POST"
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                data = json.loads(resp.read().decode())
+            batch_emb = [item["embedding"] for item in data["data"]]
+            all_embeddings.extend(batch_emb)
+        except Exception as e:
+            print(f"[WARN] get_embeddings batch {start}-{start + len(batch)} failed: {e}", file=sys.stderr)
+            return None
+
+    return all_embeddings
+
+
+def cosine_similarity(a, b):
+    """计算两个向量的余弦相似度。"""
+    dot = sum(x * y for x, y in zip(a, b))
+    norm_a = sum(x * x for x in a) ** 0.5
+    norm_b = sum(y * y for y in b) ** 0.5
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return dot / (norm_a * norm_b)
+
+
+def semantic_dedup_items(items, threshold, api_key, base_url, model):
+    """
+    对同一分组内的条目做语义去重。
+    计算所有标题的 embedding，两两比较余弦相似度，
+    相似度 >= threshold 时移除后者（保留第一个）。
+    """
+    if len(items) <= 1:
+        return items
+
+    titles = [it.get("title", "") for it in items]
+    embeddings = get_embeddings(titles, api_key, base_url, model)
+
+    if embeddings is None:
+        print("[WARN] Semantic dedup skipped: embedding API unavailable", file=sys.stderr)
+        return items
+
+    if len(embeddings) != len(items):
+        print(f"[WARN] Semantic dedup skipped: embedding count mismatch ({len(embeddings)} vs {len(items)})", file=sys.stderr)
+        return items
+
+    keep = [True] * len(items)
+    removed = 0
+    for i in range(len(items)):
+        if not keep[i]:
+            continue
+        for j in range(i + 1, len(items)):
+            if not keep[j]:
+                continue
+            sim = cosine_similarity(embeddings[i], embeddings[j])
+            if sim >= threshold:
+                keep[j] = False
+                removed += 1
+                print(f"[INFO] Semantic dedup: '{titles[j][:40]}...' (sim={sim:.3f})")
+
+    result = [items[i] for i in range(len(items)) if keep[i]]
+    if removed > 0:
+        print(f"[INFO] Semantic dedup: removed {removed} duplicate(s) within group")
+    return result
 
 
 # ── AI 过滤 ──
-
 def ai_score_batch(batch, interests, group_names, api_key, base_url, model):
     """把一批标题发给 LLM，返回 idx -> {"score": float, "group": str} 字典。"""
     lines = "\n".join(f"{i+1}. {it['title']}" for i, it in enumerate(batch))
@@ -428,6 +592,18 @@ def format_updated(ts):
 
 
 def build_html(grouped_items, config, build_time):
+    # 强制按固定顺序展示分组：国际局势、财经资讯、AI大模型、智能汽车、机器人与具身智能、其他
+    desired_order = ["国际局势", "财经资讯", "AI大模型", "智能汽车", "机器人与具身智能", "其他"]
+    ordered = {}
+    for name in desired_order:
+        if name in grouped_items:
+            ordered[name] = grouped_items[name]
+    # 保留配置中新增但未在固定顺序中声明的分组
+    for name, items in grouped_items.items():
+        if name not in ordered:
+            ordered[name] = items
+    grouped_items = ordered
+
     source_counts = {}
     for group_name, items in grouped_items.items():
         for it in items:
@@ -440,414 +616,347 @@ def build_html(grouped_items, config, build_time):
         for sid, cnt in sorted(source_counts.items(), key=lambda x: -x[1])[:5]
     ) or "暂无"
 
-    sections_html = ""
+    # 为每个分组分配颜色
+    group_colors = [
+        "#6366f1", "#0891b2", "#d97706", "#7c3aed", "#059669",
+        "#dc2626", "#2563eb", "#ea580c", "#0891b2", "#be185d"
+    ]
+    color_map = {}
+    for i, group_name in enumerate(grouped_items.keys()):
+        color_map[group_name] = group_colors[i % len(group_colors)]
+
+    # 构建导航链接
+    nav_links_parts = []
     for group_name, items in grouped_items.items():
         if not items:
             continue
-        cards = ""
+        anchor = group_name.replace(" ", "-").lower()
+        color = color_map[group_name]
+        count = len(items)
+        nav_links_parts.append(
+            f'    <a href="#sec-{anchor}" class="nav-link">\n'
+            f'      <span class="nav-dot" style="background:{color}"></span>{esc_html(group_name)}\n'
+            f'      <span class="nav-cnt">{count}</span>\n'
+            f'    </a>'
+        )
+    nav_links = "\n".join(nav_links_parts)
+
+    # 构建分组 sections
+    sections_parts = []
+    item_counter = 0
+    for group_name, items in grouped_items.items():
+        if not items:
+            continue
+        anchor = group_name.replace(" ", "-").lower()
+        color = color_map[group_name]
+        count = len(items)
+
+        # 构建卡片
+        cards_parts = []
         for it in items:
+            item_counter += 1
+            idx = item_counter
             title = esc_html(it.get("title", "无标题"))
             url = it.get("url") or it.get("mobileUrl") or "#"
             url_attr = esc_attr(url)
             src_name, icon, _ = source_meta(it, config)
-            score_text = ""
+
+            # 来源样式
+            source_class = "source-x"
+            if "wechat" in src_name.lower() or "微信" in src_name:
+                source_class = "source-wechat"
+            elif "blog" in src_name.lower() or "博客" in src_name:
+                source_class = "source-blog"
+            elif "hacker" in src_name.lower() or "hn" in src_name.lower():
+                source_class = "source-hn"
+            elif "github" in src_name.lower() or "gh" in src_name.lower():
+                source_class = "source-gh"
+
+            score_badge = ""
             if "ai_score" in it:
-                score_text = f" · AI {it['ai_score']:.2f}"
+                score = it["ai_score"]
+                if score >= 0.8:
+                    score_badge = f'<span class="score-badge score-high">关联度：{score:.2f}</span>'
+                elif score >= 0.6:
+                    score_badge = f'<span class="score-badge score-mid">关联度：{score:.2f}</span>'
+                else:
+                    score_badge = f'<span class="score-badge score-low">关联度：{score:.2f}</span>'
+
             updated = format_updated(it.get("updatedTime"))
-            meta = f"{src_name}{score_text}"
-            cards += (
-                f'        <a href="{url_attr}" target="_blank" rel="noopener noreferrer" class="link-card">\n'
-                f'          <span class="link-icon">{icon}</span>\n'
-                f'          <span class="link-info">\n'
-                f'            <div class="link-title">{title}</div>\n'
-                f'            <div class="link-desc">{meta}</div>\n'
-                f'          </span>\n'
-                f'          <span class="link-arrow">→</span>\n'
-                f'        </a>\n'
-            )
-        sections_html += (
-            f'      <section class="group">\n'
-            f'        <div class="group-header">\n'
-            f'          <span class="group-dot"></span>\n'
-            f'          <h2 class="group-title">{esc_html(group_name)}</h2>\n'
-            f'          <span class="group-count">{len(items)} 条</span>\n'
-            f'        </div>\n'
-            f'        <div class="group-cards">\n'
-            f'{cards}'
-            f'        </div>\n'
-            f'      </section>\n'
-        )
+            time_str = f"{updated}" if updated else ""
+
+            card_html = f"""        <article class="card" data-reveal>
+          <span class="card-num">{idx}</span>
+          <div class="card-top">
+            <h3 class="card-title">{title}</h3>
+            <span class="card-source {source_class}">{esc_html(src_name)}</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time">{time_str}</span>
+            {score_badge}
+            <a class="card-link" href="{url_attr}" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>"""
+            cards_parts.append(card_html)
+
+        cards_html = "\n".join(cards_parts)
+        section_html = f"""    <section class="section" id="sec-{anchor}">
+      <div class="section-header">
+        <div class="section-dot" style="background:{color}"></div>
+        <h2>{esc_html(group_name)}</h2>
+        <span class="section-count">{count} 条</span>
+      </div>
+      <div class="card-grid">
+{cards_html}
+      </div>
+    </section>"""
+        sections_parts.append(section_html)
+
+    sections_html = "\n".join(sections_parts)
 
     display_date = build_time.strftime("%Y-%m-%d %H:%M")
     wd = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"][build_time.weekday()]
+    date_str = f"{display_date} · {wd}"
 
-    html = f"""<!DOCTYPE html>
+    # CSS - 普通字符串，花括号不需要转义
+    css = """    :root {
+      --hero-from: #ff5e3a;
+      --hero-mid: #f73b4a;
+      --hero-to: #c0392b;
+      --accent: #ff6b35;
+      --accent-dark: #e0552b;
+      --bg: #faf8f6;
+      --card-bg: #ffffff;
+      --card-border: #ede8e2;
+      --text: #2c2c2c;
+      --text-secondary: #6b6b6b;
+      --text-muted: #999999;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 40%, var(--hero-to) 100%);
+      color: #fff; padding: 56px 24px 48px; text-align: center;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(255,200,120,.12) 0%, transparent 50%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block; background: rgba(255,255,255,.2);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.25); border-radius: 100px;
+      padding: 4px 16px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px;
+    }
+    .hero h1 { font-size: clamp(28px,5vw,44px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero-sub { font-size: 16px; opacity: 0.85; margin-bottom: 24px; }
+    .hero-stats { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .hero-stat {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(255,255,255,.15); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      border-radius: 12px; padding: 12px 20px; min-width: 80px;
+    }
+    .hero-stat-num { font-size: 28px; font-weight: 800; line-height: 1.2; }
+    .hero-stat-lbl { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .nav-wrap {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border); padding: 0 16px;
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 4px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-link {
+      flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 100px; font-size: 13.5px; font-weight: 600;
+      color: var(--text-secondary); text-decoration: none; transition: 0.3s; white-space: nowrap; border: 1px solid transparent;
+    }
+    .nav-link:hover { background: #f5f0eb; color: var(--accent-dark); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .nav-cnt { font-size: 11px; opacity: 0.6; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 48px; }
+    .section { margin-bottom: 48px; scroll-margin-top: 72px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--card-border); }
+    .section-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; transform: rotate(45deg); }
+    .section h2 { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .section-count { font-size: 14px; color: var(--text-muted); margin-left: auto; }
+    .section-empty { text-align: center; padding: 32px 16px; color: var(--text-muted); background: var(--card-bg); border-radius: 16px; border: 1px dashed var(--card-border); }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 16px; }
+    .card {
+      position: relative; background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 20px 20px 16px;
+      transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      display: flex; flex-direction: column; opacity: 0; transform: translateY(24px);
+    }
+    .card.revealed { opacity: 1; transform: translateY(0); }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.07); transform: translateY(-2px); }
+    .card.revealed:hover { transform: translateY(-2px); }
+    .card-num {
+      position: absolute; top: -10px; left: 16px; background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(255,107,53,.35);
+    }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; margin-top: 6px; }
+    .card-title { font-size: 15px; font-weight: 700; line-height: 1.5; color: var(--text); flex: 1; }
+    .card-source { flex-shrink: 0; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+    .source-x { background: #f0f0f0; color: #555; }
+    .source-blog { background: #e8f4fd; color: #1a73e8; }
+    .source-wechat { background: #e8f8e8; color: #2e7d32; }
+    .source-media { background: #fff3e0; color: #e65100; }
+    .source-hn { background: #fce4ec; color: #c62828; }
+    .source-gh { background: #f3e5f5; color: #6a1b9a; }
+    .score-badge {
+      font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px;
+    }
+    .score-high { background: #e8f8e8; color: #2e7d32; }
+    .score-mid { background: #fff3e0; color: #e65100; }
+    .score-low { background: #fce4ec; color: #c62828; }
+    .card-footer { display: flex; align-items: center; gap: 12px; margin-top: auto; flex-wrap: wrap; }
+    .card-time { font-size: 12px; color: var(--text-muted); }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;
+      color: var(--accent); text-decoration: none; padding: 6px 14px; border-radius: 100px;
+      background: rgba(255,107,53,.08); transition: 0.3s;
+    }
+    .card-link:hover { background: rgba(255,107,53,.16); color: var(--accent-dark); }
+    .card-link svg { width: 14px; height: 14px; }
+    .footer { text-align: center; padding: 32px 16px 40px; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 13px; max-width: 1100px; margin: 0 auto; }
+    .footer strong { color: var(--text-secondary); }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .quick-top {
+      position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 20px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.1); opacity: 0; transform: translateY(12px);
+      pointer-events: none; transition: 0.3s; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quick-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .quick-top:hover { background: var(--accent-dark); }
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 36px; }
+      .hero-stats { gap: 12px; }
+      .hero-stat { padding: 10px 14px; min-width: 64px; }
+      .hero-stat-num { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .section h2 { font-size: 17px; }
+      .nav-link { padding: 6px 12px; font-size: 12px; }
+    }"""
+
+    # JavaScript - 需要转义 { 和 } 为 {{ 和 }}
+    js = """    // 滚动揭示动画
+    const cards = document.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('revealed'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    cards.forEach(c => observer.observe(c));
+
+    // 回到顶部
+    const quickTop = document.getElementById('quickTop');
+    window.addEventListener('scroll', () => {
+      quickTop.classList.toggle('visible', window.scrollY > 400);
+    });
+    quickTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // 导航高亮
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 100) {
+          current = sec.id;
+        }
+      });
+      navLinks.forEach(a => {
+        const isActive = a.getAttribute('href') === '#' + current;
+        a.style.background = isActive ? 'rgba(255,107,53,.1)' : '';
+        a.style.color = isActive ? 'var(--accent-dark)' : '';
+      });
+    });"""
+
+    # 构建完整的 HTML
+    html = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>~/trending</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<title>当日热点 — {date_str}</title>
 <style>
-  *, *::before, *::after {{ margin: 0; padding: 0; box-sizing: border-box; }}
-
-  :root {{
-    --bg: oklch(0.14 0.01 60);
-    --surface: oklch(0.18 0.01 60);
-    --surface-hover: oklch(0.22 0.01 60);
-    --accent: oklch(0.72 0.17 45);
-    --accent-dim: oklch(0.55 0.12 45);
-    --text-primary: oklch(0.88 0.01 80);
-    --text-secondary: oklch(0.55 0.02 80);
-    --text-tertiary: oklch(0.38 0.02 80);
-    --border: oklch(0.25 0.01 60);
-    --mono: "Fira Code", "Cascadia Code", "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
-    --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
-    --radius: 2px;
-    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  }}
-
-  html, body {{
-    height: 100%;
-    background: var(--bg);
-    color: var(--text-primary);
-    font-family: var(--mono);
-    font-weight: 400;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }}
-
-  body::before {{
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 60px 60px;
-    background-position: center center;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 0;
-  }}
-
-  .terminal {{
-    position: relative;
-    z-index: 1;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-  }}
-
-  .viewport {{
-    width: 100%;
-    max-width: 800px;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-  }}
-
-  .header {{
-    position: relative;
-    padding-top: 2rem;
-  }}
-
-  .prompt-line {{
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: clamp(0.8rem, 1.4vw, 0.9rem);
-    color: var(--text-secondary);
-    margin-bottom: 1.5rem;
-  }}
-
-  .prompt-arrow {{ color: var(--accent); font-weight: 600; }}
-  .cmd {{ color: var(--accent); font-weight: 500; }}
-
-  .cursor {{
-    display: inline-block;
-    width: 0.55em;
-    height: 1.15em;
-    background: var(--accent);
-    margin-left: 0.1em;
-    vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
-  }}
-
-  @keyframes blink {{
-    0%, 100% {{ opacity: 1; }}
-    50% {{ opacity: 0; }}
-  }}
-
-  .hostname {{
-    font-size: clamp(2.4rem, 6vw, 4.5rem);
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-    line-height: 1.15;
-    margin-bottom: 0.6rem;
-  }}
-
-  .hostname .tilde {{ color: var(--accent); font-weight: 400; }}
-
-  .tagline {{
-    font-family: var(--sans);
-    font-size: clamp(0.85rem, 1.3vw, 0.95rem);
-    color: var(--text-tertiary);
-    font-weight: 300;
-    letter-spacing: 0.01em;
-  }}
-
-  .stats {{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }}
-
-  .stat {{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.8rem 1.2rem;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-  }}
-
-  .stat strong {{
-    color: var(--accent);
-    font-weight: 600;
-  }}
-
-  .divider {{
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent) 15%, var(--accent) 85%, transparent);
-    opacity: 0.3;
-  }}
-
-  .section-label {{
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--text-tertiary);
-    margin-bottom: 0.5rem;
-  }}
-
-  .groups {{
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-  }}
-
-  .group-header {{
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    margin-bottom: 1rem;
-  }}
-
-  .group-dot {{
-    width: 8px;
-    height: 8px;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 6px var(--accent-dim);
-  }}
-
-  .group-title {{
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: var(--text-primary);
-  }}
-
-  .group-count {{
-    margin-left: auto;
-    font-size: 0.75rem;
-    color: var(--text-tertiary);
-  }}
-
-  .group-cards {{
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-  }}
-
-  .link-card {{
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    padding: 1.2rem 1.5rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s var(--ease-out-quart);
-    position: relative;
-    overflow: hidden;
-  }}
-
-  .link-card::before {{
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--accent);
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform 0.3s var(--ease-out-expo);
-  }}
-
-  .link-card:hover {{
-    background: var(--surface-hover);
-    border-color: oklch(0.35 0.01 60);
-    transform: translateX(4px);
-  }}
-
-  .link-card:hover::before {{ transform: scaleY(1); }}
-
-  .link-icon {{
-    font-size: 1.4rem;
-    line-height: 1;
-    color: var(--accent);
-    flex-shrink: 0;
-    width: 2.5rem;
-    text-align: center;
-  }}
-
-  .link-info {{
-    flex: 1;
-    min-width: 0;
-  }}
-
-  .link-title {{
-    font-size: clamp(0.9rem, 1.5vw, 1rem);
-    font-weight: 500;
-    color: var(--text-primary);
-    letter-spacing: 0.01em;
-    margin-bottom: 0.15rem;
-    transition: color 0.3s;
-  }}
-
-  .link-card:hover .link-title {{ color: var(--accent); }}
-
-  .link-desc {{
-    font-family: var(--sans);
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    font-weight: 300;
-    line-height: 1.4;
-  }}
-
-  .link-arrow {{
-    font-size: 0.8rem;
-    color: var(--text-tertiary);
-    transition: all 0.3s var(--ease-out-expo);
-    flex-shrink: 0;
-  }}
-
-  .link-card:hover .link-arrow {{
-    color: var(--accent);
-    transform: translateX(4px);
-  }}
-
-  .empty {{
-    font-size: 0.85rem;
-    color: var(--text-tertiary);
-    font-style: italic;
-    padding: 0.8rem 0;
-  }}
-
-  .footer {{
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.72rem;
-    color: var(--text-tertiary);
-    padding-bottom: 2rem;
-  }}
-
-  .footer .dim {{ opacity: 0.5; }}
-
-  .status-dot {{
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    margin-right: 0.35rem;
-    box-shadow: 0 0 6px var(--accent-dim);
-    animation: pulse 2s ease-in-out infinite;
-  }}
-
-  @keyframes pulse {{
-    0%, 100% {{ opacity: 0.5; }}
-    50% {{ opacity: 1; }}
-  }}
-
-  @media (max-width: 480px) {{
-    .terminal {{ padding: 1.5rem; }}
-    .viewport {{ gap: 2rem; }}
-    .link-card {{ padding: 1rem; gap: 0.8rem; }}
-    .link-icon {{ width: 2rem; font-size: 1.2rem; }}
-  }}
+{css}
 </style>
 </head>
 <body>
 
-<div class="terminal">
-  <div class="viewport">
-
-    <header class="header">
-      <div class="prompt-line">
-        <span class="prompt-arrow">➜</span>
-        <span class="cmd">trending</span>
-        <span class="cursor"></span>
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🔥 当日热点</div>
+    <h1>{total} 条热点资讯</h1>
+    <p class="hero-sub">全网热点雷达 · 关键词过滤 · 智能聚合</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">{total}</span>
+        <span class="hero-stat-lbl">命中条数</span>
       </div>
-      <h1 class="hostname"><span class="tilde">~/</span>trending</h1>
-      <p class="tagline">全网热点雷达 · 关键词过滤 · 智能聚合</p>
-      <div class="stats">
-        <div class="stat"><strong>{total}</strong> 条命中</div>
-        <div class="stat">{source_summary}</div>
-        <div class="stat">{display_date} · {wd}</div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">{len(grouped_items)}</span>
+        <span class="hero-stat-lbl">分组数</span>
       </div>
-    </header>
-
-    <div class="divider"></div>
-
-    <main class="groups">
-      <span class="section-label">// 分组</span>
-{sections_html}
-    </main>
-
-    <div class="divider"></div>
-
-    <footer class="footer">
-      <span><span class="status-dot"></span>在线</span>
-      <span class="dim">|</span>
-      <span>UTC+8</span>
-      <span class="dim">|</span>
-      <span>数据来源 NewsNow</span>
-      <span class="dim">|</span>
-      <span>last build <time>{display_date}</time></span>
-    </footer>
-
+      <div class="hero-stat">
+        <span class="hero-stat-num">{wd}</span>
+        <span class="hero-stat-lbl">{display_date}</span>
+      </div>
+    </div>
   </div>
-</div>
+</header>
+
+<nav class="nav-wrap" id="nav">
+  <div class="nav-inner">
+{nav_links}
+  </div>
+</nav>
+
+<main class="main" id="main">
+{sections_html}
+</main>
+
+<footer class="footer">
+  <p>数据来源 <strong>NewsNow</strong> · 最后生成 <time>{display_date}</time> · <a href="../index.html">返回首页</a></p>
+</footer>
+
+<button class="quick-top" id="quickTop" aria-label="回到顶部">↑</button>
+
+<script>
+{js}
+</script>
 
 </body>
-</html>
-"""
+</html>'''
+
     return html
 
 
@@ -862,7 +971,7 @@ def main():
     print(f"[INFO] Total raw items: {len(items)}")
 
     if config.get("filter", {}).get("dedup", True):
-        items = dedup(items)
+        items = dedup(items, config)
         print(f"[INFO] After dedup: {len(items)}")
 
     method = config.get("filter", {}).get("method", "keyword")
@@ -879,7 +988,7 @@ def main():
 
     grouped_items = {}
     for it in matched:
-        gname = it.get("group_name", "全部")
+        gname = it.get("group_name", "其他")
         grouped_items.setdefault(gname, []).append(it)
 
     now = datetime.now(timezone(timedelta(hours=8)))
@@ -895,7 +1004,7 @@ def main():
     INDEX_FILE.write_text(html, encoding="utf-8")
     print(f"[INFO] Written {INDEX_FILE} ({len(html)} bytes)")
 
-    date_str = now.strftime("%Y-%m-%d")
+    date_str = now.strftime("%Y-%m-%d-%H")
     archive_file = ARCHIVE_DIR / f"{date_str}.html"
     archive_file.write_text(html, encoding="utf-8")
     print(f"[INFO] Archived to {archive_file}")

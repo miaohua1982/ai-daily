@@ -497,6 +497,55 @@
     scanning.textContent = '扫描中...';
     group.appendChild(scanning);
 
+    // For trending: scan by hours (multiple archives per day)
+    if (prefix === 'trending') {
+      const hoursBack = daysBack * 24; // Scan last N days * 24 hours
+      const datetimes = [];
+      const now = new Date();
+
+      for (let i = 0; i < hoursBack; i++) {
+        const d = new Date(now);
+        d.setHours(d.getHours() - i);
+        datetimes.push({
+          y: d.getFullYear(),
+          m: d.getMonth() + 1,
+          d: d.getDate(),
+          h: d.getHours()
+        });
+      }
+
+      // Probe in parallel
+      const probes = datetimes.map(dt => {
+        const dateStr = fmtDate(dt.y, dt.m, dt.d);
+        const datetimeStr = dateStr + '-' + pad(dt.h);
+        const url = prefix + '-archive/' + datetimeStr + '.html';
+        return probeFile(url).then(exists => exists ? { dt, datetimeStr, url } : null);
+      });
+
+      const results = (await Promise.all(probes)).filter(Boolean).slice(0, 15); // Show last 15 archives
+      scanning.remove();
+
+      if (results.length === 0) {
+        const empty = document.createElement('span');
+        empty.className = 'archive-empty';
+        empty.textContent = '暂无归档';
+        group.appendChild(empty);
+        return;
+      }
+
+      results.forEach(r => {
+        const wd = weekdayCN(r.dt.y, r.dt.m, r.dt.d);
+        const displayStr = r.dt.y + '-' + pad(r.dt.m) + '-' + pad(r.dt.d) + ' ' + pad(r.dt.h) + ':00 周' + wd;
+        const a = document.createElement('a');
+        a.className = 'archive-link';
+        a.href = r.url;
+        a.textContent = displayStr;
+        group.appendChild(a);
+      });
+      return;
+    }
+
+    // For news and papers: scan by days (one archive per day)
     // Build date list
     const dates = [];
     const today = new Date();
@@ -540,7 +589,7 @@
 
   scanArchive('news', '📰 AI 日报', 30);
   scanArchive('papers', '📄 AI 论文', 30);
-  scanArchive('trending', '📡 趋势雷达', 30);
+  scanArchive('trending', '🔥 当日热点', 7);
 
   // ── Keyboard ──
   document.querySelectorAll('.link-card').forEach(card => {

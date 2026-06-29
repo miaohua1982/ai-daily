@@ -6,36 +6,54 @@ newsnow:
   api_url: "https://newsnow.busiyi.world/api/s"
   # 自建 NewsNow 实例后，替换为：
   # api_url: "https://your-newsnow.example.com/api/s"
+
+  # source 分组：同一分组内做语义去重（不同 source 可能报道同一条新闻）
+  source_groups:
+    - name: 综合热榜
+      sources: [weibo, toutiao]
+    - name: 财经/金融
+      sources: [jin10, cls, wallstreetcn]
+    - name: 国际/深度新闻
+      sources: [cankaoxiaoxi, zaobao, thepaper]
+
   sources:
     # ── 综合热榜 ─────────────────────────────────────
     - id: weibo
       name: 微博热搜
       icon: "🔥"
+      group: 综合热榜
     - id: toutiao
       name: 今日头条
       icon: "📰"
+      group: 综合热榜
 
     # ── 财经 / 金融 ──────────────────────────────────
     - id: jin10
       name: 金十数据
       icon: "📊"
+      group: 财经/金融
     - id: cls
       name: 财联社
       icon: "📰"
+      group: 财经/金融
     - id: wallstreetcn
       name: 华尔街见闻
       icon: "💹"
+      group: 财经/金融
 
     # ── 国际 / 深度新闻 ─────────────────────────────
     - id: cankaoxiaoxi
       name: 参考消息
       icon: "🌏"
+      group: 国际/深度新闻
     - id: zaobao
       name: 联合早报
       icon: "🗞️"
+      group: 国际/深度新闻
     - id: thepaper
       name: 澎湃新闻
       icon: "📝"
+      group: 国际/深度新闻
 
 filter:
   # keyword | ai | both
@@ -44,6 +62,22 @@ filter:
   # both:    先用关键词初筛，再经 AI 打分过滤
   method: ai
   dedup: true
+
+  # 语义去重：对同一分组内不同 source 的条目做 embedding 相似度去重
+  # 需要 OpenAI 兼容的 embedding API（DeepSeek 不支持 embedding，需单独配置）
+  # 默认关闭，需要时设置 enabled: true 并填写 embedding API 信息
+  semantic_dedup:
+    enabled: true
+    # 读取 API Key 的环境变量名（可与 ai.api_key_env 相同，但该服务需支持 embedding）
+    api_key_env: "EMBEDDING_API_KEY"
+    # OpenAI 兼容的 embedding API 地址
+    base_url: "https://llm-860ckp050tycaw8n.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+    # embedding 模型名
+    model: "text-embedding-v4"
+    # 余弦相似度阈值（0.0-1.0），≥ 此值视为重复
+    threshold: 0.85
+    # 单次请求最大文本数（阿里 Qwen embedding 限制为 10 条）
+    batch_size: 10
 
 keywords:
   # 关键词组，标题命中任一词即被归入该组
@@ -185,10 +219,10 @@ ai:
   batch_size: 30
   interests: |
     我关注以下领域的重要新闻：
-    1. AI 大模型与产品：OpenAI、ChatGPT、Claude、DeepSeek、Qwen、Kimi、豆包等模型的能力演进与产品发布。
-    2. 智能汽车：比亚迪、特斯拉、小米汽车、自动驾驶、智驾技术、FSD。
-    3. 机器人与具身智能：宇树、智元、人形机器人。
-    4. 消费电子：iPhone、华为、小米、Apple、Vision Pro 等重要发布。
-    5. 财经资讯：GDP、一二三产、就业、统计数据、出口、进口、CPI、PPI、股市、汇率、大宗商品等重要经济数据和政策。
-    6. 国际局势：中美贸易、欧洲经济、俄乌局势、美伊局势、日韩经济、地缘政治等重要国际动态。
+    1. 国际局势：中美贸易、欧洲经济、俄乌局势、美伊局势、日韩经济、地缘政治等重要国际动态。
+    2. 财经资讯：GDP、一二三产、就业、统计数据、出口、进口、CPI、PPI、股市、汇率、大宗商品等重要经济数据和政策。
+    3. AI 大模型与产品：OpenAI、ChatGPT、Claude、DeepSeek、Qwen、Kimi、豆包等模型的能力演进与产品发布。
+    4. 智能汽车：比亚迪、特斯拉、小米汽车、自动驾驶、智驾技术、FSD。
+    5. 机器人与具身智能：宇树、智元、人形机器人。
+
     请对每条新闻给出 0-1 的相关性评分，1 表示高度相关，0 表示完全不相关。
