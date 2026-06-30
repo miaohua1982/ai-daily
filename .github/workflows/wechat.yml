@@ -34,6 +34,7 @@ jobs:
         env:
           WECHAT_APPID: ${{ secrets.WECHAT_APPID }}
           WECHAT_APPSECRET: ${{ secrets.WECHAT_APPSECRET }}
+          EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
 
       - name: Notify success via Server酱
         if: success()
