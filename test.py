@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-Test script for generate_wechat.py and generate_trending.py
-Tests capabilities locally:
-  1. Cover image generation  → craft/cover.png
-  2. WeChat-compatible HTML  → craft/wechat_preview.html
-  3. Trending Radar config / filtering / HTML  → craft/trending_preview.html
+Test script for ai-daily pipelines (news / papers / trending).
+Tests all step functions except git_commit, importing from the three generators.
+All output goes to the craft/ directory (excluded from git).
 
-All output goes to the craft/ folder (excluded from git).
-No WeChat API calls are made; no real credentials are needed.
+Usage:
+  python test.py          # 默认使用 stub 数据（快速）
+  python test.py --live   # 尋试真实 API（trending 可能很慢）
 """
 
 import sys
@@ -18,26 +17,40 @@ from datetime import datetime, timezone, timedelta
 ROOT = Path(__file__).parent.resolve()
 CRAFT_DIR = ROOT / "craft"
 CRAFT_DIR.mkdir(exist_ok=True)
-
-# Add project root to import path
 sys.path.insert(0, str(ROOT))
 
-# ── Import from generate_wechat ──────────────────────────────────
-from generate_wechat import (
-    generate_cover,
-    build_wechat_html,
-    fetch_news,
-    fetch_papers,
-    _format_date_cn,
-)
+LIVE = "--live" in sys.argv
 
-# ── Import from generate_trending ─────────────────────────────────
-from generate_trending import (
-    load_yaml,
-    keyword_filter,
-    dedup,
-    build_html,
+# ── Import step functions ───────────────────────────────────────
+from generate_daily import (
+    fetch_data as news_fetch,
+    dedup_data as news_dedup,
+    generate_html as news_html,
 )
+import generate_daily as gd
+
+from generate_papers import (
+    fetch_data as papers_fetch,
+    dedup_data as papers_dedup,
+    generate_html as papers_html,
+)
+import generate_papers as gp
+
+from generate_trending import (
+    fetch_data as trending_fetch,
+    dedup_data as trending_dedup,
+    filter_data as trending_filter,
+    generate_html as trending_html,
+)
+import generate_trending as gt
+
+from utils import load_config, write_files
+
+# ── Config paths ────────────────────────────────────────────────
+NEWS_CONFIG = ROOT / "news_config.yaml"
+PAPERS_CONFIG = ROOT / "papers_config.yaml"
+TRENDING_CONFIG = ROOT / "trending_config.yaml"
+
 
 # ── Helpers ─────────────────────────────────────────────────────
 def header(title: str) -> None:
@@ -54,333 +67,162 @@ def fail(msg: str) -> None:
     print(f"  ✗  {msg}", file=sys.stderr)
 
 
-# ── Test 1: Cover image generation ──────────────────────────────
-def test_cover_image() -> bool:
-    header("TEST 1 — Cover image generation")
+# ── Monkey-patch helper ─────────────────────────────────────────
+class PatchPaths:
+    """Temporarily redirect a module's INDEX_FILE and ARCHIVE_DIR to craft/ subdirectory."""
 
-    bj = datetime.now(timezone(timedelta(hours=8)))
-    date_str = bj.strftime("%Y-%m-%d")
-    news_count = 10
-    papers_count = 10
+    def __init__(self, module, sub_dir: str):
+        self.module = module
+        self.dest = CRAFT_DIR / sub_dir
+        self.old_index = module.INDEX_FILE
+        self.old_archive = module.ARCHIVE_DIR
 
-    try:
-        cover_bytes = generate_cover(date_str, news_count, papers_count)
-    except Exception as e:
-        fail(f"generate_cover() raised: {e}")
-        return False
+    def __enter__(self):
+        self.dest.mkdir(parents=True, exist_ok=True)
+        self.module.INDEX_FILE = self.dest / self.old_index.name
+        self.module.ARCHIVE_DIR = self.dest / self.old_archive.name
+        return self
 
-    if not cover_bytes:
-        fail("generate_cover() returned empty bytes")
-        return False
-
-    out_path = CRAFT_DIR / "cover.png"
-    out_path.write_bytes(cover_bytes)
-
-    ok(f"Cover generated: {len(cover_bytes):,} bytes")
-    ok(f"Saved to:        {out_path}")
-
-    # Basic PNG signature check
-    if cover_bytes[:4] == b"\x89PNG":
-        ok("PNG signature valid ✓")
-    else:
-        fail("Output is not a valid PNG file")
-        return False
-
-    return True
+    def __exit__(self, *args):
+        self.module.INDEX_FILE = self.old_index
+        self.module.ARCHIVE_DIR = self.old_archive
 
 
-# ── Test 2: WeChat HTML generation ──────────────────────────────
-def test_wechat_html() -> bool:
-    header("TEST 2 — WeChat-compatible HTML generation")
-
-    bj = datetime.now(timezone(timedelta(hours=8)))
-    if bj.hour < 5:
-        bj -= timedelta(days=1)
-    date_str = bj.strftime("%Y-%m-%d")
-
-    # 2a. Fetch live data from API
-    print(f"\n  [*] Fetching news from aihot API...")
-    try:
-        news = fetch_news()
-        ok(f"Fetched {len(news)} news items")
-    except Exception as e:
-        fail(f"fetch_news() raised: {e}")
-        news = []
-
-    print(f"\n  [*] Fetching papers from aihot API...")
-    try:
-        papers = fetch_papers()
-        ok(f"Fetched {len(papers)} papers")
-    except Exception as e:
-        fail(f"fetch_papers() raised: {e}")
-        papers = []
-
-    if len(news) == 0 and len(papers) == 0:
-        print("  [!] No content from API (network issue or off-peak hours)")
-        print("      Using stub data for HTML generation test...")
-        news = _stub_news()
-        papers = _stub_papers()
-
-    # 2b. Build WeChat HTML
-    repo_url = "https://github.com/miaohua1982/ai-daily"
-    try:
-        html_content = build_wechat_html(news, papers, date_str, repo_url)
-    except Exception as e:
-        fail(f"build_wechat_html() raised: {e}")
-        return False
-
-    if not html_content or len(html_content) < 200:
-        fail(f"HTML too short ({len(html_content)} chars) — likely a build failure")
-        return False
-
-    ok(f"HTML content built: {len(html_content):,} chars")
-
-    # 2c. Wrap in a viewable full HTML page (for browser preview)
-    display_date = _format_date_cn(date_str)
-    preview_html = _wrap_preview(html_content, display_date)
-
-    out_path = CRAFT_DIR / "wechat_preview.html"
-    out_path.write_text(preview_html, encoding="utf-8")
-    ok(f"Saved to:          {out_path}")
-
-    # 2d. Sanity checks
-    checks = [
-        ("headline section", "每日 AI 情报" in html_content),
-        ("news section header", "AI 热点资讯" in html_content or len(news) == 0),
-        ("papers section header", "AI 论文精选" in html_content or len(papers) == 0),
-        ("no <script> tags", "<script" not in html_content),
-        ("no external CSS", "<link" not in html_content),
-        ("inline styles present", "style=" in html_content),
-        ("footer/credit present", "ai-daily" in html_content),
-    ]
-
-    all_ok = True
-    for label, passed in checks:
-        if passed:
-            ok(f"Check [{label}]")
-        else:
-            fail(f"Check [{label}] FAILED")
-            all_ok = False
-
-    return all_ok
-
-
-# ── Stub data (used when API is unreachable) ─────────────────────
-def _stub_news() -> list[dict]:
-    return [
-        {
-            "title": "OpenAI 发布 GPT-5 Turbo，推理速度提升 3 倍",
-            "summary": "OpenAI 最新发布的 GPT-5 Turbo 在保持高质量输出的同时，推理延迟大幅下降。",
-            "sourceName": "TechCrunch",
-            "_section": "大模型",
-            "url": "https://example.com/1",
-        },
-        {
-            "title": "Google DeepMind 在蛋白质折叠领域再突破",
-            "summary": "AlphaFold 3 新版本已能预测 RNA 与蛋白质复合物的结构。",
-            "sourceName": "Nature",
-            "_section": "科学研究",
-            "url": "https://example.com/2",
-        },
-        {
-            "title": "Anthropic Claude 4 开放 API 公测",
-            "summary": "Claude 4 上下文窗口扩展至 200K tokens，编程任务得分超越同期竞品。",
-            "sourceName": "Anthropic Blog",
-            "_section": "产品发布",
-            "url": "https://example.com/3",
-        },
-    ]
-
-
-def _stub_papers() -> list[dict]:
-    return [
-        {
-            "title": "Scaling Laws for Neural Language Models",
-            "summary": "本文系统研究了语言模型性能随参数量、数据量、计算量变化的规律，提出了可指导大规模训练的缩放定律。",
-            "source": "arXiv",
-            "url": "https://arxiv.org/abs/2001.08361",
-            "publishedAt": "2024-06-20T00:00:00Z",
-        },
-        {
-            "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
-            "summary": "通过在少样本示例中加入思维链，可以显著提升大型语言模型在算术、符号推理等复杂任务上的表现。",
-            "source": "arXiv",
-            "url": "https://arxiv.org/abs/2201.11903",
-            "publishedAt": "2024-06-19T00:00:00Z",
-        },
-    ]
-
-
-# ── Trending Radar stub helpers ──────────────────────────────────
-def _stub_trending_config() -> dict:
-    """Minimal config that matches the real trending_config.yaml shape."""
-    return {
-        "newsnow": {
-            "api_url": "https://newsnow.busiyi.world/api/s",
-            "sources": [
-                {"id": "weibo", "name": "微博热搜", "icon": "🔥"},
-                {"id": "zhihu", "name": "知乎热榜", "icon": "💡"},
-            ],
-        },
-        "filter": {"method": "keyword", "dedup": True},
-        "keywords": {
-            "groups": [
-                {
-                    "name": "AI 大模型",
-                    "terms": ["OpenAI", "ChatGPT", "大模型", "AI"],
-                    "exclude": ["破解"],
-                },
-                {
-                    "name": "智能汽车",
-                    "terms": ["比亚迪", "特斯拉", "自动驾驶"],
-                },
-            ]
-        },
-        "ai": {"enabled": False},
+# ── Stub data (used when API is unreachable or --live not set) ───
+def _stub_news_data():
+    """Minimal news data matching aihot API response structure."""
+    date_str = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
+    data = {
+        "sections": [
+            {
+                "label": "模型发布/更新",
+                "items": [
+                    {"id": "n1", "title": "OpenAI 发布 GPT-5 Turbo，推理速度提升 3 倍",
+                     "summary": "推理延迟大幅下降", "sourceName": "TechCrunch",
+                     "sourceUrl": "https://example.com/1"},
+                    {"id": "n2", "title": "Claude 4 开放 API 公测",
+                     "summary": "上下文窗口扩展至 200K tokens", "sourceName": "Anthropic Blog",
+                     "sourceUrl": "https://example.com/2"},
+                ],
+            },
+            {
+                "label": "行业动态",
+                "items": [
+                    {"id": "n3", "title": "Google DeepMind 在蛋白质折叠领域再突破",
+                     "summary": "AlphaFold 3 新版本", "sourceName": "Nature",
+                     "url": "https://example.com/3"},
+                ],
+            },
+        ],
+        "windowEnd": datetime.now(timezone(timedelta(hours=8))).isoformat(),
     }
+    return data, date_str
 
 
-def _stub_trending_items() -> list[dict]:
+def _stub_papers_items():
+    """Minimal papers items matching aihot API response structure."""
+    date_str = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
     return [
-        {
-            "title": "OpenAI 发布 GPT-5，推理能力大幅提升",
-            "url": "https://example.com/openai-gpt5",
-            "source_id": "weibo",
-            "updatedTime": 1750992000000,
-        },
-        {
-            "title": "特斯拉 FSD 在中国开始推送",
-            "url": "https://example.com/tesla-fsd-china",
-            "source_id": "zhihu",
-            "updatedTime": 1750992000000,
-        },
-        {
-            "title": "某明星离婚登上热搜",
-            "url": "https://example.com/celebrity",
-            "source_id": "weibo",
-            "updatedTime": 1750992000000,
-        },
-        {
-            "title": "OpenAI 发布 GPT-5，推理能力大幅提升",
-            "url": "https://example.com/openai-gpt5#duplicate",
-            "source_id": "zhihu",
-            "updatedTime": 1750992000000,
-        },
+        {"title": "Scaling Laws for Neural Language Models",
+         "summary": "语言模型缩放定律研究", "source": "arXiv",
+         "url": "https://arxiv.org/abs/2001.08361",
+         "publishedAt": f"{date_str}T00:00:00Z",
+         "selected": True, "score": 9.5},
+        {"title": "Chain-of-Thought Prompting Elicits Reasoning",
+         "summary": "思维链提示方法", "source": "arXiv",
+         "url": "https://arxiv.org/abs/2201.11903",
+         "publishedAt": f"{date_str}T00:00:00Z",
+         "selected": True, "score": 8.0},
+        {"title": "Attention Is All You Need",
+         "summary": "Transformer 架构", "source": "arXiv",
+         "url": "https://arxiv.org/abs/1706.03762",
+         "publishedAt": f"{date_str}T00:00:00Z",
+         "selected": False, "score": 7.0},
+    ], date_str
+
+
+def _stub_trending_items():
+    """Minimal trending items matching NewsNow API response.
+    Titles are crafted to hit keyword groups in trending_config.yaml."""
+    return [
+        {"title": "OpenAI 发布 GPT-5，推理能力大幅提升",
+         "url": "https://example.com/openai-gpt5",
+         "source_id": "weibo", "updatedTime": 1750992000000,
+         "source_group": "综合热榜"},
+        {"title": "特斯拉 FSD 在中国开始推送",
+         "url": "https://example.com/tesla-fsd",
+         "source_id": "toutiao", "updatedTime": 1750992000000,
+         "source_group": "综合热榜"},
+        {"title": "比亚迪月销量再创新高",
+         "url": "https://example.com/byd-sales",
+         "source_id": "jin10", "updatedTime": 1750992000000,
+         "source_group": "财经/金融"},
+        {"title": "宇树机器人新版本发布",
+         "url": "https://example.com/unitree",
+         "source_id": "cls", "updatedTime": 1750992000000,
+         "source_group": "财经/金融"},
     ]
 
 
-# ── Test 3: Trending Radar config loading ─────────────────────────
-def test_trending_config() -> bool:
-    header("TEST 3 — Trending Radar config loading")
+# ── Test 1: News pipeline (fetch → dedup → html → write) ──────
+def test_news_pipeline() -> bool:
+    header("TEST 1 — News: fetch → dedup → html → write")
 
-    config_path = ROOT / "trending_config.yaml"
-    if not config_path.exists():
-        fail(f"Config file not found: {config_path}")
-        return False
+    config = load_config(NEWS_CONFIG)
 
+    # Step 1: Fetch
+    data, date_str = None, None
+    if LIVE:
+        try:
+            data, date_str = news_fetch(config=config)
+            ok(f"Step 1 Fetch (live): got data for {date_str}")
+        except Exception as e:
+            fail(f"Step 1 Fetch (live) failed: {e}")
+            data, date_str = _stub_news_data()
+            ok(f"  Fallback to stub data for {date_str}")
+    else:
+        data, date_str = _stub_news_data()
+        ok(f"Step 1 Fetch (stub): data for {date_str}")
+
+    sections = data.get("sections", [])
+    ok(f"  Raw sections: {len(sections)}")
+
+    # Step 2: Dedup
     try:
-        config = load_yaml(config_path)
+        items_by_cat = news_dedup(data, config)
+        total = sum(len(v) for v in items_by_cat.values())
+        ok(f"Step 2 Dedup: {total} items in {len(items_by_cat)} categories")
+        for cat, items in items_by_cat.items():
+            if items:
+                ok(f"    {cat}: {len(items)}")
     except Exception as e:
-        fail(f"load_yaml() raised: {e}")
+        fail(f"Step 2 Dedup failed: {e}")
         return False
 
-    required_keys = ["newsnow", "filter", "keywords"]
-    for key in required_keys:
-        if key not in config:
-            fail(f"Missing top-level key: {key}")
+    # Step 3: Generate HTML
+    try:
+        html = news_html(items_by_cat, data, date_str)
+        ok(f"Step 3 HTML: {len(html):,} chars")
+    except Exception as e:
+        fail(f"Step 3 HTML failed: {e}")
+        return False
+
+    # Step 4: Write files (redirected to craft/)
+    with PatchPaths(gd, "news"):
+        try:
+            write_files(html, date_str, gd.INDEX_FILE, gd.ARCHIVE_DIR)
+            ok(f"Step 4 Write: {gd.INDEX_FILE}")
+        except Exception as e:
+            fail(f"Step 4 Write failed: {e}")
             return False
 
-    ok("Config loaded successfully")
-    ok(f"Sources: {len(config['newsnow']['sources'])}")
-    ok(f"Keyword groups: {len(config['keywords']['groups'])}")
-
-    return True
-
-
-# ── Test 4: Trending Radar keyword filtering ──────────────────────
-def test_trending_keyword_filter() -> bool:
-    header("TEST 4 — Trending Radar keyword filtering")
-
-    config = _stub_trending_config()
-    items = _stub_trending_items()
-
-    try:
-        matched, unmatched = keyword_filter(items, config)
-    except Exception as e:
-        fail(f"keyword_filter() raised: {e}")
-        return False
-
-    ok(f"Matched {len(matched)} items")
-    ok(f"Unmatched {len(unmatched)} items")
-
-    group_names = {it.get("group_name") for it in matched}
-    if "AI 大模型" not in group_names:
-        fail("Expected 'AI 大模型' group in matched items")
-        return False
-    if "智能汽车" not in group_names:
-        fail("Expected '智能汽车' group in matched items")
-        return False
-
-    ok("Grouping correct: AI 大模型 / 智能汽车")
-
-    return True
-
-
-# ── Test 5: Trending Radar deduplication ─────────────────────────
-def test_trending_dedup() -> bool:
-    header("TEST 5 — Trending Radar deduplication")
-
-    items = _stub_trending_items()
-    try:
-        deduped = dedup(items)
-    except Exception as e:
-        fail(f"dedup() raised: {e}")
-        return False
-
-    ok(f"Before dedup: {len(items)}, after dedup: {len(deduped)}")
-
-    if len(deduped) >= len(items):
-        fail("Dedup did not remove duplicate URL")
-        return False
-
-    ok("Duplicate URL removed")
-    return True
-
-
-# ── Test 6: Trending Radar HTML generation ────────────────────────
-def test_trending_html() -> bool:
-    header("TEST 6 — Trending Radar HTML generation")
-
-    config = _stub_trending_config()
-    items = _stub_trending_items()
-    matched, _ = keyword_filter(items, config)
-    matched = dedup(matched)
-
-    grouped = {}
-    for it in matched:
-        gname = it.get("group_name", "全部")
-        grouped.setdefault(gname, []).append(it)
-
-    bj = datetime.now(timezone(timedelta(hours=8)))
-    try:
-        html = build_html(grouped, config, bj)
-    except Exception as e:
-        fail(f"build_html() raised: {e}")
-        return False
-
-    if not html or len(html) < 500:
-        fail(f"HTML too short ({len(html)} chars)")
-        return False
-
-    ok(f"HTML content built: {len(html):,} chars")
-
+    # Sanity checks on HTML content
     checks = [
-        ("title", "~/trending" in html),
-        ("group section", "AI 大模型" in html),
-        ("link card", 'class="link-card"' in html),
-        ("footer", "数据来源 NewsNow" in html),
+        ("date header", "年" in html or date_str[:4] in html),
+        ("section markup", "sec-" in html),
+        ("card markup", "card" in html),
+        ("nav links", "nav-link" in html),
     ]
-
     all_ok = True
     for label, passed in checks:
         if passed:
@@ -389,96 +231,210 @@ def test_trending_html() -> bool:
             fail(f"Check [{label}] FAILED")
             all_ok = False
 
-    # Save preview
-    preview_path = CRAFT_DIR / "trending_preview.html"
-    preview_path.write_text(html, encoding="utf-8")
-    ok(f"Saved preview to: {preview_path}")
+    # Verify output file
+    out_file = CRAFT_DIR / "news" / "daily_news.html"
+    if out_file.exists():
+        ok(f"File exists: {out_file} ({out_file.stat().st_size:,} bytes)")
+    else:
+        fail(f"File missing: {out_file}")
+        all_ok = False
 
     return all_ok
 
 
-# ── Preview wrapper ──────────────────────────────────────────────
-def _wrap_preview(wechat_html: str, display_date: str) -> str:
-    """Wrap WeChat content in a full HTML page for local browser preview."""
-    return f"""<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>微信草稿预览 — {display_date}</title>
-  <style>
-    body {{
-      background: #f5f5f5;
-      margin: 0;
-      padding: 20px;
-      font-family: -apple-system, "Helvetica Neue", sans-serif;
-    }}
-    .device {{
-      max-width: 390px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px rgba(0,0,0,.12);
-      overflow: hidden;
-    }}
-    .status-bar {{
-      height: 44px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      font-size: 13px;
-      color: #333;
-      border-bottom: 1px solid #eee;
-    }}
-    .wechat-content {{
-      padding: 0;
-      font-size: 15px;
-      color: #333;
-      line-height: 1.6;
-    }}
-    .preview-note {{
-      text-align: center;
-      padding: 10px;
-      font-size: 11px;
-      color: #bbb;
-      background: #fafafa;
-      border-top: 1px solid #eee;
-    }}
-  </style>
-</head>
-<body>
-  <div style="text-align:center;margin-bottom:16px;font-size:13px;color:#888">
-    ⬇️ 微信公众号文章预览（craft 本地预览，不会提交到 git）
-  </div>
-  <div class="device">
-    <div class="status-bar">
-      <span>9:41</span>
-      <span>📶 🔋</span>
-    </div>
-    <div class="wechat-content">
-{wechat_html}
-    </div>
-    <div class="preview-note">本文件由 test.py 生成 · 仅供本地预览</div>
-  </div>
-</body>
-</html>"""
+# ── Test 2: Papers pipeline (fetch → dedup → html → write) ────
+def test_papers_pipeline() -> bool:
+    header("TEST 2 — Papers: fetch → dedup → html → write")
+
+    config = load_config(PAPERS_CONFIG)
+
+    # Step 1: Fetch
+    items, date_str = None, None
+    if LIVE:
+        try:
+            items, date_str = papers_fetch(config=config)
+            ok(f"Step 1 Fetch (live): {len(items)} papers for {date_str}")
+        except Exception as e:
+            fail(f"Step 1 Fetch (live) failed: {e}")
+            items, date_str = _stub_papers_items()
+            ok(f"  Fallback to stub data: {len(items)} papers for {date_str}")
+    else:
+        items, date_str = _stub_papers_items()
+        ok(f"Step 1 Fetch (stub): {len(items)} papers for {date_str}")
+
+    if not items:
+        fail("No papers fetched")
+        return False
+
+    # Step 2: Dedup
+    try:
+        papers = papers_dedup(items, config)
+        ok(f"Step 2 Dedup: {len(papers)} papers after dedup (was {len(items)})")
+    except Exception as e:
+        fail(f"Step 2 Dedup failed: {e}")
+        return False
+
+    if not papers:
+        fail("No papers after dedup")
+        return False
+
+    # Step 3: Generate HTML
+    try:
+        html = papers_html(papers, date_str)
+        ok(f"Step 3 HTML: {len(html):,} chars")
+    except Exception as e:
+        fail(f"Step 3 HTML failed: {e}")
+        return False
+
+    # Step 4: Write files (redirected to craft/)
+    with PatchPaths(gp, "papers"):
+        try:
+            write_files(html, date_str, gp.INDEX_FILE, gp.ARCHIVE_DIR)
+            ok(f"Step 4 Write: {gp.INDEX_FILE}")
+        except Exception as e:
+            fail(f"Step 4 Write failed: {e}")
+            return False
+
+    # Sanity checks
+    checks = [
+        ("paper content", "论文" in html or "paper" in html.lower()),
+        ("timeline or nav", "timeline" in html or "nav" in html),
+        ("card or entry", "card" in html or "entry" in html),
+    ]
+    all_ok = True
+    for label, passed in checks:
+        if passed:
+            ok(f"Check [{label}]")
+        else:
+            fail(f"Check [{label}] FAILED")
+            all_ok = False
+
+    # Verify output file
+    out_file = CRAFT_DIR / "papers" / "papers.html"
+    if out_file.exists():
+        ok(f"File exists: {out_file} ({out_file.stat().st_size:,} bytes)")
+    else:
+        fail(f"File missing: {out_file}")
+        all_ok = False
+
+    return all_ok
+
+
+# ── Test 3: Trending pipeline (fetch → dedup → filter → html → write)
+def test_trending_pipeline() -> bool:
+    header("TEST 3 — Trending: fetch → dedup → filter → html → write")
+
+    config = load_config(TRENDING_CONFIG)
+    if not config:
+        fail("trending_config.yaml not found or empty")
+        return False
+
+    # 使用 stub 数据时，将 filter method 临时改为 keyword
+    # （避免依赖 DeepSeek API，让 keyword_filter 能匹配 stub 标题）
+    test_config = config.copy() if not LIVE else config
+    if not LIVE:
+        test_config.setdefault("filter", {})["method"] = "keyword"
+
+    # Step 1: Fetch
+    items = None
+    if LIVE:
+        try:
+            items = trending_fetch(config)
+            ok(f"Step 1 Fetch (live): {len(items)} raw items")
+        except Exception as e:
+            fail(f"Step 1 Fetch (live) failed: {e}")
+            items = _stub_trending_items()
+            ok(f"  Fallback to stub data: {len(items)} items")
+    else:
+        items = _stub_trending_items()
+        ok(f"Step 1 Fetch (stub): {len(items)} items")
+
+    if not items:
+        fail("No items fetched")
+        return False
+
+    # Step 2: Dedup
+    try:
+        deduped = trending_dedup(items, test_config)
+        ok(f"Step 2 Dedup: {len(deduped)} items (was {len(items)})")
+    except Exception as e:
+        fail(f"Step 2 Dedup failed: {e}")
+        return False
+
+    if not deduped:
+        fail("No items after dedup")
+        return False
+
+    # Step 3: Filter (keyword or AI, per test_config)
+    try:
+        grouped = trending_filter(deduped, test_config)
+        total = sum(len(v) for v in grouped.values())
+        ok(f"Step 3 Filter: {total} items in {len(grouped)} groups")
+        for gname, gitems in grouped.items():
+            ok(f"    {gname}: {len(gitems)}")
+    except Exception as e:
+        fail(f"Step 3 Filter failed: {e}")
+        return False
+
+    if not grouped:
+        fail("No groups after filtering")
+        return False
+
+    # Step 4: Generate HTML
+    build_time = datetime.now(timezone(timedelta(hours=8)))
+    try:
+        html = trending_html(grouped, test_config, build_time)
+        ok(f"Step 4 HTML: {len(html):,} chars")
+    except Exception as e:
+        fail(f"Step 4 HTML failed: {e}")
+        return False
+
+    # Step 5: Write files (redirected to craft/)
+    date_str = build_time.strftime("%Y-%m-%d-%H")
+    with PatchPaths(gt, "trending"):
+        try:
+            write_files(html, date_str, gt.INDEX_FILE, gt.ARCHIVE_DIR)
+            ok(f"Step 5 Write: {gt.INDEX_FILE}")
+        except Exception as e:
+            fail(f"Step 5 Write failed: {e}")
+            return False
+
+    # Sanity checks
+    checks = [
+        ("trending/radar title", "trending" in html.lower() or "雷达" in html),
+        ("group section", "sec-" in html),
+        ("card markup", "card" in html or "link-card" in html),
+        ("nav links", "nav-link" in html),
+    ]
+    all_ok = True
+    for label, passed in checks:
+        if passed:
+            ok(f"Check [{label}]")
+        else:
+            fail(f"Check [{label}] FAILED")
+            all_ok = False
+
+    # Verify output file
+    out_file = CRAFT_DIR / "trending" / "trending.html"
+    if out_file.exists():
+        ok(f"File exists: {out_file} ({out_file.stat().st_size:,} bytes)")
+    else:
+        fail(f"File missing: {out_file}")
+        all_ok = False
+
+    return all_ok
 
 
 # ── Runner ───────────────────────────────────────────────────────
 def main() -> int:
-    print(f"\nai-daily / generate_wechat.py — local test suite")
-    print(f"Output directory: {CRAFT_DIR}\n")
+    mode = "LIVE" if LIVE else "STUB"
+    print(f"\nai-daily — pipeline test suite (news / papers / trending)")
+    print(f"Mode: {mode}  |  Output: {CRAFT_DIR}\n")
 
     results = {}
-
-    results["cover"] = test_cover_image()
-    results["html"] = test_wechat_html()
-    results["trending_config"] = test_trending_config()
-    results["trending_filter"] = test_trending_keyword_filter()
-    results["trending_dedup"] = test_trending_dedup()
-    results["trending_html"] = test_trending_html()
+    results["news"] = test_news_pipeline()
+    results["papers"] = test_papers_pipeline()
+    results["trending"] = test_trending_pipeline()
 
     # Summary
     header("SUMMARY")
@@ -489,8 +445,8 @@ def main() -> int:
         print(f"  {status}  {name}")
 
     print(f"\n  {passed}/{total} tests passed")
-    print(f"\n  Open craft/wechat_preview.html in a browser to inspect the WeChat layout.")
-    print(f"  Open craft/cover.png to inspect the cover image.\n")
+    if passed > 0:
+        print(f"\n  Open craft/ subfolders in a browser to inspect output pages.\n")
 
     return 0 if passed == total else 1
 

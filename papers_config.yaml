@@ -1,0 +1,21 @@
+# Papers 配置
+
+# 数据获取配置
+fetch:
+  # 单个 API 请求失败时的最大重试次数（默认 3）
+  max_retries: 3
+
+# 语义去重配置
+# 对同一论文在不同来源（arXiv、Hugging Face 等）重复出现的情况做 embedding 相似度去重
+semantic_dedup:
+  enabled: true
+  # 读取 API Key 的环境变量名
+  api_key_env: "EMBEDDING_API_KEY"
+  # OpenAI 兼容的 embedding API 地址
+  base_url: "https://llm-860ckp050tycaw8n.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+  # embedding 模型名
+  model: "text-embedding-v4"
+  # 余弦相似度阈值（0.0-1.0），≥ 此值视为重复
+  threshold: 0.80
+  # 单次请求最大文本数（阿里 Qwen embedding 限制为 10 条）
+  batch_size: 10

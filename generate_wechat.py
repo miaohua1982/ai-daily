@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
 WeChat Official Account Draft Publisher
-- Checks if daily_news.html and papers.html exist (gate condition)
-- Fetches content from aihot API and builds WeChat-compatible HTML
-- Creates a draft on WeChat Official Account platform
+- Fetches + dedup content via generate_daily / generate_papers step functions
+- Builds WeChat-compatible HTML and creates a draft on WeChat platform
 - Uses env vars: WECHAT_APPID, WECHAT_APPSECRET
-  
+
 Scheduled after daily (05:00) and papers (06:00) — Beijing time.
 """
 
@@ -17,15 +16,13 @@ import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from dotenv_helper import load_dot_env
+from utils import load_dot_env, load_config, UA
+from html_template import render_wechat_html
+import generate_daily as gd
+import generate_papers as gp
 
 # ── Configuration ──────────────────────────────────────────────
 
-UA = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-)
-AIHOT_BASE = "https://aihot.virxact.com/api/public"
 WECHAT_BASE = "https://api.weixin.qq.com"
 OUTPUT_DIR = Path(__file__).parent.resolve()
 
@@ -34,33 +31,15 @@ DAILY_FILE = OUTPUT_DIR / "daily_news.html"
 PAPERS_FILE = OUTPUT_DIR / "papers.html"
 
 # ── Load secrets ───────────────────────────────────────────────
-# Priority: environment variables (GitHub Actions) > .env file (local dev)
-
 _dotenv = load_dot_env(OUTPUT_DIR / ".env")
 
-APPID = os.environ.get("WECHAT_APPID") or _dotenv.get("WECHAT_APPID", "")
-APPSECRET = os.environ.get("WECHAT_APPSECRET") or _dotenv.get("WECHAT_APPSECRET", "")
-APPID = APPID.strip()
-APPSECRET = APPSECRET.strip()
+APPID = (os.environ.get("WECHAT_APPID") or _dotenv.get("WECHAT_APPID", "")).strip()
+APPSECRET = (os.environ.get("WECHAT_APPSECRET") or _dotenv.get("WECHAT_APPSECRET", "")).strip()
 
 MAX_NEWS = 10
 MAX_PAPERS = 10
 
-# ── Helpers ────────────────────────────────────────────────────
-
-def api_get(path: str) -> dict | None:
-    url = f"{AIHOT_BASE}{path}"
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            return json.loads(resp.read().decode())
-    except urllib.error.HTTPError as e:
-        print(f"[WARN] HTTP {e.code} for {path}", file=sys.stderr)
-        return None
-    except Exception as e:
-        print(f"[WARN] Failed to fetch {path}: {e}", file=sys.stderr)
-        return None
-
+# ── WeChat API helpers ─────────────────────────────────────────
 
 def wechat_get(path: str) -> dict | None:
     url = f"{WECHAT_BASE}{path}"
@@ -96,240 +75,52 @@ def wechat_post(path: str, payload, content_type: str = "application/json"):
         return None
 
 
-def esc(s: str) -> str:
-    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+# ── Content fetching (reuses generate_daily / generate_papers) ──
 
+def fetch_news() -> tuple[list[dict], str]:
+    """Fetch + dedup news via generate_daily step functions. Returns (items, date_str)."""
+    try:
+        config = load_config(gd.CONFIG_FILE)
+        data, date_str = gd.fetch_data(config=config)
+    except Exception as e:
+        print(f"[WARN] fetch_news failed: {e}", file=sys.stderr)
+        return [], ""
 
-# ── Content fetching ───────────────────────────────────────────
-
-def fetch_news() -> list[dict]:
-    """Fetch today's AI news via the daily endpoint."""
-    bj = datetime.now(timezone(timedelta(hours=8)))
-    if bj.hour < 5:
-        bj = bj - timedelta(days=1)
-    date_str = bj.strftime("%Y-%m-%d")
-
-    data = api_get(f"/daily/{date_str}")
     if not data or "sections" not in data:
-        print(f"[WARN] No daily report for {date_str}, trying fallback...")
-        dailies = api_get("/dailies?take=3")
-        if dailies and dailies.get("items"):
-            latest = dailies["items"][0]["date"]
-            data = api_get(f"/daily/{latest}")
-            date_str = latest
-        if not data:
-            return []
+        return [], date_str
 
-    items: list[dict] = []
-    for sec in data.get("sections", []):
-        for it in sec.get("items", []):
-            if not it.get("title"):
-                continue
-            it["_section"] = sec.get("label", "")
-            items.append(it)
+    # Use generate_daily's dedup (URL + semantic)
+    items_by_cat = gd.dedup_data(data, config)
 
-    # deduplicate by title prefix
-    seen = set()
-    deduped = []
-    for it in items:
-        key = it["title"].strip()[:40]
-        if key not in seen:
-            seen.add(key)
-            deduped.append(it)
-    return deduped[:MAX_NEWS]
+    # Flatten items_by_cat → list with _section labels, preserving CATEGORY_ORDER
+    news_items = []
+    for cat in gd.CATEGORY_ORDER:
+        label = gd.CATEGORY_LABELS.get(cat, cat)
+        for it in items_by_cat.get(cat, []):
+            it["_section"] = label
+            news_items.append(it)
+
+    print(f"[INFO] News: {len(news_items)} items after dedup")
+    return news_items[:MAX_NEWS], date_str
 
 
-def fetch_papers() -> list[dict]:
-    """Fetch recent AI papers via the public items endpoint.
-
-    Mirrors the proven pagination logic from generate_papers.py:
-    uses "items" (not "data") as the JSON key, respects hasNext /
-    nextCursor, and caps at remaining count.
-    """
-    since = (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    items: list[dict] = []
-    cursor = ""
-    remaining = 30
-
-    for _ in range(3):
-        url = f"/items?mode=all&category=paper&since={since}&take={min(remaining, 30)}"
-        if cursor:
-            url += f"&cursor={cursor}"
-        data = api_get(url)
-        if not data or "items" not in data:
-            break
-        batch = data.get("items", [])
-        items.extend(batch)
-        remaining -= len(batch)
-        if not data.get("hasNext") or remaining <= 0:
-            break
-        cursor = data.get("nextCursor", "")
-        if not cursor:
-            break
+def fetch_papers() -> tuple[list[dict], str]:
+    """Fetch + dedup papers via generate_papers step functions. Returns (papers, date_str)."""
+    try:
+        config = load_config(gp.CONFIG_FILE)
+        items, date_str = gp.fetch_data(config=config)
+    except Exception as e:
+        print(f"[WARN] fetch_papers failed: {e}", file=sys.stderr)
+        return [], ""
 
     if not items:
-        return []
+        return [], ""
 
-    # Sort & deduplicate
-    items.sort(key=lambda x: x.get("score", 0), reverse=True)
-    seen = set()
-    deduped = []
-    for it in items:
-        prefix = it.get("title", "").strip()[:40]
-        if prefix and prefix not in seen:
-            seen.add(prefix)
-            deduped.append(it)
-    deduped.sort(key=lambda x: x.get("publishedAt", ""), reverse=True)
-    return deduped[:MAX_PAPERS]
+    # Use generate_papers's dedup (URL + semantic + top selection)
+    papers = gp.dedup_data(items, config)
 
-
-# ── WeChat HTML builder ────────────────────────────────────────
-
-def build_wechat_html(
-    news: list[dict], papers: list[dict], date_str: str, repo_url: str
-) -> str:
-    display = _format_date_cn(date_str)
-
-    parts = [_HEAD_SECTION.format(display_date=display)]
-
-    # ── AI News ──
-    if news:
-        parts.append(_SECTION_NEWS_HEADER.format(count=len(news)))
-        for i, it in enumerate(news, 1):
-            parts.append(_build_news_item(i, it))
-
-    # ── AI Papers ──
-    if papers:
-        parts.append(_SECTION_PAPERS_HEADER.format(count=len(papers)))
-        for i, it in enumerate(papers, 1):
-            parts.append(_build_paper_item(i, it))
-
-    parts.append(_FOOT_SECTION.format(repo_url=repo_url))
-    return "\n".join(parts)
-
-
-def _format_date_cn(date_str: str) -> str:
-    try:
-        d = datetime.strptime(date_str, "%Y-%m-%d")
-        wd = ["一", "二", "三", "四", "五", "六", "日"][d.weekday()]
-        return f"{d.year}年{d.month}月{d.day}日 · 周{wd}"
-    except Exception:
-        return date_str
-
-
-def _badge_html(label: str, color: str) -> str:
-    return (
-        f'<span style="display:inline-block;background:{color}15;'
-        f'color:{color};padding:1px 8px;border-radius:2px;'
-        f'font-size:11px;line-height:18px">{esc(label)}</span>'
-    )
-
-
-def _build_news_item(i: int, it: dict) -> str:
-    title = esc(it.get("title", ""))
-    summary = esc((it.get("summary") or it.get("description") or ""))
-    source = esc(it.get("sourceName") or it.get("source") or "来源")
-    section = esc(it.get("_section", ""))
-    url = (it.get("sourceUrl") or it.get("url") or "").strip()
-    # Ensure URL has a scheme — WeChat requires absolute URLs
-    if url and not url.startswith(("http://", "https://")):
-        url = "https://" + url.lstrip("/")
-
-    html = _ITEM_TEMPLATE.format(
-        num=i,
-        title=title,
-        summary=summary,
-        source=source,
-    )
-    # Prepend section badge if available
-    if section and section not in ("未分类", ""):
-        badge = _badge_html(section, "#007AAA")
-        html = html.replace("{section_badge}", badge)
-    else:
-        html = html.replace("{section_badge}", "")
-
-    # Wrap in link if URL available
-    if url:
-        html = html.replace("{link_open}", f'<a href="{url}" style="text-decoration:none;color:inherit">')
-        html = html.replace("{link_close}", "</a>")
-    else:
-        html = html.replace("{link_open}", "").replace("{link_close}", "")
-    return html
-
-
-def _build_paper_item(i: int, it: dict) -> str:
-    title = esc(it.get("title", ""))
-    summary = esc((it.get("summary") or it.get("description") or ""))
-    source = esc(it.get("source") or "arXiv")
-    url = (it.get("url") or "").strip()
-    # Ensure URL has a scheme — WeChat requires absolute URLs
-    if url and not url.startswith(("http://", "https://")):
-        url = "https://" + url.lstrip("/")
-
-    html = _PAPER_TEMPLATE.format(
-        num=i, title=title, summary=summary, source=source
-    )
-    source_color = "#E05252" if "arxiv" in (source or "").lower() else "#007AAA"
-    badge = _badge_html(source, source_color)
-    html = html.replace("{source_badge}", badge)
-    if url:
-        html = html.replace("{link_open}", f'<a href="{url}" style="text-decoration:none;color:inherit">')
-        html = html.replace("{link_close}", "</a>")
-    else:
-        html = html.replace("{link_open}", "").replace("{link_close}", "")
-    return html
-
-
-# ── HTML Templates (WeChat-compatible, inline styles only) ─────
-
-_HEAD_SECTION = """\
-<section style="padding:8px 15px 0">
-  <p style="text-align:center;color:#888;font-size:14px;margin:10px 0 0;letter-spacing:1px">
-    📰 每日 AI 情报
-  </p>
-  <p style="text-align:center;color:#333;font-size:22px;font-weight:bold;margin:6px 0 0">
-    {display_date}
-  </p>
-</section>
-<section style="margin:20px 15px 10px;height:1px;background:#eee"></section>"""
-
-_SECTION_NEWS_HEADER = """\
-<section style="padding:5px 15px">
-  <h2 style="font-size:17px;color:#333;border-left:4px solid #ff6b35;padding-left:10px;margin:18px 0 12px">🔥 AI 热点资讯（{count}条）</h2>
-</section>"""
-
-_ITEM_TEMPLATE = """\
-{{link_open}}<section style="margin:0 15px 12px;padding:12px 14px;background:#faf8f6;border-radius:4px">
-  <p style="margin:0 0 6px;line-height:1.5;text-align:justify;text-justify:inter-ideograph">
-    <strong style="color:#ff6b35;font-size:14px">{num}.</strong>
-    <strong style="color:#222;font-size:14px">{title}</strong>
-  </p>
-  <p style="margin:0 0 8px;font-size:13px;color:#666;line-height:1.7;text-align:justify;text-justify:inter-ideograph;text-indent:2em">{summary}</p>
-  <p style="margin:0;font-size:12px;color:#999;line-height:1.5">{{section_badge}} <span style="margin-left:6px">来源：{source}</span></p>
-</section>{{link_close}}"""
-
-_SECTION_PAPERS_HEADER = """\
-<section style="padding:5px 15px">
-  <h2 style="font-size:17px;color:#333;border-left:4px solid #E05252;padding-left:10px;margin:22px 0 12px">📄 AI 论文精选（{count}篇）</h2>
-</section>"""
-
-_PAPER_TEMPLATE = """\
-{{link_open}}<section style="margin:0 15px 12px;padding:12px 14px;background:#faf8f6;border-radius:4px">
-  <p style="margin:0 0 6px;line-height:1.5;text-align:justify;text-justify:inter-ideograph">
-    <strong style="color:#E05252;font-size:14px">{num}.</strong>
-    <strong style="color:#222;font-size:14px">{title}</strong>
-  </p>
-  <p style="margin:0 0 8px;font-size:13px;color:#666;line-height:1.7;text-align:justify;text-justify:inter-ideograph;text-indent:2em">{summary}</p>
-  <p style="margin:0;font-size:12px;color:#999;line-height:1.5">{{source_badge}}</p>
-</section>{{link_close}}"""
-
-_FOOT_SECTION = """\
-<section style="margin:25px 15px 20px;height:1px;background:#eee"></section>
-<section style="padding:0 15px 30px">
-  <p style="text-align:center;font-size:12px;color:#bbb;line-height:1.8">
-    由 <a href="{repo_url}" style="color:#576b95;text-decoration:none">ai-daily</a> 自动生成 · 仅供学习参考
-  </p>
-</section>"""
+    print(f"[INFO] Papers: {len(papers)} items after dedup")
+    return papers[:MAX_PAPERS], date_str
 
 
 # ── Cover image generation ─────────────────────────────────────
@@ -344,9 +135,6 @@ def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
 
     W, H = 900, 380
 
-    # ═══════════════════════════════════════════════════════════
-    # STEP 1 — Build the base image (background + decorations)
-    # ═══════════════════════════════════════════════════════════
     img = Image.new("RGB", (W, H), (244, 246, 250))
     draw = ImageDraw.Draw(img)
 
@@ -403,9 +191,7 @@ def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
     # 1g. Bottom accent bar
     draw.rectangle([0, H - 5, W, H], fill=(255, 107, 53))
 
-    # ═══════════════════════════════════════════════════════════
     # STEP 2 — Draw text overlay
-    # ═══════════════════════════════════════════════════════════
     try:
         font_title = _find_chinese_font(54)
         font_date = _find_chinese_font(26)
@@ -521,7 +307,6 @@ def _find_chinese_font(size: int):
 
 def _fallback_cover_bytes() -> bytes:
     """Generate a minimal PNG without Pillow."""
-    # 1x1 pixel placeholder — minimal valid PNG
     return (
         b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
         b"\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\x0cIDAT\x08\xd7c\xf8\xcf"
@@ -629,52 +414,52 @@ def main() -> int:
 
     print("[INFO] Gate files exist ✓ — proceeding to generate WeChat content")
 
-    # 3. Determine date
-    bj = datetime.now(timezone(timedelta(hours=8)))
-    if bj.hour < 5:
-        bj = bj - timedelta(days=1)
-    date_str = bj.strftime("%Y-%m-%d")
-    print(f"[INFO] Target date: {date_str}")
-
-    # 4. Fetch content
+    # 3. Fetch + dedup content via step functions
     print("[INFO] Fetching news...")
-    news = fetch_news()
-    print(f"[INFO] Fetching papers...")
-    papers = fetch_papers()
+    news, news_date = fetch_news()
+    print("[INFO] Fetching papers...")
+    papers, papers_date = fetch_papers()
 
     if not news and not papers:
         print("[SKIP] No content fetched — nothing to publish")
         return 0
 
-    print(f"[INFO]  News items: {len(news)},  Papers: {len(papers)}")
+    # Use news date as primary; fallback to papers date or local calculation
+    date_str = news_date or papers_date
+    if not date_str:
+        bj = datetime.now(timezone(timedelta(hours=8)))
+        if bj.hour < 5:
+            bj = bj - timedelta(days=1)
+        date_str = bj.strftime("%Y-%m-%d")
 
-    # 5. Get WeChat access token
+    print(f"[INFO] Target date: {date_str}, News: {len(news)}, Papers: {len(papers)}")
+
+    # 4. Get WeChat access token
     print("[INFO] Getting WeChat access token...")
     token = get_access_token()
     if not token:
         return 1
 
-    # 6. Generate cover image
+    # 5. Generate cover image
     print("[INFO] Generating cover image...")
     cover_bytes = generate_cover(date_str, len(news), len(papers))
 
-    # 7. Upload cover image
+    # 6. Upload cover image
     print("[INFO] Uploading cover image to WeChat...")
     thumb_media_id = upload_image(token, cover_bytes)
     if not thumb_media_id:
         print("[WARN] Cover upload failed, retrying with fallback...")
-        # retry with tiny fallback
         thumb_media_id = upload_image(token, _fallback_cover_bytes())
         if not thumb_media_id:
             print("[ERROR] Cannot create draft without cover image", file=sys.stderr)
             return 1
 
-    # 8. Build WeChat-compatible HTML
+    # 7. Build WeChat-compatible HTML
     repo_url = f"https://miaohua1982.github.io/ai-daily/"
-    content_html = build_wechat_html(news, papers, date_str, repo_url)
+    content_html = render_wechat_html(news, papers, date_str, repo_url)
 
-    # 9. Create draft
-    date_fmt = date_str = bj.strftime("%Y%m%d")
+    # 8. Create draft
+    date_fmt = date_str.replace("-", "")
     title = f"AI情报日报 | {date_fmt}"
     digest_parts = []
     if news:

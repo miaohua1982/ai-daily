@@ -23,8 +23,14 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
       - name: Generate papers archive
         run: python generate_papers.py
+        env:
+          # 如果启用语义去重，请在仓库 Settings -> Secrets -> Actions 中添加 EMBEDDING_API_KEY
+          EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
 
       - name: Commit and push
         run: |

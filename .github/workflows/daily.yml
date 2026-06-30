@@ -24,10 +24,12 @@ jobs:
           python-version: '3.13'
 
       - name: Install dependencies
-        run: pip install urllib3  # only needed if not using stdlib
+        run: pip install -r requirements.txt
 
       - name: Generate daily dashboard
         run: python generate_daily.py
+        env:
+          EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
 
       - name: Commit and push
         run: |
