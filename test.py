@@ -47,9 +47,9 @@ import generate_trending as gt
 from utils import load_config, write_files
 
 # ── Config paths ────────────────────────────────────────────────
-NEWS_CONFIG = ROOT / "news_config.yaml"
-PAPERS_CONFIG = ROOT / "papers_config.yaml"
-TRENDING_CONFIG = ROOT / "trending_config.yaml"
+NEWS_CONFIG = ROOT / "config" / "news_config.yaml"
+PAPERS_CONFIG = ROOT / "config" / "papers_config.yaml"
+TRENDING_CONFIG = ROOT / "config" / "trending_config.yaml"
 
 
 # ── Helpers ─────────────────────────────────────────────────────

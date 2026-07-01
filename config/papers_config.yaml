@@ -2,6 +2,8 @@
 
 # 数据获取配置
 fetch:
+  # AI HOT 公共 API 地址
+  api_base: "https://aihot.virxact.com/api/public"
   # 单个 API 请求失败时的最大重试次数（默认 3）
   max_retries: 3
 

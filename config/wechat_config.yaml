@@ -1,0 +1,26 @@
+# WeChat 公众号草稿发布配置
+
+# 微信公众号 API 地址
+wechat_base: "https://api.weixin.qq.com"
+
+# 站点地址（用于 HTML 中链接回源）
+repo_url: "https://miaohua1982.github.io/ai-daily/"
+
+# 草稿标题模板（{date} 替换为 YYYYMMDD 格式）
+title_template: "AI情报日报 | {date}"
+
+# 草稿摘要模板
+# {news_count} 和 {papers_count} 替换为对应条数
+digest_template: "今日 {news_count} 条AI热点 · {papers_count} 篇精选论文"
+digest_fallback: "每日AI情报汇总"
+
+# 作者名
+author: "ai-daily"
+
+# 内容截断上限
+max_news: 10
+max_papers: 10
+
+# 环境变量：从哪个环境变量读取微信 API 凭证
+appid_env: "WECHAT_APPID"
+appsecret_env: "WECHAT_APPSECRET"

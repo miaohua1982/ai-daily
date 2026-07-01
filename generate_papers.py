@@ -14,13 +14,12 @@ import urllib.parse
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from utils import load_dot_env, semantic_dedup, load_config, write_files, git_commit, api_get
-from html_template import render_papers_html, WEEKDAY_NAMES
+from utils.html_template import render_papers_html, WEEKDAY_NAMES
 
-API_BASE = "https://aihot.virxact.com/api/public"
 OUTPUT_DIR = Path(__file__).parent
 ARCHIVE_DIR = OUTPUT_DIR / "papers-archive"
 INDEX_FILE = OUTPUT_DIR / "papers.html"
-CONFIG_FILE = OUTPUT_DIR / "papers_config.yaml"
+CONFIG_FILE = OUTPUT_DIR / "config" / "papers_config.yaml"
 
 # Load secrets (env > .env file)
 _dot_env = load_dot_env(OUTPUT_DIR / ".env")
@@ -47,7 +46,8 @@ def fetch_data(target_date=None, config=None):
     """Step 1: 获取论文原始数据。返回 (items, date_str)。"""
     if config is None:
         config = load_config(CONFIG_FILE)
-    max_retries = config.get("fetch", {}).get("max_retries", 3)
+    api_base = config["fetch"]["api_base"]
+    max_retries = config["fetch"]["max_retries"]
 
     # 随机启动抖动：避免多实例同时请求
     startup_jitter = random.uniform(0, 1.5)
@@ -82,7 +82,7 @@ def fetch_data(target_date=None, config=None):
                "&take=" + str(min(remaining, 100)))
         if cursor:
             url += "&cursor=" + cursor
-        data = api_get(url, base_url=API_BASE, max_retries=max_retries)
+        data = api_get(url, base_url=api_base, max_retries=max_retries)
         if not data or "items" not in data:
             break
         items = data.get("items", [])

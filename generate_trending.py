@@ -18,7 +18,7 @@ import urllib.parse
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from utils import load_dot_env, semantic_dedup, load_config, write_files, git_commit, UA, esc_html, esc_attr
-from html_template import (
+from utils.html_template import (
     render_trending_html,
     TRENDING_CARD_TEMPLATE,
     TRENDING_SECTION_TEMPLATE,
@@ -26,7 +26,7 @@ from html_template import (
 
 # ── 配置 ──
 OUTPUT_DIR = Path(__file__).parent
-CONFIG_FILE = OUTPUT_DIR / "trending_config.yaml"
+CONFIG_FILE = OUTPUT_DIR / "config" / "trending_config.yaml"
 ARCHIVE_DIR = OUTPUT_DIR / "trending-archive"
 INDEX_FILE = OUTPUT_DIR / "trending.html"
 

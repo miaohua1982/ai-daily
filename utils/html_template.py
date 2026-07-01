@@ -8,8 +8,8 @@ so the generator logic stays readable.
 from datetime import datetime
 
 
-WEEKDAY_NAMES = ["\u661f\u671f\u65e5", "\u661f\u671f\u4e00", "\u661f\u671f\u4e8c",
-                 "\u661f\u671f\u4e09", "\u661f\u671f\u56db", "\u661f\u671f\u4e94", "\u661f\u671f\u516d"]
+WEEKDAY_NAMES = ["星期日", "星期一", "星期二",
+                 "星期三", "星期四", "星期五", "星期六"]
 
 
 PAPERS_CSS = """\
@@ -392,16 +392,16 @@ PAPERS_EXT_SVG = (
 
 PAPERS_JS_TEMPLATE = """\
 (function(){
-  var WEEKDAYS = ['\u661f\u671f\u65e5','\u661f\u671f\u4e00','\u661f\u671f\u4e8c','\u661f\u671f\u4e09','\u661f\u671f\u56db','\u661f\u671f\u4e94','\u661f\u671f\u516d'];
+  var WEEKDAYS = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
 
   function relativeTime(isoStr){
     var now = Date.now();
     var t = new Date(isoStr).getTime();
     var diff = Math.floor((now - t) / 1000);
-    if(diff < 60) return '\u521a\u521a';
-    if(diff < 3600) return Math.floor(diff/60) + ' \u5206\u949f\u524d';
-    if(diff < 86400) return Math.floor(diff/3600) + ' \u5c0f\u65f6\u524d';
-    if(diff < 604800) return Math.floor(diff/86400) + ' \u5929\u524d';
+    if(diff < 60) return '刚刚';
+    if(diff < 3600) return Math.floor(diff/60) + ' 分钟前';
+    if(diff < 86400) return Math.floor(diff/3600) + ' 小时前';
+    if(diff < 604800) return Math.floor(diff/86400) + ' 天前';
     return new Date(isoStr).toLocaleDateString('zh-CN',{month:'numeric',day:'numeric'});
   }
 
@@ -417,7 +417,7 @@ PAPERS_JS_TEMPLATE = """\
       li.className = 'timeline-item';
       li.dataset.date = g.date;
       li.innerHTML = '<div class="timeline-date">' + g.date.slice(5) + '</div>'
-        + '<div class="timeline-count">' + g.wd + ' \u00b7 ' + g.count + ' \u7bc7</div>';
+        + '<div class="timeline-count">' + g.wd + ' · ' + g.count + ' 篇</div>';
       li.addEventListener('click', function(){
         var el = document.getElementById('anchor-' + g.date);
         if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
@@ -458,7 +458,7 @@ PAPERS_JS_TEMPLATE = """\
       header.className = 'date-header';
       header.innerHTML = '<span class="date-pill">' + date + '</span>'
         + '<span class="date-weekday">' + wd + '</span>'
-        + '<span class="date-count">' + grp.length + ' \u7bc7</span>';
+        + '<span class="date-count">' + grp.length + ' 篇</span>';
       groupEl.appendChild(header);
       var stack = document.createElement('div');
       stack.className = 'papers-stack';
@@ -468,7 +468,7 @@ PAPERS_JS_TEMPLATE = """\
         card.className = 'paper-card' + (p.selected ? ' selected-card' : '');
         card.dataset.id = p.idx;
         var shtml = '';
-        if(p.summary && p.summary !== '\u6682\u65e0\u6458\u8981'){
+        if(p.summary && p.summary !== '暂无摘要'){
           shtml = '<div class="card-summary">' + escHtml(p.summary) + '</div>';
         }
         card.innerHTML =
@@ -486,7 +486,7 @@ PAPERS_JS_TEMPLATE = """\
           shtml +
           '<div class="card-footer">' +
             '<a class="read-link" href="' + escAttr(p.url) + '" target="_blank" rel="noopener">' +
-              '__PAPERS_EXT_SVG__' + ' \u9605\u8bfb\u539f\u6587</a>' +
+              '__PAPERS_EXT_SVG__' + ' 阅读原文</a>' +
           '</div>';
         stack.appendChild(card);
       });
@@ -540,7 +540,7 @@ PAPERS_JS_TEMPLATE = """\
               || (p.source && p.source.toLowerCase().indexOf(q)!==-1)
               || (p.badgeLabel && p.badgeLabel.toLowerCase().indexOf(q)!==-1);
         }); }
-        searchCount.textContent = filtered.length + ' \u7bc7';
+        searchCount.textContent = filtered.length + ' 篇';
         buildCards(filtered);
       }, 250);
     });
@@ -563,7 +563,7 @@ PAPERS_PAGE_TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI \u5b66\u672f\u6863\u6848\u5e93 \u00b7 \u8fd1\u65e5\u8bba\u6587\u7cbe\u9009</title>
+<title>AI 学术档案库 · 近日论文精选</title>
 <style>
 __PAPERS_CSS__
 </style>
@@ -572,21 +572,21 @@ __PAPERS_CSS__
 
 <header class="header">
   <div class="header-inner">
-    <div class="header-badge">\U0001f4c4 AI \u5b66\u672f\u6863\u6848\u5e93</div>
-    <h1 class="header-title">\u8fd1\u65e5 AI \u8bba\u6587\u7cbe\u9009</h1>
-    <p class="header-sub">\u6570\u636e\u6765\u6e90 AI HOT \u00b7 \u8fc7\u53bb 7 \u5929\u7cbe\u9009 __PAPERS_TOTAL__ \u7bc7</p>
+    <div class="header-badge">📄 AI 学术档案库</div>
+    <h1 class="header-title">近日 AI 论文精选</h1>
+    <p class="header-sub">数据来源 AI HOT · 过去 7 天精选 __PAPERS_TOTAL__ 篇</p>
     <div class="header-stats">
       <div class="stat-card">
         <span class="stat-num" id="total-count">__PAPERS_TOTAL__</span>
-        <span class="stat-label">\u8bba\u6587\u603b\u6570</span>
+        <span class="stat-label">论文总数</span>
       </div>
       <div class="stat-card">
         <span class="stat-num">__PAPERS_NUM_DATES__</span>
-        <span class="stat-label">\u8986\u76d6\u5929\u6570</span>
+        <span class="stat-label">覆盖天数</span>
       </div>
       <div class="stat-card">
         <span class="stat-num" id="filtered-count">__PAPERS_TOTAL__</span>
-        <span class="stat-label">\u5f53\u524d\u663e\u793a</span>
+        <span class="stat-label">当前显示</span>
       </div>
     </div>
   </div>
@@ -596,12 +596,12 @@ __PAPERS_CSS__
   <div class="search-bar">
     __PAPERS_SEARCH_SVG__
     <input class="search-input" id="searchInput" type="text"
-     placeholder="\u641c\u7d22\u8bba\u6587\u6807\u9898\u3001\u6458\u8981\u6216\u6765\u6e90\u2026" autocomplete="off">
-    <span class="search-count" id="searchCount">__PAPERS_TOTAL__ \u7bc7</span>
+     placeholder="搜索论文标题、摘要或来源…" autocomplete="off">
+    <span class="search-count" id="searchCount">__PAPERS_TOTAL__ 篇</span>
   </div>
 
   <nav class="timeline">
-    <div class="timeline-title">\u65f6\u95f4\u8f74</div>
+    <div class="timeline-title">时间轴</div>
     <ul class="timeline-list" id="timelineList"></ul>
   </nav>
 
@@ -611,7 +611,7 @@ __PAPERS_DATE_GROUPS_HTML__
 </main>
 
 <footer class="footer">
-  \u6570\u636e\u6765\u6e90\uff1a<a href="https://aihot.virxact.com" target="_blank" rel="noopener">AI HOT</a> \u00b7 \u7cbe\u9009\u8bba\u6587 \u00b7 \u4ec5\u4f9b\u5b66\u672f\u53c2\u8003
+  数据来源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener">AI HOT</a> · 精选论文 · 仅供学术参考
 </footer>
 
 <script>
@@ -623,7 +623,7 @@ window.TIMELINE_DATA = __PAPERS_TIMELINE_JSON__;
 __PAPERS_JS__
 </script>
 
-<div class="quick-top" id="quickTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">\u2191</div>
+<div class="quick-top" id="quickTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 </body>
 </html>
@@ -644,7 +644,7 @@ def _build_paper_date_groups(groups, sorted_dates):
             '    <div class="date-header">\n'
             '      <span class="date-pill">' + d + '</span>\n'
             '      <span class="date-weekday">' + wd + '</span>\n'
-            '      <span class="date-count">' + str(len(groups[d])) + ' \u7bc7</span>\n'
+            '      <span class="date-count">' + str(len(groups[d])) + ' 篇</span>\n'
             '    </div>\n'
             '    <div class="papers-stack" id="stack-' + d + '"></div>\n'
             '  </div>\n'
@@ -1225,7 +1225,7 @@ def render_news_html(display_date, total, nav_items, sections_html):
 # WeChat templates (inline-styled, no <style>/<script> tags)
 # ═══════════════════════════════════════════════════════════════
 
-from utils import esc_html as _esc_html
+from .utils import esc_html as _esc_html
 
 
 WECHAT_HEAD_SECTION = """\

@@ -17,27 +17,36 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from utils import load_dot_env, load_config, UA
-from html_template import render_wechat_html
+from utils.html_template import render_wechat_html
 import generate_daily as gd
 import generate_papers as gp
 
 # ── Configuration ──────────────────────────────────────────────
 
-WECHAT_BASE = "https://api.weixin.qq.com"
 OUTPUT_DIR = Path(__file__).parent.resolve()
+CONFIG_FILE = OUTPUT_DIR / "config" / "wechat_config.yaml"
 
 # Gate files — must both exist for the script to run
 DAILY_FILE = OUTPUT_DIR / "daily_news.html"
 PAPERS_FILE = OUTPUT_DIR / "papers.html"
 
-# ── Load secrets ───────────────────────────────────────────────
+# ── Load config & secrets ───────────────────────────────────────
 _dotenv = load_dot_env(OUTPUT_DIR / ".env")
+_config = load_config(CONFIG_FILE)
 
-APPID = (os.environ.get("WECHAT_APPID") or _dotenv.get("WECHAT_APPID", "")).strip()
-APPSECRET = (os.environ.get("WECHAT_APPSECRET") or _dotenv.get("WECHAT_APPSECRET", "")).strip()
+WECHAT_BASE = _config["wechat_base"]
+REPO_URL = _config["repo_url"]
+TITLE_TEMPLATE = _config["title_template"]
+DIGEST_TEMPLATE = _config["digest_template"]
+DIGEST_FALLBACK = _config["digest_fallback"]
+AUTHOR = _config["author"]
+MAX_NEWS = _config["max_news"]
+MAX_PAPERS = _config["max_papers"]
 
-MAX_NEWS = 10
-MAX_PAPERS = 10
+appid_env = _config["appid_env"]
+appsecret_env = _config["appsecret_env"]
+APPID = (os.environ.get(appid_env) or _dotenv.get(appid_env, "")).strip()
+APPSECRET = (os.environ.get(appsecret_env) or _dotenv.get(appsecret_env, "")).strip()
 
 # ── WeChat API helpers ─────────────────────────────────────────
 
@@ -374,7 +383,7 @@ def create_draft(
             {
                 "title": title,
                 "thumb_media_id": thumb_media_id,
-                "author": "ai-daily",
+                "author": AUTHOR,
                 "digest": digest,
                 "show_cover_pic": 1,
                 "content": content,
@@ -455,25 +464,24 @@ def main() -> int:
             return 1
 
     # 7. Build WeChat-compatible HTML
-    repo_url = f"https://miaohua1982.github.io/ai-daily/"
-    content_html = render_wechat_html(news, papers, date_str, repo_url)
+    content_html = render_wechat_html(news, papers, date_str, REPO_URL)
 
     # 8. Create draft
     date_fmt = date_str.replace("-", "")
-    title = f"AI情报日报 | {date_fmt}"
+    title = TITLE_TEMPLATE.format(date=date_fmt)
     digest_parts = []
     if news:
-        digest_parts.append(f"今日 {len(news)} 条AI热点")
-    if papers:
+        digest_parts.append(DIGEST_TEMPLATE.format(news_count=len(news), papers_count=len(papers)))
+    elif papers:
         digest_parts.append(f"{len(papers)} 篇精选论文")
-    digest = " · ".join(digest_parts) if digest_parts else "每日AI情报汇总"
+    digest = " · ".join(digest_parts) if digest_parts else DIGEST_FALLBACK
 
     print(f"[INFO] Creating WeChat draft...")
     print(f"  Title: {title}")
     print(f"  Digest: {digest}")
     print(f"  Content: {len(content_html)} chars")
 
-    ok = create_draft(token, thumb_media_id, title, content_html, digest, repo_url)
+    ok = create_draft(token, thumb_media_id, title, content_html, digest, REPO_URL)
     if ok:
         print("[INFO] ✓ WeChat draft published successfully!")
         return 0

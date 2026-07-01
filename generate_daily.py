@@ -14,18 +14,17 @@ import urllib.parse
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from utils import load_dot_env, semantic_dedup, load_config, write_files, git_commit, api_get, esc_html, esc_attr
-from html_template import (
+from utils.html_template import (
     render_news_html,
     NEWS_CARD_TEMPLATE,
     NEWS_SECTION_TEMPLATE,
     NEWS_EMPTY_SECTION_TEMPLATE,
 )
 
-API_BASE = "https://aihot.virxact.com/api/public"
 OUTPUT_DIR = Path(__file__).parent
 ARCHIVE_DIR = OUTPUT_DIR / "news-archive"
 INDEX_FILE = OUTPUT_DIR / "daily_news.html"
-CONFIG_FILE = OUTPUT_DIR / "news_config.yaml"
+CONFIG_FILE = OUTPUT_DIR / "config" / "news_config.yaml"
 
 # Load secrets (env > .env file)
 _dot_env = load_dot_env(OUTPUT_DIR / ".env")
@@ -63,7 +62,8 @@ def fetch_data(target_date=None, config=None):
     """Step 1: 获取每日新闻原始数据。返回 (data, date_str)。"""
     if config is None:
         config = load_config(CONFIG_FILE)
-    max_retries = config.get("fetch", {}).get("max_retries", 3)
+    api_base = config["fetch"]["api_base"]
+    max_retries = config["fetch"]["max_retries"]
 
     # 随机启动抖动：避免多实例同时请求
     startup_jitter = random.uniform(0, 1.5)
@@ -79,7 +79,7 @@ def fetch_data(target_date=None, config=None):
         date_str = bj.strftime("%Y-%m-%d")
 
     print(f"[INFO] Fetching daily for {date_str} ...")
-    data = api_get(f"/daily/{date_str}", base_url=API_BASE, max_retries=max_retries)
+    data = api_get(f"/daily/{date_str}", base_url=api_base, max_retries=max_retries)
     if data and "sections" in data:
         sections = data["sections"]
         total = sum(len(s.get("items", [])) for s in sections)
@@ -87,12 +87,12 @@ def fetch_data(target_date=None, config=None):
         return data, date_str
 
     print(f"[WARN] Daily {date_str} not available, falling back to latest...")
-    dailies = api_get("/dailies?take=5", base_url=API_BASE, max_retries=max_retries)
+    dailies = api_get("/dailies?take=5", base_url=api_base, max_retries=max_retries)
     if dailies and dailies.get("items"):
         latest = dailies["items"][0]["date"]
         available = [d["date"] for d in dailies["items"]]
         print(f"[INFO] Fallback to {latest} (available dates: {available})")
-        data = api_get(f"/daily/{latest}", base_url=API_BASE, max_retries=max_retries)
+        data = api_get(f"/daily/{latest}", base_url=api_base, max_retries=max_retries)
         if data and "sections" in data:
             sections = data["sections"]
             total = sum(len(s.get("items", [])) for s in sections)
