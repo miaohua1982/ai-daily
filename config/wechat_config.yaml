@@ -7,7 +7,7 @@ wechat_base: "https://api.weixin.qq.com"
 repo_url: "https://miaohua1982.github.io/ai-daily/"
 
 # 草稿标题模板（{date} 替换为 YYYYMMDD 格式）
-title_template: "AI情报日报 | {date}"
+title_template: "AI情报 | {date}"
 
 # 草稿摘要模板
 # {news_count} 和 {papers_count} 替换为对应条数

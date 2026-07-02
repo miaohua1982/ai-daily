@@ -212,7 +212,7 @@ def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
         font_title = font_date = font_label = font_num = font_unit = font_foot = ImageFont.load_default()
 
     # ── Header ──
-    draw.text((55, 45), "AI 情报日报", fill=(30, 30, 40), font=font_title)
+    draw.text((55, 45), "AI 情报", fill=(30, 30, 40), font=font_title)
     draw.text((55, 112), today, fill=(150, 140, 130), font=font_date)
     draw.line([(55, 150), (440, 150)], fill=(240, 200, 170), width=2)
 
