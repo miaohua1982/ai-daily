@@ -1243,9 +1243,9 @@ WECHAT_NEWS_HEADER = """\
 </section>"""
 
 WECHAT_ITEM_TEMPLATE = """\
-{{link_open}}<section style="margin:0 15px 10px;padding:12px 14px 10px;background:#f0fdf4;border-radius:8px;border-left:3px solid #10b981">
+{{link_open}}<section style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color}">
   <p style="margin:0;line-height:1.45;text-align:left">
-    <strong style="color:#10b981;font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
+    <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
   </p>
   <p style="margin:4px 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph">{summary}</p>
   <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{section_badge}}<span style="margin-left:8px">来源：{source}</span></p>
@@ -1259,13 +1259,24 @@ WECHAT_PAPERS_HEADER = """\
 </section>"""
 
 WECHAT_PAPER_TEMPLATE = """\
-{{link_open}}<section style="margin:0 15px 10px;padding:12px 14px 10px;background:#fdf2f8;border-radius:8px;border-left:3px solid #ec4899">
+{{link_open}}<section style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color}">
   <p style="margin:0;line-height:1.45;text-align:left">
-    <strong style="color:#ec4899;font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
+    <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
   </p>
   <p style="margin:4px 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph">{summary}</p>
   <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{source_badge}}</p>
 </section>{{link_close}}"""
+
+# ── 6-color pastel palette for alternating card styles ──
+# Each entry: (accent, background)
+WECHAT_COLOR_PALETTE = [
+    ("#10b981", "#ecfdf5"),  # 薄荷绿
+    ("#ec4899", "#fdf2f8"),  # 樱花粉
+    ("#8b5cf6", "#f5f3ff"),  # 柔紫
+    ("#f59e0b", "#fffbeb"),  # 暖金
+    ("#3b82f6", "#eff6ff"),  # 天空蓝
+    ("#06b6d4", "#ecfeff"),  # 青蓝
+]
 
 WECHAT_FOOT_SECTION = """\
 <section style="margin:20px 15px 16px;height:1px;background:#e5e7eb"></section>
@@ -1306,11 +1317,15 @@ def _wechat_build_news_item(i: int, it: dict) -> str:
     if url and not url.startswith(("http://", "https://")):
         url = "https://" + url.lstrip("/")
 
+    # Cycle through 6-color palette
+    accent, bg = WECHAT_COLOR_PALETTE[(i - 1) % len(WECHAT_COLOR_PALETTE)]
+
     html = WECHAT_ITEM_TEMPLATE.format(
         num=i, title=title, summary=summary, source=source,
+        accent_color=accent, bg_color=bg,
     )
     if section and section not in ("未分类", ""):
-        badge = _wechat_badge_html(section, "#059669")
+        badge = _wechat_badge_html(section, accent)
         html = html.replace("{section_badge}", badge)
     else:
         html = html.replace("{section_badge}", "")
@@ -1332,11 +1347,14 @@ def _wechat_build_paper_item(i: int, it: dict) -> str:
     if url and not url.startswith(("http://", "https://")):
         url = "https://" + url.lstrip("/")
 
+    # Cycle through 6-color palette
+    accent, bg = WECHAT_COLOR_PALETTE[(i - 1) % len(WECHAT_COLOR_PALETTE)]
+
     html = WECHAT_PAPER_TEMPLATE.format(
         num=i, title=title, summary=summary, source=source,
+        accent_color=accent, bg_color=bg,
     )
-    source_color = "#db2777" if "arxiv" in (source or "").lower() else "#059669"
-    badge = _wechat_badge_html(source, source_color)
+    badge = _wechat_badge_html(source, accent)
     html = html.replace("{source_badge}", badge)
     if url:
         html = html.replace("{link_open}", f'<a href="{url}" style="text-decoration:none;color:inherit">')
