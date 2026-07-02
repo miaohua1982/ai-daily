@@ -1243,7 +1243,7 @@ WECHAT_NEWS_HEADER = """\
 </section>"""
 
 WECHAT_ITEM_TEMPLATE = """\
-{{link_open}}<section style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color}">
+{{link_open}}<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color};transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
   <p style="margin:0;line-height:1.45;text-align:left">
     <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
   </p>
@@ -1259,7 +1259,7 @@ WECHAT_PAPERS_HEADER = """\
 </section>"""
 
 WECHAT_PAPER_TEMPLATE = """\
-{{link_open}}<section style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color}">
+{{link_open}}<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color};transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
   <p style="margin:0;line-height:1.45;text-align:left">
     <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
   </p>
@@ -1267,15 +1267,13 @@ WECHAT_PAPER_TEMPLATE = """\
   <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{source_badge}}</p>
 </section>{{link_close}}"""
 
-# ── 6-color pastel palette for alternating card styles ──
+# ── 4-color pastel palette for alternating card styles ──
 # Each entry: (accent, background)
 WECHAT_COLOR_PALETTE = [
     ("#10b981", "#ecfdf5"),  # 薄荷绿
     ("#ec4899", "#fdf2f8"),  # 樱花粉
     ("#8b5cf6", "#f5f3ff"),  # 柔紫
-    ("#f59e0b", "#fffbeb"),  # 暖金
     ("#3b82f6", "#eff6ff"),  # 天空蓝
-    ("#06b6d4", "#ecfeff"),  # 青蓝
 ]
 
 WECHAT_FOOT_SECTION = """\
@@ -1367,10 +1365,16 @@ def _wechat_build_paper_item(i: int, it: dict) -> str:
 def render_wechat_html(
     news: list[dict], papers: list[dict], date_str: str, repo_url: str
 ) -> str:
-    """Render WeChat-compatible HTML (inline styles only, no <style>/<script>)."""
+    """Render WeChat-compatible HTML (inline styles only, minimal style block for hover)."""
     display = _wechat_format_date_cn(date_str)
 
-    parts = [WECHAT_HEAD_SECTION.format(display_date=display)]
+    css = (
+        '<style>'
+        '.ai-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08);border-left-width:5px}'
+        '.ai-card:active{transform:translateY(0);box-shadow:0 3px 10px rgba(0,0,0,.06)}'
+        '</style>'
+    )
+    parts = [css, WECHAT_HEAD_SECTION.format(display_date=display)]
 
     # ── AI News ──
     if news:
