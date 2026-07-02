@@ -1229,51 +1229,49 @@ from .utils import esc_html as _esc_html
 
 
 WECHAT_HEAD_SECTION = """\
-<section style="padding:8px 15px 0">
-  <p style="text-align:center;color:#888;font-size:14px;margin:10px 0 0;letter-spacing:1px">
-    📰 每日 AI 情报
-  </p>
-  <p style="text-align:center;color:#333;font-size:22px;font-weight:bold;margin:6px 0 0">
-    {display_date}
-  </p>
+<section style="padding:12px 15px 0;text-align:center">
+  <p style="color:#6b7280;font-size:13px;margin:0 0 6px;letter-spacing:2px">📰 每日 AI 情报</p>
+  <p style="color:#111827;font-size:24px;font-weight:800;margin:0;letter-spacing:-0.5px">{display_date}</p>
 </section>
-<section style="margin:20px 15px 10px;height:1px;background:#eee"></section>"""
+<section style="margin:16px 15px 12px;height:1px;background:#e5e7eb"></section>"""
 
 WECHAT_NEWS_HEADER = """\
-<section style="padding:5px 15px">
-  <h2 style="font-size:17px;color:#333;border-left:4px solid #ff6b35;padding-left:10px;margin:18px 0 12px">🔥 AI 热点资讯（{count}条）</h2>
+<section style="padding:4px 15px">
+  <h2 style="font-size:16px;color:#111827;margin:14px 0 10px;font-weight:700;line-height:1.4">
+    <span style="display:inline-block;width:4px;height:16px;background:#10b981;vertical-align:middle;margin-right:8px;border-radius:2px"></span>🔥 AI 热点资讯（{count}条）
+  </h2>
 </section>"""
 
 WECHAT_ITEM_TEMPLATE = """\
-{{link_open}}<section style="margin:0 15px 12px;padding:12px 14px;background:#faf8f6;border-radius:4px">
-  <p style="margin:0 0 6px;line-height:1.5;text-align:justify;text-justify:inter-ideograph">
-    <strong style="color:#ff6b35;font-size:14px">{num}.</strong>
-    <strong style="color:#222;font-size:14px">{title}</strong>
+{{link_open}}<section style="margin:0 15px 10px;padding:12px 14px 10px;background:#f0fdf4;border-radius:8px;border-left:3px solid #10b981">
+  <p style="margin:0;line-height:1.45;text-align:left">
+    <strong style="color:#10b981;font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
   </p>
-  <p style="margin:0 0 8px;font-size:13px;color:#666;line-height:1.7;text-align:justify;text-justify:inter-ideograph;text-indent:2em">{summary}</p>
-  <p style="margin:0;font-size:12px;color:#999;line-height:1.5">{{section_badge}} <span style="margin-left:6px">来源：{source}</span></p>
+  <p style="margin:4px 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph">{summary}</p>
+  <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{section_badge}}<span style="margin-left:8px">来源：{source}</span></p>
 </section>{{link_close}}"""
 
 WECHAT_PAPERS_HEADER = """\
-<section style="padding:5px 15px">
-  <h2 style="font-size:17px;color:#333;border-left:4px solid #E05252;padding-left:10px;margin:22px 0 12px">📄 AI 论文精选（{count}篇）</h2>
+<section style="padding:4px 15px">
+  <h2 style="font-size:16px;color:#111827;margin:18px 0 10px;font-weight:700;line-height:1.4">
+    <span style="display:inline-block;width:4px;height:16px;background:#ec4899;vertical-align:middle;margin-right:8px;border-radius:2px"></span>📄 AI 论文精选（{count}篇）
+  </h2>
 </section>"""
 
 WECHAT_PAPER_TEMPLATE = """\
-{{link_open}}<section style="margin:0 15px 12px;padding:12px 14px;background:#faf8f6;border-radius:4px">
-  <p style="margin:0 0 6px;line-height:1.5;text-align:justify;text-justify:inter-ideograph">
-    <strong style="color:#E05252;font-size:14px">{num}.</strong>
-    <strong style="color:#222;font-size:14px">{title}</strong>
+{{link_open}}<section style="margin:0 15px 10px;padding:12px 14px 10px;background:#fdf2f8;border-radius:8px;border-left:3px solid #ec4899">
+  <p style="margin:0;line-height:1.45;text-align:left">
+    <strong style="color:#ec4899;font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
   </p>
-  <p style="margin:0 0 8px;font-size:13px;color:#666;line-height:1.7;text-align:justify;text-justify:inter-ideograph;text-indent:2em">{summary}</p>
-  <p style="margin:0;font-size:12px;color:#999;line-height:1.5">{{source_badge}}</p>
+  <p style="margin:4px 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph">{summary}</p>
+  <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{source_badge}}</p>
 </section>{{link_close}}"""
 
 WECHAT_FOOT_SECTION = """\
-<section style="margin:25px 15px 20px;height:1px;background:#eee"></section>
+<section style="margin:20px 15px 16px;height:1px;background:#e5e7eb"></section>
 <section style="padding:0 15px 30px">
-  <p style="text-align:center;font-size:12px;color:#bbb;line-height:1.8">
-    由 <a href="{repo_url}" style="color:#576b95;text-decoration:none">ai-daily</a> 自动生成 · 仅供学习参考
+  <p style="text-align:center;font-size:12px;color:#9ca3af;line-height:1.8">
+    由 <a href="{repo_url}" style="color:#10b981;text-decoration:none">ai-daily</a> 自动生成 · 仅供学习参考
   </p>
 </section>"""
 
@@ -1293,7 +1291,7 @@ def _wechat_badge_html(label: str, color: str) -> str:
     """Build an inline-styled badge span for WeChat HTML."""
     return (
         f'<span style="display:inline-block;background:{color}15;'
-        f'color:{color};padding:1px 8px;border-radius:2px;'
+        f'color:{color};padding:1px 8px;border-radius:4px;'
         f'font-size:11px;line-height:18px">{_esc_html(label)}</span>'
     )
 
@@ -1312,7 +1310,7 @@ def _wechat_build_news_item(i: int, it: dict) -> str:
         num=i, title=title, summary=summary, source=source,
     )
     if section and section not in ("未分类", ""):
-        badge = _wechat_badge_html(section, "#007AAA")
+        badge = _wechat_badge_html(section, "#059669")
         html = html.replace("{section_badge}", badge)
     else:
         html = html.replace("{section_badge}", "")
@@ -1337,7 +1335,7 @@ def _wechat_build_paper_item(i: int, it: dict) -> str:
     html = WECHAT_PAPER_TEMPLATE.format(
         num=i, title=title, summary=summary, source=source,
     )
-    source_color = "#E05252" if "arxiv" in (source or "").lower() else "#007AAA"
+    source_color = "#db2777" if "arxiv" in (source or "").lower() else "#059669"
     badge = _wechat_badge_html(source, source_color)
     html = html.replace("{source_badge}", badge)
     if url:
