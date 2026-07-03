@@ -2,8 +2,8 @@ name: Publish to WeChat Draft
 
 on:
   schedule:
-    # Beijing time 06:30 = UTC 22:30
-    - cron: '30 22 * * *'
+    # Beijing time 07:00 = UTC 23:00
+    - cron: '00 23 * * *'
   workflow_dispatch:
 
 permissions:
