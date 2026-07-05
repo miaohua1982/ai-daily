@@ -275,6 +275,9 @@ def get_embeddings(
     all_embeddings: List[List[float]] = []
     total = len(texts)
 
+    # 显式禁用代理，与 api_get 保持一致
+    embed_opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+
     for start in range(0, total, batch_size):
         batch = list(texts[start:start + batch_size])
         payload = {"model": model, "input": batch}
@@ -282,7 +285,7 @@ def get_embeddings(
             url, data=json.dumps(payload).encode(), headers=headers, method="POST"
         )
         try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
+            with embed_opener.open(req, timeout=60) as resp:
                 data = json.loads(resp.read().decode())
             batch_emb = [item["embedding"] for item in data["data"]]
             all_embeddings.extend(batch_emb)
@@ -406,10 +409,15 @@ def api_get(path, base_url, max_retries=3):
     """
     url = f"{base_url}{path}"
 
+    # 使用 ProxyHandler({}) 显式禁用代理，避免 urllib 自动读取系统代理配置
+    # （某些环境（如 CI runner、公司网络）的系统代理可能指向不可达地址，
+    #   导致所有 HTTPS 请求都变成 "Connection refused"）
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+
     for attempt in range(max_retries):
         req = urllib.request.Request(url, headers={"User-Agent": UA})
         try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
+            with opener.open(req, timeout=30) as resp:
                 return json.loads(resp.read().decode())
         except urllib.error.HTTPError as e:
             print(f"[WARN] HTTP {e.code} for {path} (attempt {attempt+1}/{max_retries})", file=sys.stderr)

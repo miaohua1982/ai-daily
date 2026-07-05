@@ -5,8 +5,8 @@ Tests all step functions except git_commit, importing from the three generators.
 All output goes to the craft/ directory (excluded from git).
 
 Usage:
-  python test.py          # 默认使用 stub 数据（快速）
-  python test.py --live   # 尋试真实 API（trending 可能很慢）
+  python test/test.py          # 默认使用 stub 数据（快速）
+  python test/test.py --live   # 尝试真实 API（trending 可能很慢）
 """
 
 import sys
@@ -14,7 +14,8 @@ from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
 # ── Setup paths ─────────────────────────────────────────────────
-ROOT = Path(__file__).parent.resolve()
+# 文件位于 test/ 子目录，项目根目录是上两级
+ROOT = Path(__file__).parent.parent.resolve()
 CRAFT_DIR = ROOT / "craft"
 CRAFT_DIR.mkdir(exist_ok=True)
 sys.path.insert(0, str(ROOT))

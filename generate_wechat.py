@@ -20,6 +20,7 @@ from utils import load_dot_env, load_config, UA
 from utils.html_template import render_wechat_html
 import generate_daily as gd
 import generate_papers as gp
+from typing import Union
 
 # ── Configuration ──────────────────────────────────────────────
 
@@ -50,7 +51,7 @@ APPSECRET = (os.environ.get(appsecret_env) or _dotenv.get(appsecret_env, "")).st
 
 # ── WeChat API helpers ─────────────────────────────────────────
 
-def wechat_get(path: str) -> dict | None:
+def wechat_get(path: str) -> Union[dict, None]:
     url = f"{WECHAT_BASE}{path}"
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     try:
@@ -274,10 +275,20 @@ def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
 
 def _find_chinese_font(size: int):
     from PIL import ImageFont
+    # 统一用正斜杠，Path 跨平台兼容
     candidates = [
         # macOS
         "/System/Library/Fonts/PingFang.ttc",
         "/System/Library/Fonts/Hiragino Sans GB.ttc",
+        # Windows — 微软雅黑（Win7+ 默认中文字体）
+        "C:/Windows/Fonts/msyh.ttc",
+        "C:/Windows/Fonts/msyhbd.ttc",
+        # Windows — 黑体（兼容老系统）
+        "C:/Windows/Fonts/simhei.ttf",
+        # Windows — 等线（Win10+ 默认）
+        "C:/Windows/Fonts/Deng.ttf",
+        # Windows — 宋体
+        "C:/Windows/Fonts/simsun.ttc",
         # Ubuntu 24.04 — noto-cjk (opentype or truetype)
         "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
         "/usr/share/fonts/opentype/noto/NotoSansCJK-Medium.ttc",
@@ -298,7 +309,7 @@ def _find_chinese_font(size: int):
     for path in candidates:
         if Path(path).exists():
             return ImageFont.truetype(path, size)
-    # Last resort: scan system with fc-list
+    # Fallback 1: scan system with fc-list (Linux/macOS with fontconfig)
     try:
         import subprocess
         out = subprocess.check_output(
@@ -309,6 +320,20 @@ def _find_chinese_font(size: int):
             line = line.strip()
             if line and Path(line).exists():
                 return ImageFont.truetype(line, size)
+    except Exception:
+        pass
+    # Fallback 2: Windows — enumerate fonts directory for any CJK ttc/ttf
+    try:
+        win_fonts_dir = Path("C:/Windows/Fonts")
+        if win_fonts_dir.is_dir():
+            for ext in ("*.ttc", "*.ttf"):
+                for fp in win_fonts_dir.glob(ext):
+                    name = fp.name.lower()
+                    # 常见中文字体文件名关键词
+                    if any(k in name for k in ("msyh", "simhei", "simsun", "deng",
+                                                "yahei", "song", "hei", "kai",
+                                                "ming", "fang")):
+                        return ImageFont.truetype(str(fp), size)
     except Exception:
         pass
     return ImageFont.load_default()
@@ -325,7 +350,7 @@ def _fallback_cover_bytes() -> bytes:
 
 # ── WeChat API ─────────────────────────────────────────────────
 
-def get_access_token() -> str | None:
+def get_access_token() -> Union[str, None]:
     resp = wechat_get(
         f"/cgi-bin/token?grant_type=client_credential&appid={APPID}&secret={APPSECRET}"
     )
@@ -337,7 +362,7 @@ def get_access_token() -> str | None:
     return token
 
 
-def upload_image(token: str, image_bytes: bytes) -> str | None:
+def upload_image(token: str, image_bytes: bytes) -> Union[str, None]:
     """Upload image as permanent material. Returns media_id."""
     import uuid
 
