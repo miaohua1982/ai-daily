@@ -2,8 +2,11 @@
 
 # 数据获取配置
 fetch:
-  # AI HOT 公共 API 地址
+  # AI HOT 公共 API 地址（主源）
   api_base: "https://aihot.virxact.com/api/public"
+  # 备用数据源（当主源不可用时自动切换）
+  fallback_base: "https://newsnow.busiyi.world"
+  fallback_path: "/api/s?id=aihot&latest"
   # 单个 API 请求失败时的最大重试次数（默认 3）
   max_retries: 3
 

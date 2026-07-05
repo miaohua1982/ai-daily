@@ -55,6 +55,10 @@ EMPTY_ICONS = {
     "tip": "💡",
 }
 
+# newsnow 返回的 extra.info 中包含英文 category slug（如 "tip", "industry"）
+# SLUG_TO_LABEL 直接复用 CATEGORY_LABELS
+SLUG_TO_LABEL = CATEGORY_LABELS
+
 
 # ─── Step 1: 获取数据 ───
 
@@ -86,7 +90,8 @@ def fetch_data(target_date=None, config=None):
         print(f"[INFO] Got daily {date_str}: {len(sections)} sections, {total} items")
         return data, date_str
 
-    print(f"[WARN] Daily {date_str} not available, falling back to latest...")
+    # ── 第一级回退：主源最新日期 ──
+    print(f"[WARN] Daily {date_str} not available on primary, falling back to latest...")
     dailies = api_get("/dailies?take=5", base_url=api_base, max_retries=max_retries)
     if dailies and dailies.get("items"):
         latest = dailies["items"][0]["date"]
@@ -97,9 +102,88 @@ def fetch_data(target_date=None, config=None):
             sections = data["sections"]
             total = sum(len(s.get("items", [])) for s in sections)
             print(f"[INFO] Got daily {latest}: {len(sections)} sections, {total} items")
-        return data, latest
+            return data, latest
 
-    raise RuntimeError("Failed to fetch any daily report")
+    # ── 第二级回退：备用数据源 newsnow ──
+    print(f"[WARN] Primary source unavailable, falling back to newsnow secondary source...")
+    data = _fetch_from_newsnow(config)
+    if data and data.get("sections"):
+        sections = data["sections"]
+        total = sum(len(s.get("items", [])) for s in sections)
+        print(f"[INFO] Got from newsnow: {len(sections)} sections, {total} items")
+        return data, date_str
+
+    raise RuntimeError("Failed to fetch any daily report from both primary and secondary sources")
+
+
+def _fetch_from_newsnow(config):
+    """
+    从 newsnow.busiyi.world 备用源获取数据，并转换为与 aihot 主源兼容的格式。
+
+    newsnow 原始格式:
+      {"items": [{"id":"..","title":"..","url":"..",
+                   "extra":{"hover":"摘要","info":"来源名 · category_slug"}}]}
+
+    转换为 aihot 格式:
+      {"sections": [{"label":"技巧与观点","items":[{...}]}], "date":"2026-07-05"}
+    """
+    fallback_base = config["fetch"]["fallback_base"]
+    fallback_path = config["fetch"]["fallback_path"]
+    max_retries = config["fetch"]["max_retries"]
+
+    data = api_get(fallback_path, base_url=fallback_base, max_retries=max_retries)
+    if not data or not data.get("items"):
+        return None
+
+    # 按 category slug 分组
+    items_by_slug = {}
+    for item in data["items"]:
+        extra = item.get("extra", {})
+        info = extra.get("info", "")
+
+        # 解析 "来源描述 · category_slug"（如 "IT之家（RSS） · industry"）
+        if " · " in info:
+            source_name, slug = info.rsplit(" · ", 1)
+            source_name = source_name.strip()
+            slug = slug.strip()
+        else:
+            source_name = info.strip()
+            slug = "tip"  # 无法解析时归入"技巧与观点"
+
+        transformed = {
+            "id": item.get("id", ""),
+            "title": item.get("title", ""),
+            "url": item.get("url", ""),
+            "sourceUrl": item.get("url", ""),
+            "sourceName": source_name,
+            "summary": extra.get("hover", ""),
+        }
+        items_by_slug.setdefault(slug, []).append(transformed)
+
+    # 按 CATEGORY_ORDER 构建 sections（与主源 label 格式一致）
+    sections = []
+    for slug in CATEGORY_ORDER:
+        if slug in items_by_slug:
+            sections.append({
+                "label": CATEGORY_LABELS.get(slug, slug),
+                "items": items_by_slug[slug],
+            })
+
+    # 从 updatedTime（Unix 毫秒时间戳）提取日期
+    date_str = None
+    updated = data.get("updatedTime")
+    if updated:
+        try:
+            from datetime import timezone as tz
+            dt = datetime.fromtimestamp(updated / 1000, tz=tz.utc)
+            dt_bj = dt.astimezone(timezone(timedelta(hours=8)))
+            date_str = dt_bj.strftime("%Y-%m-%d")
+        except Exception:
+            pass
+    if not date_str:
+        date_str = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
+
+    return {"sections": sections, "date": date_str}
 
 
 # ─── Step 2: 去重 ───

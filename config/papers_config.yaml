@@ -1,14 +1,88 @@
 # Papers 配置
 
-# 数据获取配置
+# ============================================================
+# 数据源配置
+# ============================================================
+
+# 全局抓取参数
 fetch:
-  # AI HOT 公共 API 地址
-  api_base: "https://aihot.virxact.com/api/public"
+  # 拉取天数（arXiv 用 submittedDate 范围过滤，HF 逐天遍历）
+  days_back: 3
   # 单个 API 请求失败时的最大重试次数（默认 3）
   max_retries: 3
+  # 请求 User-Agent
+  user_agent: "ai-daily/1.0"
 
-# 语义去重配置
-# 对同一论文在不同来源（arXiv、Hugging Face 等）重复出现的情况做 embedding 相似度去重
+# 数据源 1: AI HOT（原有，category=paper 过滤论文）
+aihot:
+  enabled: true
+  api_base: "https://aihot.virxact.com/api/public"
+  # 单次抓取上限
+  take: 150
+  # 每页条数
+  page_size: 100
+
+# 数据源 2: arXiv（全量论文检索，按分类/关键词/日期）
+arxiv:
+  enabled: true
+  endpoint: "http://export.arxiv.org/api/query"
+  # AI 相关分类
+  categories:
+    - "cs.AI"    # Artificial Intelligence
+    - "cs.CL"    # Computation and Language (NLP)
+    - "cs.LG"    # Machine Learning
+    - "cs.CV"    # Computer Vision
+    - "cs.MA"    # Multi-Agent Systems
+    - "cs.RO"    # Robotics
+    - "stat.ML"  # Statistics - Machine Learning
+  # 单次返回上限（≤ 2000）
+  max_results: 50
+  # 排序字段
+  sort_by: "submittedDate"
+  sort_order: "descending"
+  # 连续调用间隔（秒，arXiv 要求 ≥ 3）
+  rate_limit_seconds: 3
+  # 请求超时（秒）
+  timeout_seconds: 30
+
+# 数据源 3: HuggingFace Daily Papers（每日精选，社区高赞 + AI 摘要）
+huggingface:
+  enabled: true
+  endpoint_daily: "https://huggingface.co/api/daily_papers"
+  endpoint_paper: "https://huggingface.co/api/papers"
+  endpoint_search: "https://huggingface.co/api/papers/search"
+  # 分页每页条数
+  page_limit: 50
+  # 连续调用间隔（秒）
+  rate_limit_seconds: 1
+  # 请求超时（秒）
+  timeout_seconds: 30
+
+# ============================================================
+# 翻译配置（arXiv / HuggingFace 英文论文翻译为中文）
+# ============================================================
+
+translation:
+  enabled: true
+  # 读取 API Key 的环境变量名
+  api_key_env: "DEEPSEEK_API_KEY"
+  # OpenAI 兼容的 chat API 地址
+  base_url: "https://api.deepseek.com/v1"
+  # 翻译用的大模型
+  model: "deepseek-chat"
+  # 单次翻译的论文数（批量翻译，减少 API 调用次数）
+  batch_size: 5
+  # 批次间间隔（秒，避免限流）
+  rate_limit_seconds: 1
+  # 请求超时（秒）
+  timeout_seconds: 60
+
+# ============================================================
+# 去重配置
+# ============================================================
+
+# 语义去重
+# 对同一论文在不同来源（aihot、arXiv、Hugging Face 等）重复出现的情况做 embedding 相似度去重
 semantic_dedup:
   enabled: true
   # 读取 API Key 的环境变量名
@@ -17,7 +91,7 @@ semantic_dedup:
   base_url: "https://llm-860ckp050tycaw8n.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
   # embedding 模型名
   model: "text-embedding-v4"
-  # 余弦相似度阈值（0.0-1.0），≥ 此值视为重复
+  # 余弦相似度阈值（0.0-1.0），>= 此值视为重复
   threshold: 0.80
   # 单次请求最大文本数（阿里 Qwen embedding 限制为 10 条）
   batch_size: 10
