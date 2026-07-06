@@ -3,6 +3,7 @@ news/renderer — 新闻 HTML 渲染（含卡片、分类、导航构建）。
 """
 
 from datetime import datetime, timezone, timedelta
+from typing import Any, Dict, List
 
 from utils import esc_html, esc_attr
 from utils.html_template import (
@@ -14,7 +15,7 @@ from utils.html_template import (
 from src.news.constants import CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_COLORS, EMPTY_ICONS
 
 
-def fmt_time(dt_str):
+def fmt_time(dt_str: str) -> str:
     """格式化相对时间（暂未使用，保留以备后续需求）。"""
     try:
         dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
@@ -32,7 +33,7 @@ def fmt_time(dt_str):
         return dt_str or ""
 
 
-def source_class(source_name):
+def source_class(source_name: str) -> str:
     """根据来源名称返回 CSS class 名。"""
     s = (source_name or "").lower()
     if "x：" in s or "twitter" in s or s.startswith("x:"):
@@ -48,7 +49,7 @@ def source_class(source_name):
     return "source-media"
 
 
-def short_source(source_name):
+def short_source(source_name: str) -> str:
     """从完整 sourceName 中提取 2-6 字简短标签。"""
     s = (source_name or "").lower()
     if "x：" in s or s.startswith("x:"):
@@ -72,7 +73,7 @@ def short_source(source_name):
     return "来源"
 
 
-def summarize(text, max_len=60):
+def summarize(text: str, max_len: int = 60) -> str:
     """截断摘要文本到指定长度。"""
     if not text:
         return "暂无摘要"
@@ -80,7 +81,11 @@ def summarize(text, max_len=60):
     return t if len(t) <= max_len else t[:max_len - 1].rstrip() + "…"
 
 
-def generate_html(items_by_cat, data, date_str):
+def generate_html(
+    items_by_cat: Dict[str, List[Dict[str, Any]]],
+    data: Dict[str, Any],
+    date_str: str,
+) -> str:
     """Step 3: 纯 HTML 渲染，不含任何数据获取或去重逻辑。"""
     cat_counts = {cat: len(items_by_cat.get(cat, [])) for cat in CATEGORY_ORDER}
     total = sum(cat_counts.values())

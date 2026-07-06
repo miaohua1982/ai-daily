@@ -6,11 +6,16 @@ import os
 import sys
 import urllib.parse
 from collections import defaultdict
+from typing import Any, Dict, List, Optional
 
 from utils import semantic_dedup
 
 
-def dedup_data(items, config, dot_env=None):
+def dedup_data(
+    items: List[Dict[str, Any]],
+    config: Dict[str, Any],
+    dot_env: Optional[Dict[str, str]] = None,
+) -> List[Dict[str, Any]]:
     """Step 2: URL 去重 + 语义去重。返回去重后的 items。"""
     # ── 1. URL 去重 ──
     seen = set()

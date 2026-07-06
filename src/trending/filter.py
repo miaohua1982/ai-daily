@@ -7,9 +7,10 @@ import json
 import re
 import sys
 import urllib.request
+from typing import Any, Dict, List, Optional, Tuple
 
 
-def assign_group_names(items, config):
+def assign_group_names(items: List[Dict[str, Any]], config: Dict[str, Any]) -> List[Dict[str, Any]]:
     """给每个 item 标注最匹配的 group_name。"""
     groups = config.get("keywords", {}).get("groups", [])
     result = []
@@ -31,7 +32,7 @@ def assign_group_names(items, config):
     return result
 
 
-def keyword_filter(items, config):
+def keyword_filter(items: List[Dict[str, Any]], config: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     """按关键词组匹配，返回命中列表和未命中列表。"""
     result = []
     unmatched = []
@@ -43,7 +44,14 @@ def keyword_filter(items, config):
     return result, unmatched
 
 
-def ai_score_batch(batch, interests, group_names, api_key, base_url, model):
+def ai_score_batch(
+    batch: List[Dict[str, Any]],
+    interests: str,
+    group_names: List[str],
+    api_key: str,
+    base_url: str,
+    model: str,
+) -> Dict[int, Dict[str, Any]]:
     """把一批标题发给 LLM，返回 idx -> {"score": float, "group": str} 字典。"""
     lines = "\n".join(f"{i+1}. {it['title']}" for i, it in enumerate(batch))
     group_list = "\n".join(f"- {g}" for g in group_names)
@@ -101,7 +109,12 @@ def ai_score_batch(batch, interests, group_names, api_key, base_url, model):
         return {}
 
 
-def ai_filter(items, config, assign_groups=True, dot_env=None):
+def ai_filter(
+    items: List[Dict[str, Any]],
+    config: Dict[str, Any],
+    assign_groups: bool = True,
+    dot_env: Optional[Dict[str, str]] = None,
+) -> List[Dict[str, Any]]:
     """对 items 进行 AI 打分过滤；若 assign_groups=True 则同时由 AI 分组。"""
     ai_cfg = config.get("ai", {})
     api_key_env = ai_cfg.get("api_key_env", "DEEPSEEK_API_KEY")
@@ -133,7 +146,11 @@ def ai_filter(items, config, assign_groups=True, dot_env=None):
     return retained
 
 
-def filter_data(items, config, dot_env=None):
+def filter_data(
+    items: List[Dict[str, Any]],
+    config: Dict[str, Any],
+    dot_env: Optional[Dict[str, str]] = None,
+) -> Dict[str, List[Dict[str, Any]]]:
     """Step 3: 关键词 / AI 过滤 + 分组。返回 grouped_items。"""
     method = config.get("filter", {}).get("method", "keyword")
 

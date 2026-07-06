@@ -3,6 +3,7 @@ trending.renderer — HTML 渲染（含辅助工具函数）。
 """
 
 from datetime import datetime, timezone, timedelta
+from typing import Any, Dict, List, Tuple
 
 from utils import esc_html, esc_attr
 from utils.html_template import (
@@ -12,7 +13,7 @@ from utils.html_template import (
 )
 
 
-def source_meta(item, config):
+def source_meta(item: Dict[str, Any], config: Dict[str, Any]) -> Tuple[str, str, str]:
     """返回 (来源名称, 图标, 热度文本)。"""
     sid = item.get("source_id", "")
     for s in config["newsnow"]["sources"]:
@@ -21,7 +22,7 @@ def source_meta(item, config):
     return sid, "•", ""
 
 
-def format_updated(ts):
+def format_updated(ts: Any) -> str:
     """格式化更新时间戳为 HH:MM。"""
     if not ts:
         return ""
@@ -34,7 +35,11 @@ def format_updated(ts):
         return ""
 
 
-def generate_html(grouped_items, config, build_time):
+def generate_html(
+    grouped_items: Dict[str, List[Dict[str, Any]]],
+    config: Dict[str, Any],
+    build_time: datetime,
+) -> str:
     """Step 4: 纯 HTML 渲染，不含去重或过滤逻辑。"""
     # 强制按固定顺序展示分组
     desired_order = ["国际局势", "财经资讯", "AI大模型", "智能汽车", "机器人与具身智能", "其他"]

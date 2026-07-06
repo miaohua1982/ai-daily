@@ -8,11 +8,12 @@ import random
 import sys
 import urllib.request
 import urllib.error
+from typing import Any, Dict, List
 
 from utils import UA
 
 
-def fetch_source(api_url, source_id, max_retries=3):
+def fetch_source(api_url: str, source_id: str, max_retries: int = 3) -> List[Dict[str, Any]]:
     """从 NewsNow 获取单个数据源，失败时进行指数退避重试。"""
     startup_jitter = random.uniform(0, 1.5)
     if startup_jitter > 0.05:
@@ -44,7 +45,7 @@ def fetch_source(api_url, source_id, max_retries=3):
     return []
 
 
-def fetch_data(config):
+def fetch_data(config: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Step 1: 获取所有 NewsNow 数据源。返回 items。"""
     api_url = config["newsnow"]["api_url"]
     sources = config["newsnow"]["sources"]
