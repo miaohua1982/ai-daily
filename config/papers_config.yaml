@@ -7,7 +7,7 @@
 # 全局抓取参数
 fetch:
   # 拉取天数（arXiv 用 submittedDate 范围过滤，HF 逐天遍历）
-  days_back: 3
+  days_back: 5
   # 单个 API 请求失败时的最大重试次数（默认 3）
   max_retries: 3
   # 请求 User-Agent
@@ -36,7 +36,7 @@ arxiv:
     - "cs.RO"    # Robotics
     - "stat.ML"  # Statistics - Machine Learning
   # 单次返回上限（≤ 2000）
-  max_results: 50
+  max_results: 30
   # 排序字段
   sort_by: "submittedDate"
   sort_order: "descending"
@@ -52,7 +52,7 @@ huggingface:
   endpoint_paper: "https://huggingface.co/api/papers"
   endpoint_search: "https://huggingface.co/api/papers/search"
   # 分页每页条数
-  page_limit: 50
+  page_limit: 10
   # 连续调用间隔（秒）
   rate_limit_seconds: 1
   # 请求超时（秒）

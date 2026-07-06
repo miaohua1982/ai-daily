@@ -4,20 +4,19 @@ AI HOT Academic Papers Archive Generator
 Fetches recent AI papers from aihot / arXiv / HuggingFace and generates a static HTML archive.
 Usage: python generate_papers.py [YYYY-MM-DD]
 
-辅助函数已拆分至 src/ 目录：
-  - src/papers_fetcher.py   数据获取（aihot + arXiv + HuggingFace 三源合并）
-  - src/papers_dedup.py     去重（URL + 语义 + Top-N 选择）
-  - src/papers_renderer.py  HTML 渲染
+辅助函数已拆分至 src/papers/ 目录：
+  - src/papers/fetcher.py   数据获取（aihot + arXiv + HuggingFace 三源合并）
+  - src/papers/renderer.py  HTML 渲染
+  - 去重逻辑（URL + 语义）已提取至 utils.dedup_data — papers / news 共用
+  - generate_papers.py     编排（含 Top-N 选择）
 """
 
 import sys
 from pathlib import Path
 
-from utils import load_dot_env, load_config, write_files, git_commit
-from src.papers_fetcher import fetch_data as _fetch_data_impl
-from src.papers_dedup import dedup_data as _dedup_data_impl
-from src.papers_renderer import generate_html
-from src.papers_fetcher import translate_papers  # noqa: F401 — re-export
+from utils import load_dot_env, load_config, write_files, git_commit, dedup_data as _dedup_data_impl
+from src.papers.fetcher import fetch_data as _fetch_data_impl
+from src.papers.renderer import generate_html
 
 # ── 路径常量 ─────────────────────────────────────────────────────
 
@@ -39,9 +38,24 @@ def fetch_data(target_date=None, config=None):
     return _fetch_data_impl(target_date, config, _dot_env)
 
 
+def _select_top_papers(items, limit=50, config=None):
+    """按 score 排序选出 top papers，未启用语义去重时用标题前缀兜底去重。"""
+    selected = [i for i in items if i.get("selected")]
+    not_selected = [i for i in items if not i.get("selected")]
+    selected.sort(key=lambda x: x.get("score", 0), reverse=True)
+    not_selected.sort(key=lambda x: x.get("score", 0), reverse=True)
+    result = selected[:limit]
+    if len(result) < limit:
+        result += not_selected[:limit - len(result)]
+
+    result.sort(key=lambda x: x.get("publishedAt", ""), reverse=True)
+    return result[:limit]
+
+
 def dedup_data(items, config=None):
-    """Step 2: URL 去重 + 语义去重 + Top-N 选择。"""
-    return _dedup_data_impl(items, config, _dot_env)
+    """Step 2: URL 去重 + 语义去重 + Top-N 选择。返回 papers。"""
+    deduped = _dedup_data_impl(items, config, _dot_env)
+    return _select_top_papers(deduped, limit=50, config=config)
 
 
 # ── Main ─────────────────────────────────────────────────────────

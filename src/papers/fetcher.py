@@ -14,17 +14,18 @@ import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
+from typing import Any, Dict, List, Optional, Tuple
 
-from utils import api_get
+from utils import api_get, filter_by_date
 
 
 # ── 通用 HTTP GET（带重试 + 指数退避 + 抖动）────────────────────
 
-def _http_get(url, config, timeout=30):
+def _http_get(url: str, config: Dict[str, Any], timeout: int = 30) -> bytes:
     """带重试 + 指数退避 + 抖动的 HTTP GET，返回原始 bytes。"""
     max_retries = config["fetch"]["max_retries"]
     ua = config["fetch"]["user_agent"]
-    last_err = None
+    last_err: Optional[Exception] = None
     for attempt in range(max_retries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": ua})
@@ -36,12 +37,14 @@ def _http_get(url, config, timeout=30):
                 backoff = (2 ** attempt) + random.uniform(0, 1)
                 print(f"[INFO] Retry {attempt+1}/{max_retries}: {e}, waiting {backoff:.1f}s", file=sys.stderr)
                 time.sleep(backoff)
-    raise last_err
+    if last_err is not None:
+        raise last_err
+    raise RuntimeError(f"HTTP GET failed for {url}: max_retries={max_retries}")
 
 
 # ── 数据源 1: AI HOT ─────────────────────────────────────────────
 
-def fetch_aihot_papers(config, target_date):
+def fetch_aihot_papers(config: Dict[str, Any], target_date: str) -> List[Dict[str, Any]]:
     """数据源 1: AI HOT API（category=paper 过滤论文）。"""
     cfg = config["aihot"]
     if not cfg["enabled"]:
@@ -99,8 +102,13 @@ def fetch_aihot_papers(config, target_date):
 
 # ── 数据源 2: arXiv ──────────────────────────────────────────────
 
-def fetch_arxiv_papers(config, target_date):
-    """数据源 2: arXiv API（按分类 + 日期范围检索）。"""
+def fetch_arxiv_papers(config: Dict[str, Any], target_date: str) -> List[Dict[str, Any]]:
+    """数据源 2: arXiv API（按分类检索，本地按日期过滤）。
+
+    arXiv API 不支持 submittedDate 搜索前缀，无法在 API 层按日期过滤。
+    改为：按 submittedDate 降序拉取 max_results 条，然后在本地根据
+    publishedAt 字段过滤 days_back 范围内的论文。
+    """
     cfg = config["arxiv"]
     if not cfg["enabled"]:
         return []
@@ -110,19 +118,12 @@ def fetch_arxiv_papers(config, target_date):
     max_results = cfg["max_results"]
     timeout = cfg["timeout_seconds"]
 
-    # 日期范围（GMT）
-    end_date = datetime.strptime(target_date, "%Y-%m-%d")
-    start_date = end_date - timedelta(days=days_back)
-
-    # 构造 search_query: (cat:cs.AI+OR+cat:cs.CL+...)+AND+submittedDate:[...]
+    # 构造 search_query: (cat:cs.AI+OR+cat:cs.CL+OR+...)
+    # 注意：使用 + 而非 %20 表示空格，arXiv API 要求这种格式
     cat_query = "+OR+".join(f"cat:{c}" for c in categories)
     if len(categories) > 1:
         cat_query = f"%28{cat_query}%29"
-    date_query = (
-        f"submittedDate:[{start_date.strftime('%Y%m%d')}0000"
-        f"+TO+{end_date.strftime('%Y%m%d')}2359]"
-    )
-    search_query = f"{cat_query}+AND+{date_query}"
+    search_query = cat_query
 
     params = {
         "search_query": search_query,
@@ -131,7 +132,7 @@ def fetch_arxiv_papers(config, target_date):
         "sortBy": cfg["sort_by"],
         "sortOrder": cfg["sort_order"],
     }
-    url = f"{cfg['endpoint']}?{urllib.parse.urlencode(params, safe=':+%[]')}"
+    url = f"{cfg['endpoint']}?{urllib.parse.urlencode(params, safe=':+%')}"
     print(f"[INFO] arXiv request: {url}", file=sys.stderr)
 
     raw = _http_get(url, config, timeout=timeout)
@@ -145,12 +146,15 @@ def fetch_arxiv_papers(config, target_date):
     root = ET.fromstring(xml_data)
     papers = []
     for entry in root.findall("atom:entry", ns):
-        arxiv_id = entry.find("atom:id", ns).text.split("/abs/")[-1]
-        title = entry.find("atom:title", ns).text.strip().replace("\n", " ")
-        summary = entry.find("atom:summary", ns).text.strip().replace("\n", " ")
-        authors = [a.find("atom:name", ns).text for a in entry.findall("atom:author", ns)]
-        published = entry.find("atom:published", ns).text
-        primary_cat = entry.find("arxiv:primary_category", ns).attrib.get("term", "")
+        try:
+            arxiv_id = entry.find("atom:id", ns).text.split("/abs/")[-1]
+            title = entry.find("atom:title", ns).text.strip().replace("\n", " ")
+            summary = (entry.find("atom:summary", ns).text or "").strip().replace("\n", " ")
+            authors = [a.find("atom:name", ns).text for a in entry.findall("atom:author", ns)]
+            published = entry.find("atom:published", ns).text
+            primary_cat = entry.find("arxiv:primary_category", ns).attrib.get("term", "")
+        except (AttributeError, TypeError):
+            continue
 
         papers.append({
             "id": arxiv_id,
@@ -168,13 +172,19 @@ def fetch_arxiv_papers(config, target_date):
             "pdf_url": f"https://arxiv.org/pdf/{arxiv_id}",
         })
 
-    print(f"[INFO] arXiv fetched {len(papers)} papers", file=sys.stderr)
+    # 本地日期过滤（arXiv API 不支持 submittedDate 搜索前缀）
+    if days_back > 0:
+        papers = filter_by_date(papers, target_date, days_back)
+        print(f"[INFO] arXiv after date filter: {len(papers)} papers", file=sys.stderr)
+    else:
+        print(f"[INFO] arXiv fetched {len(papers)} papers", file=sys.stderr)
+
     return papers
 
 
 # ── 数据源 3: HuggingFace Daily Papers ───────────────────────────
 
-def fetch_hf_daily_papers(config, target_date):
+def fetch_hf_daily_papers(config: Dict[str, Any], target_date: str) -> List[Dict[str, Any]]:
     """数据源 3: HuggingFace Daily Papers（逐天遍历最近 N 天）。"""
     cfg = config["huggingface"]
     if not cfg["enabled"]:
@@ -191,54 +201,55 @@ def fetch_hf_daily_papers(config, target_date):
 
     for i in range(days_back):
         date_str = (today - timedelta(days=i)).strftime("%Y-%m-%d")
-        page = 1
-        while True:
-            url = f"{cfg['endpoint_daily']}?date={date_str}&page={page}&limit={page_limit}"
-            try:
-                raw = _http_get(url, config, timeout=timeout)
-                data = json.loads(raw.decode("utf-8"))
-            except Exception as e:
-                print(f"[WARN] HF {date_str} failed: {e}", file=sys.stderr)
-                break
+        
+        url = f"{cfg['endpoint_daily']}?date={date_str}&page=1&limit={page_limit}"
+        try:
+            raw = _http_get(url, config, timeout=timeout)
+            data = json.loads(raw.decode("utf-8"))
+        except Exception as e:
+            print(f"[WARN] HF {date_str} failed: {e}", file=sys.stderr)
+            continue
 
-            if not data:
-                break
+        if not data:
+            print(f"[INFO] HF {date_str} returned empty data", file=sys.stderr)
+            continue
 
-            for item in data:
-                paper = item.get("paper", {})
-                all_items.append({
-                    "id": paper.get("id", ""),
-                    "title": paper.get("title", ""),
-                    "summary": (paper.get("summary") or "").strip(),
-                    "url": f"https://huggingface.co/papers/{paper.get('id', '')}",
-                    "source": "hugging face",
-                    "source_api": "huggingface",
-                    "publishedAt": paper.get("publishedAt", ""),
-                    "score": paper.get("upvotes", 0),
-                    "selected": paper.get("upvotes", 0) >= 50,
-                    # 额外字段
-                    "upvotes": paper.get("upvotes", 0),
-                    "ai_summary": paper.get("ai_summary"),
-                    "ai_keywords": paper.get("ai_keywords", []),
-                    "githubRepo": paper.get("githubRepo"),
-                    "organization": (paper.get("organization") or {}).get("fullname", ""),
-                    "numComments": item.get("numComments", 0),
-                })
-
-            if len(data) < page_limit:
-                break
-            page += 1
-            time.sleep(rate_limit)
+        for item in data:
+            paper = item.get("paper", {})
+            all_items.append({
+                "id": paper.get("id", ""),
+                "title": paper.get("title", ""),
+                "summary": (paper.get("ai_summary") or paper.get("summary") or "").strip(),
+                "url": f"https://huggingface.co/papers/{paper.get('id', '')}",
+                "source": "hugging face",
+                "source_api": "huggingface",
+                "publishedAt": paper.get("publishedAt", ""),
+                "score": paper.get("upvotes", 0),
+                "selected": paper.get("upvotes", 0) >= 50,
+                # 额外字段
+                "upvotes": paper.get("upvotes", 0),
+                "ai_summary": paper.get("ai_summary"),
+                "ai_keywords": paper.get("ai_keywords", []),
+                "githubRepo": paper.get("githubRepo"),
+                "organization": (paper.get("organization") or {}).get("fullname", ""),
+                "numComments": item.get("numComments", 0),
+            })
 
         time.sleep(rate_limit)
 
-    print(f"[INFO] HuggingFace fetched {len(all_items)} papers ({days_back} days)", file=sys.stderr)
+    # 本地日期过滤：HF 的 daily_papers 返回的是推荐列表，不是严格按 publishedAt 筛选
+    if days_back > 0:
+        all_items = filter_by_date(all_items, target_date, days_back)
+        print(f"[INFO] HuggingFace after date filter: {len(all_items)} papers", file=sys.stderr)
+    else:
+        print(f"[INFO] HuggingFace fetched {len(all_items)} papers", file=sys.stderr)
+
     return all_items
 
 
 # ── 多源合并去重 ─────────────────────────────────────────────────
 
-def merge_papers(*sources):
+def merge_papers(*sources: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """多源合并去重：以 id 或 url 为 key，HF 数据优先补充热度字段。"""
     merged = {}
     for source in sources:
@@ -263,14 +274,12 @@ def merge_papers(*sources):
 
 # ── Step 1 入口：三源拉取 + 合并 ─────────────────────────────────
 
-def fetch_data(target_date=None, config=None, dot_env=None):
-    """Step 1: 多源获取论文原始数据。返回 (items, date_str)。
-
-    Args:
-        target_date:  目标日期（YYYY-MM-DD），为空时自动取北京时间当天
-        config:       配置字典（需包含 fetch / aihot / arxiv / huggingface / translation 段）
-        dot_env:      .env 解析结果字典（用于获取翻译 API Key）
-    """
+def fetch_data(
+    target_date: Optional[str] = None,
+    config: Optional[Dict[str, Any]] = None,
+    dot_env: Optional[Dict[str, str]] = None,
+) -> Tuple[List[Dict[str, Any]], str]:
+    """Step 1: 多源获取论文原始数据。返回 (items, date_str)。"""
     if config is None:
         raise ValueError("config is required — pass load_config(CONFIG_FILE) result")
 
@@ -304,7 +313,11 @@ def fetch_data(target_date=None, config=None, dot_env=None):
 
 # ── 翻译（arXiv / HuggingFace 英文论文 → 中文）─────────────────
 
-def translate_papers(papers, config, dot_env=None):
+def translate_papers(
+    papers: List[Dict[str, Any]],
+    config: Dict[str, Any],
+    dot_env: Optional[Dict[str, str]] = None,
+) -> List[Dict[str, Any]]:
     """将 arXiv / HuggingFace 来源的英文论文标题和摘要翻译为中文。
 
     翻译后在 paper dict 中新增 title_zh / summary_zh 字段。
@@ -359,7 +372,13 @@ def translate_papers(papers, config, dot_env=None):
     return papers
 
 
-def _translate_batch(papers, api_key, base_url, model, timeout):
+def _translate_batch(
+    papers: List[Dict[str, Any]],
+    api_key: str,
+    base_url: str,
+    model: str,
+    timeout: int,
+) -> List[Dict[str, Any]]:
     """调用大模型批量翻译论文标题和摘要，返回翻译结果列表。
 
     Returns:
@@ -411,7 +430,7 @@ def _translate_batch(papers, api_key, base_url, model, timeout):
     return _parse_translation_response(content, len(papers))
 
 
-def _parse_translation_response(content, expected_count):
+def _parse_translation_response(content: str, expected_count: int) -> List[Dict[str, Any]]:
     """从 LLM 响应中解析翻译结果，返回 list[dict]。"""
     # 尝试直接解析
     text = content.strip()

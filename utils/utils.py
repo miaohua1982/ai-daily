@@ -8,7 +8,7 @@ Utils — 公共工具函数
   - api_get:           HTTP GET + 指数退避重试（共用）
   - get_embeddings:    批量获取文本 embedding（OpenAI 兼容接口，支持分批）
   - cosine_similarity: 余弦相似度计算
-  - semantic_dedup:    基于 embedding 相似度的语义去重
+  - dedup_data:        URL 去重 + 语义去重（papers / news 共用）
   - write_files:       写入主页面和归档文件（共用）
   - git_commit:        git add/commit/push（共用）
 """
@@ -19,10 +19,12 @@ import json
 import subprocess
 import time
 import random
+import urllib.parse
 import urllib.request
 import urllib.error
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 # ── .env 解析 ──────────────────────────────────────────────────
@@ -378,6 +380,57 @@ def semantic_dedup(
     return result
 
 
+def dedup_data(
+    items: List[dict],
+    config: Optional[Dict] = None,
+    dot_env: Optional[Dict[str, str]] = None,
+) -> List[dict]:
+    """URL 去重 + 语义去重（papers / news 共用）。
+
+    1. URL 去重：按 ``sourceUrl``（优先）→ ``url`` 去重，去掉 URL fragment
+    2. 语义去重：若 ``config.semantic_dedup.enabled``，调用 embedding API 做语义去重
+
+    Args:
+        items:   待去重的条目列表（每条需含 ``sourceUrl`` 或 ``url``）
+        config:  配置字典（可选，含 ``semantic_dedup`` 段）
+        dot_env: .env 解析结果（可选，用于注入 embedding API Key）
+
+    Returns:
+        去重后的条目列表
+    """
+    # 1. URL 去重
+    seen = set()
+    url_deduped = []
+    for p in items:
+        url = p.get("sourceUrl") or p.get("url") or ""
+        key = urllib.parse.urldefrag(url)[0]
+        if key and key in seen:
+            continue
+        if key:
+            seen.add(key)
+        url_deduped.append(p)
+
+    # 2. 语义去重
+    sem_cfg = (config or {}).get("semantic_dedup", {})
+    if sem_cfg.get("enabled", False):
+        api_key_env = sem_cfg.get("api_key_env", "EMBEDDING_API_KEY")
+        api_key = os.environ.get(api_key_env) or (dot_env or {}).get(api_key_env, "")
+        base_url = sem_cfg.get("base_url", "")
+        model = sem_cfg.get("model", "text-embedding-3-small")
+        threshold = float(sem_cfg.get("threshold", 0.85))
+        batch_size = int(sem_cfg.get("batch_size", 10))
+
+        if api_key and base_url:
+            before = len(url_deduped)
+            url_deduped = semantic_dedup(url_deduped, threshold, api_key, base_url, model, batch_size)
+            if len(url_deduped) != before:
+                print(f"[INFO] Semantic dedup: {before} -> {len(url_deduped)}", file=sys.stderr)
+        else:
+            print("[WARN] Semantic dedup enabled but API key or base_url not configured", file=sys.stderr)
+
+    return url_deduped
+
+
 # ── HTML 转义（共用）───────────────────────────────────────────
 
 def esc_html(s):
@@ -431,6 +484,45 @@ def api_get(path, base_url, max_retries=3):
             time.sleep(backoff)
 
     return None
+
+
+# ── 日期过滤（共用）─────────────────────────────────────────
+
+def filter_by_date(
+    items: List[Dict[str, Any]],
+    target_date: str,
+    days_back: int,
+) -> List[Dict[str, Any]]:
+    """按 publishedAt 过滤，只保留 days_back 范围内的数据。
+
+    解析 ``publishedAt`` 中的 ISO 8601 时间戳（取前 19 位），
+    与 cutoff 日期比较，过期的不入列。
+    无日期或解析失败的条目统一丢弃。
+
+    Args:
+        items:       待过滤的条目列表
+        target_date: 目标日期（格式 ``YYYY-MM-DD``）
+        days_back:   截止天数，0 表示不过滤
+
+    Returns:
+        过滤后的条目列表
+    """
+    if not days_back:
+        return items
+
+    cutoff_dt = datetime.strptime(target_date, "%Y-%m-%d") - timedelta(days=days_back)
+    filtered: List[Dict[str, Any]] = []
+    for item in items:
+        pub_str = item.get("publishedAt", "")
+        if not pub_str:
+            continue
+        try:
+            pub_dt = datetime.strptime(pub_str[:19], "%Y-%m-%dT%H:%M:%S")
+            if pub_dt >= cutoff_dt:
+                filtered.append(item)
+        except ValueError:
+            continue
+    return filtered
 
 
 # ── 文件写入 & Git 提交（共用）───────────────────────────────

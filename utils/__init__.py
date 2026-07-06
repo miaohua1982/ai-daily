@@ -11,6 +11,8 @@ from .utils import (
     get_embeddings,
     cosine_similarity,
     semantic_dedup,
+    dedup_data,
+    filter_by_date,
     esc_html,
     esc_attr,
     api_get,
