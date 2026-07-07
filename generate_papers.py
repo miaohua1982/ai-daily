@@ -65,19 +65,19 @@ def main():
     config = load_config(CONFIG_FILE)
 
     # Step 1: 获取数据（aihot + arXiv + HuggingFace 三源合并）
-    items, date_str = fetch_data(target_date, config)
+    items, date_now_str = fetch_data(target_date, config)
 
     # Step 2: 去重（URL 去重 + 语义去重 + Top-N 选择）
     papers = dedup_data(items, config)
 
     # Step 3: 生成 HTML
-    html = generate_html(papers, date_str)
+    html = generate_html(papers, date_now_str)
 
     # Step 4: 写入文件
-    write_files(html, date_str, INDEX_FILE, ARCHIVE_DIR)
+    write_files(html, date_now_str, INDEX_FILE, ARCHIVE_DIR)
 
     # Step 5: Git 提交
-    git_commit(date_str, ["papers.html", f"papers-archive/{date_str}.html"], "papers archive", OUTPUT_DIR)
+    git_commit(date_now_str, ["papers.html", f"papers-archive/{date_now_str}.html"], "papers archive", OUTPUT_DIR)
 
 
 if __name__ == "__main__":

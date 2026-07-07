@@ -9,11 +9,9 @@ news — 新闻管线辅助模块。
 
 from .constants import (
     CATEGORY_LABELS,
-    LABEL_TO_SLUG,
     CATEGORY_ORDER,
     CATEGORY_COLORS,
     EMPTY_ICONS,
-    SLUG_TO_LABEL,
 )
 from .fetcher import fetch_data
 from utils import dedup_data
@@ -21,8 +19,8 @@ from .renderer import generate_html, fmt_time, source_class, short_source, summa
 
 __all__ = [
     # constants
-    "CATEGORY_LABELS", "LABEL_TO_SLUG", "CATEGORY_ORDER",
-    "CATEGORY_COLORS", "EMPTY_ICONS", "SLUG_TO_LABEL",
+    "CATEGORY_LABELS", "CATEGORY_ORDER",
+    "CATEGORY_COLORS", "EMPTY_ICONS",
     # fetcher
     "fetch_data",
     # dedup

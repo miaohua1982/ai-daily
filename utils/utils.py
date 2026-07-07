@@ -22,7 +22,7 @@ import random
 import urllib.parse
 import urllib.request
 import urllib.error
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -484,6 +484,28 @@ def api_get(path, base_url, max_retries=3):
             time.sleep(backoff)
 
     return None
+
+
+# ── 日期计算（共用）─────────────────────────────────────────────
+
+def get_now_date_str(target_date: Optional[str] = None) -> str:
+    """获取当前日期字符串（YYYY-MM-DD）。
+
+    若指定 target_date 则直接返回；否则按北京时间计算，
+    凌晨 8 点前归为前一天（与日报窗口对齐）。
+
+    Args:
+        target_date: 目标日期（格式 YYYY-MM-DD），为 None 时自动计算
+
+    Returns:
+        日期字符串 YYYY-MM-DD
+    """
+    if target_date:
+        return target_date
+    bj = datetime.now(timezone(timedelta(hours=8)))
+    if bj.hour < 8:
+        bj = bj - timedelta(days=1)
+    return bj.strftime("%Y-%m-%d")
 
 
 # ── 日期过滤（共用）─────────────────────────────────────────

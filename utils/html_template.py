@@ -1310,7 +1310,7 @@ def _wechat_build_news_item(i: int, it: dict) -> str:
     title = _esc_html(it.get("title", ""))
     summary = _esc_html(it.get("summary") or it.get("description") or "")
     source = _esc_html(it.get("sourceName") or it.get("source") or "来源")
-    section = _esc_html(it.get("_section", ""))
+    section = _esc_html(it.get("category", "tips"))
     url = (it.get("sourceUrl") or it.get("url") or "").strip()
     if url and not url.startswith(("http://", "https://")):
         url = "https://" + url.lstrip("/")
@@ -1322,7 +1322,7 @@ def _wechat_build_news_item(i: int, it: dict) -> str:
         num=i, title=title, summary=summary, source=source,
         accent_color=accent, bg_color=bg,
     )
-    if section and section not in ("未分类", ""):
+    if section:
         badge = _wechat_badge_html(section, accent)
         html = html.replace("{section_badge}", badge)
     else:

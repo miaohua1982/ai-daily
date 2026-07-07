@@ -5,7 +5,7 @@ news/renderer — 新闻 HTML 渲染（含卡片、分类、导航构建）。
 from datetime import datetime, timezone, timedelta
 from typing import Any, Dict, List
 
-from utils import esc_html, esc_attr
+from utils import esc_html, esc_attr, get_now_date_str
 from utils.html_template import (
     render_news_html,
     NEWS_CARD_TEMPLATE,
@@ -82,15 +82,21 @@ def summarize(text: str, max_len: int = 60) -> str:
 
 
 def generate_html(
-    items_by_cat: Dict[str, List[Dict[str, Any]]],
-    data: Dict[str, Any],
-    date_str: str,
+    items: List[Dict[str, Any]],
+    ts: str,
 ) -> str:
     """Step 3: 纯 HTML 渲染，不含任何数据获取或去重逻辑。"""
-    cat_counts = {cat: len(items_by_cat.get(cat, [])) for cat in CATEGORY_ORDER}
+    # 按 category 分组（保留 CATEGORY_ORDER 顺序）
+    items_by_lbl: Dict[str, List[Dict[str, Any]]] = {}
+    for it in items:
+        lbl = it.get("category", "")
+        items_by_lbl.setdefault(lbl, []).append(it)
+
+    cat_counts = {lbl: len(items_by_lbl.get(lbl, [])) for lbl in items_by_lbl.keys()}
     total = sum(cat_counts.values())
 
     # 展示日期
+    date_str = get_now_date_str()
     try:
         d = datetime.strptime(date_str, "%Y-%m-%d")
         wd = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"][d.weekday()]
@@ -101,8 +107,7 @@ def generate_html(
     # 计算相对于日报窗口的时间
     window_relative = ""
     try:
-        w_end_str = data.get("windowEnd", "")
-        w_end = datetime.fromisoformat(w_end_str.replace("Z", "+00:00"))
+        w_end = datetime.fromisoformat(ts.replace("Z", "+00:00"))
         w_end_bj = w_end.astimezone(timezone(timedelta(hours=8)))
         now_bj = datetime.now(timezone(timedelta(hours=8)))
         diff_hours = int((now_bj - w_end_bj).total_seconds() // 3600)
@@ -119,9 +124,9 @@ def generate_html(
     # ── 构建卡片 HTML（全局编号）──
     cards_parts = {}
     global_idx = 0
-    for cat in CATEGORY_ORDER:
-        cards_parts[cat] = []
-        for item in items_by_cat.get(cat, []):
+    for lbl in items_by_lbl.keys():
+        cards_parts[lbl] = []
+        for item in items_by_lbl.get(lbl, []):
             global_idx += 1
             title = esc_html(item.get("title", "无标题"))
             summary = esc_html(summarize(item.get("summary", ""), 60))
@@ -132,7 +137,7 @@ def generate_html(
             sc = source_class(source_name)
             time_str = window_relative
 
-            cards_parts[cat].append(
+            cards_parts[lbl].append(
                 NEWS_CARD_TEMPLATE.format(
                     idx=global_idx,
                     title=title,
@@ -149,7 +154,7 @@ def generate_html(
     for cat in CATEGORY_ORDER:
         label = CATEGORY_LABELS[cat]
         color = CATEGORY_COLORS[cat]
-        count = cat_counts[cat]
+        count = cat_counts[label]
 
         if count == 0:
             icon = EMPTY_ICONS.get(cat, "📌")
@@ -159,7 +164,7 @@ def generate_html(
                 )
             )
         else:
-            cards_html = "\n".join(cards_parts[cat])
+            cards_html = "\n".join(cards_parts[label])
             sections_parts.append(
                 NEWS_SECTION_TEMPLATE.format(
                     cat=cat, color=color, label=label, count=count,
@@ -173,7 +178,7 @@ def generate_html(
     nav_items_parts = []
     for cat in CATEGORY_ORDER:
         lbl = CATEGORY_LABELS[cat]
-        cnt = cat_counts[cat]
+        cnt = cat_counts[lbl]
         nav_items_parts.append(
             f'    <a href="#sec-{cat}" class="nav-link">\n'
             f'      <span class="nav-dot" style="background:{CATEGORY_COLORS[cat]}"></span>{lbl}\n'

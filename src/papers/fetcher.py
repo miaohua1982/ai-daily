@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
-from utils import api_get, filter_by_date
+from utils import api_get, filter_by_date, get_now_date_str
 
 
 # ── 通用 HTTP GET（带重试 + 指数退避 + 抖动）────────────────────
@@ -284,11 +284,7 @@ def fetch_data(
         raise ValueError("config is required — pass load_config(CONFIG_FILE) result")
 
     # 确定 target_date（北京时间 9 点前用前一天）
-    if not target_date:
-        now_bj = datetime.now(timezone(timedelta(hours=8)))
-        if now_bj.hour < 9:
-            now_bj = now_bj - timedelta(days=1)
-        target_date = now_bj.strftime("%Y-%m-%d")
+    target_date = get_now_date_str(target_date)
 
     # 优先拉取 aihot，成功则直接使用，不再请求 arXiv / HuggingFace
     aihot_items = fetch_aihot_papers(config, target_date)

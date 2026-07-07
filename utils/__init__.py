@@ -13,6 +13,7 @@ from .utils import (
     semantic_dedup,
     dedup_data,
     filter_by_date,
+    get_now_date_str,
     esc_html,
     esc_attr,
     api_get,

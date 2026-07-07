@@ -8,9 +8,6 @@ CATEGORY_LABELS = {
     "tip": "技巧与观点",
 }
 
-# Reverse mapping: Chinese label → English slug (API now uses Chinese labels)
-LABEL_TO_SLUG = {v: k for k, v in CATEGORY_LABELS.items()}
-
 CATEGORY_ORDER = ["ai-models", "ai-products", "industry", "paper", "tip"]
 
 CATEGORY_COLORS = {
@@ -28,6 +25,3 @@ EMPTY_ICONS = {
     "paper": "📄",
     "tip": "💡",
 }
-
-# newsnow 返回的 extra.info 中包含英文 category slug
-SLUG_TO_LABEL = CATEGORY_LABELS

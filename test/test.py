@@ -45,7 +45,7 @@ from generate_trending import (
 )
 import generate_trending as gt
 
-from utils import load_config, write_files
+from utils import load_config, write_files, get_now_date_str
 
 # ── Config paths ────────────────────────────────────────────────
 NEWS_CONFIG = ROOT / "config" / "news_config.yaml"
@@ -90,34 +90,21 @@ class PatchPaths:
 
 
 # ── Stub data (used when API is unreachable or --live not set) ───
-def _stub_news_data():
-    """Minimal news data matching aihot API response structure."""
-    date_str = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
-    data = {
-        "sections": [
-            {
-                "label": "模型发布/更新",
-                "items": [
-                    {"id": "n1", "title": "OpenAI 发布 GPT-5 Turbo，推理速度提升 3 倍",
-                     "summary": "推理延迟大幅下降", "sourceName": "TechCrunch",
-                     "sourceUrl": "https://example.com/1"},
-                    {"id": "n2", "title": "Claude 4 开放 API 公测",
-                     "summary": "上下文窗口扩展至 200K tokens", "sourceName": "Anthropic Blog",
-                     "sourceUrl": "https://example.com/2"},
-                ],
-            },
-            {
-                "label": "行业动态",
-                "items": [
-                    {"id": "n3", "title": "Google DeepMind 在蛋白质折叠领域再突破",
-                     "summary": "AlphaFold 3 新版本", "sourceName": "Nature",
-                     "url": "https://example.com/3"},
-                ],
-            },
-        ],
-        "windowEnd": datetime.now(timezone(timedelta(hours=8))).isoformat(),
-    }
-    return data, date_str
+def _stub_news_items():
+    """Minimal news items matching flattened structure (items + ts)."""
+    ts = datetime.now(timezone(timedelta(hours=8))).isoformat()
+    items = [
+        {"id": "n1", "title": "OpenAI 发布 GPT-5 Turbo，推理速度提升 3 倍",
+         "summary": "推理延迟大幅下降", "sourceName": "TechCrunch",
+         "sourceUrl": "https://example.com/1", "category": "ai-models"},
+        {"id": "n2", "title": "Claude 4 开放 API 公测",
+         "summary": "上下文窗口扩展至 200K tokens", "sourceName": "Anthropic Blog",
+         "sourceUrl": "https://example.com/2", "category": "ai-models"},
+        {"id": "n3", "title": "Google DeepMind 在蛋白质折叠领域再突破",
+         "summary": "AlphaFold 3 新版本", "sourceName": "Nature",
+         "url": "https://example.com/3", "category": "industry"},
+    ]
+    return items, ts
 
 
 def _stub_papers_items():
@@ -172,43 +159,39 @@ def test_news_pipeline() -> bool:
     config = load_config(NEWS_CONFIG)
 
     # Step 1: Fetch
-    data, date_str = None, None
+    items, ts = None, None
     if LIVE:
         try:
-            data, date_str = news_fetch(config=config)
-            ok(f"Step 1 Fetch (live): got data for {date_str}")
+            items, ts = news_fetch(config=config)
+            ok(f"Step 1 Fetch (live): {len(items)} items, ts={ts}")
         except Exception as e:
             fail(f"Step 1 Fetch (live) failed: {e}")
-            data, date_str = _stub_news_data()
-            ok(f"  Fallback to stub data for {date_str}")
+            items, ts = _stub_news_items()
+            ok(f"  Fallback to stub data: {len(items)} items")
     else:
-        data, date_str = _stub_news_data()
-        ok(f"Step 1 Fetch (stub): data for {date_str}")
+        items, ts = _stub_news_items()
+        ok(f"Step 1 Fetch (stub): {len(items)} items")
 
-    sections = data.get("sections", [])
-    ok(f"  Raw sections: {len(sections)}")
+    ok(f"  Raw items: {len(items)}")
 
     # Step 2: Dedup
     try:
-        items_by_cat = news_dedup(data, config)
-        total = sum(len(v) for v in items_by_cat.values())
-        ok(f"Step 2 Dedup: {total} items in {len(items_by_cat)} categories")
-        for cat, items in items_by_cat.items():
-            if items:
-                ok(f"    {cat}: {len(items)}")
+        items = news_dedup(items, config)
+        ok(f"Step 2 Dedup: {len(items)} items after dedup")
     except Exception as e:
         fail(f"Step 2 Dedup failed: {e}")
         return False
 
     # Step 3: Generate HTML
     try:
-        html = news_html(items_by_cat, data, date_str)
+        html = news_html(items, ts)
         ok(f"Step 3 HTML: {len(html):,} chars")
     except Exception as e:
         fail(f"Step 3 HTML failed: {e}")
         return False
 
     # Step 4: Write files (redirected to craft/)
+    date_str = get_now_date_str()
     with PatchPaths(gd, "news"):
         try:
             write_files(html, date_str, gd.INDEX_FILE, gd.ARCHIVE_DIR)

@@ -6,21 +6,24 @@ import sys
 import time
 import random
 from datetime import datetime, timezone, timedelta
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
-from utils import api_get
-from src.news.constants import CATEGORY_ORDER, CATEGORY_LABELS
+from utils import api_get, get_now_date_str
+from src.news.constants import CATEGORY_LABELS
 
 
 def fetch_data(
     target_date: Optional[str] = None,
     config: Optional[Dict[str, Any]] = None,
-) -> Tuple[Dict[str, Any], str]:
-    """Step1: 获取每日新闻原始数据（aihot 主源 → newsnow 备用源）。返回 (data, date_str)。"""
+) -> Tuple[List[Dict[str, Any]], str]:
+    """Step1: 获取每日新闻原始数据（aihot 主源 → newsnow 备用源）。返回 (items, ts)。
+
+    items: flat list，每个 item 含 category 字段（CATEGORY_ORDER 中的一个 slug）。
+    ts:    API 返回的精确时间戳（aihot 用 windowEnd，newsnow 用 updatedTime 转 ISO）。
+    """
     if config is None:
-        # caller should pass config
         print(f"[INFO] Caller do not pass config, just return empty data for test purpose.")
-        return {}, ""
+        return [], ""
 
     api_base = config["fetch"]["api_base"]
     max_retries = config["fetch"]["max_retries"]
@@ -30,21 +33,14 @@ def fetch_data(
     if startup_jitter > 0.05:
         time.sleep(startup_jitter)
 
-    if target_date:
-        date_str = target_date
-    else:
-        bj = datetime.now(timezone(timedelta(hours=8)))
-        if bj.hour < 8:
-            bj = bj - timedelta(days=1)
-        date_str = bj.strftime("%Y-%m-%d")
+    date_str = get_now_date_str(target_date)
 
     print(f"[INFO] Fetching daily for {date_str} ...")
     data = api_get(f"/daily/{date_str}", base_url=api_base, max_retries=max_retries)
     if data and "sections" in data:
-        sections = data["sections"]
-        total = sum(len(s.get("items", [])) for s in sections)
-        print(f"[INFO] Got daily {date_str}: {len(sections)} sections, {total} items")
-        return data, date_str
+        items, ts = _flatten_sections(data)
+        print(f"[INFO] Got daily {date_str}: {len(items)} items")
+        return items, ts
 
     # ── 第一级回退：主源最新日期 ──
     print(f"[WARN] Daily {date_str} not available on primary, falling back to latest...")
@@ -55,33 +51,39 @@ def fetch_data(
         print(f"[INFO] Fallback to {latest} (available dates: {available})")
         data = api_get(f"/daily/{latest}", base_url=api_base, max_retries=max_retries)
         if data and "sections" in data:
-            sections = data["sections"]
-            total = sum(len(s.get("items", [])) for s in sections)
-            print(f"[INFO] Got daily {latest}: {len(sections)} sections, {total} items")
-            return data, latest
+            items, ts = _flatten_sections(data)
+            print(f"[INFO] Got daily {latest}: {len(items)} items")
+            return items, ts
 
     # ── 第二级回退：备用数据源 newsnow ──
     print(f"[WARN] Primary source unavailable, falling back to newsnow secondary source...")
-    data = _fetch_from_newsnow(config)
-    if data and data.get("sections"):
-        sections = data["sections"]
-        total = sum(len(s.get("items", [])) for s in sections)
-        print(f"[INFO] Got from newsnow: {len(sections)} sections, {total} items")
-        return data, date_str
+    result = _fetch_from_newsnow(config)
+    if result:
+        items, ts = result
+        print(f"[INFO] Got from newsnow: {len(items)} items")
+        return items, ts
 
     raise RuntimeError("Failed to fetch any daily report from both primary and secondary sources")
 
 
-def _fetch_from_newsnow(config: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+def _flatten_sections(data: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], str]:
+    """将 aihot API 的 sections 展平为 item 列表，每个 item 标注 category。返回 (items, ts)。"""
+    items = []
+    for sec in data.get("sections", []):
+        label = sec.get("label", "")
+        for item in sec.get("items", []):
+            item["category"] = label
+            items.append(item)
+    ts = data.get("windowEnd", "")
+    return items, ts
+
+
+def _fetch_from_newsnow(config: Dict[str, Any]) -> Optional[Tuple[List[Dict[str, Any]], str]]:
     """
-    从 newsnow.busiyi.world 备用源获取数据，并转换为与 aihot 主源兼容的格式。
+    从 newsnow.busiyi.world 备用源获取数据，返回 (items, ts)。
 
-    newsnow 原始格式:
-      {"items": [{"id":"..","title":"..","url":"..",
-                   "extra":{"hover":"摘要","info":"来源名 · category_slug"}}]}
-
-    转换为 aihot 格式:
-      {"sections": [{"label":"技巧与观点","items":[{...}]}], "date":"2026-07-05"}
+    每个 item 标注 category（CATEGORY_ORDER 中的一个 slug）。
+    ts 从 updatedTime（Unix 毫秒时间戳）转换为 ISO 字符串。
     """
     fallback_base = config["fetch"]["fallback_base"]
     fallback_path = config["fetch"]["fallback_path"]
@@ -91,8 +93,7 @@ def _fetch_from_newsnow(config: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     if not data or not data.get("items"):
         return None
 
-    # 按 category slug 分组
-    sections = [ {"label": CATEGORY_LABELS.get(slug, slug), "items": []} for slug in CATEGORY_ORDER ]
+    items = []
     for item in data["items"]:
         extra = item.get("extra", {})
         info = extra.get("info", "")
@@ -104,7 +105,10 @@ def _fetch_from_newsnow(config: Dict[str, Any]) -> Optional[Dict[str, Any]]:
             slug = slug.strip()
         else:
             source_name = info.strip()
-            slug = "tip"  # 无法解析时归入"技巧与观点"
+            slug = "tip"
+
+        if slug not in CATEGORY_LABELS:
+            slug = "tip"
 
         transformed = {
             "id": item.get("id", ""),
@@ -113,24 +117,19 @@ def _fetch_from_newsnow(config: Dict[str, Any]) -> Optional[Dict[str, Any]]:
             "sourceUrl": item.get("url", ""),
             "sourceName": source_name,
             "summary": extra.get("hover", ""),
+            "category": CATEGORY_LABELS.get(slug, "技巧与观点"),
         }
-        for section in sections:
-            if section["label"] == CATEGORY_LABELS.get(slug, slug):
-                section["items"].append(transformed)
-                break
+        items.append(transformed)
 
-    # 从 updatedTime（Unix 毫秒时间戳）提取日期
-    date_str = None
+    # 从 updatedTime（Unix 毫秒时间戳）提取精确时间
+    ts = ""
     updated = data.get("updatedTime")
     if updated:
         try:
-            from datetime import timezone as tz
-            dt = datetime.fromtimestamp(updated / 1000, tz=tz.utc)
+            dt = datetime.fromtimestamp(updated / 1000, tz=timezone.utc)
             dt_bj = dt.astimezone(timezone(timedelta(hours=8)))
-            date_str = dt_bj.strftime("%Y-%m-%d")
+            ts = dt_bj.isoformat()
         except Exception:
             pass
-    if not date_str:
-        date_str = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
 
-    return {"sections": sections, "date": date_str}
+    return items, ts

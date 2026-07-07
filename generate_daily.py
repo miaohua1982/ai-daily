@@ -13,10 +13,10 @@ Usage: python generate_daily.py [YYYY-MM-DD]
 import sys
 from pathlib import Path
 
-from utils import load_dot_env, load_config, write_files, git_commit, dedup_data as _dedup_data_impl
+from utils import load_dot_env, load_config, write_files, git_commit, get_now_date_str, dedup_data as _dedup_data_impl
 from src.news.fetcher import fetch_data as _fetch_data_impl
 from src.news.renderer import generate_html
-from src.news.constants import CATEGORY_LABELS, CATEGORY_ORDER, LABEL_TO_SLUG  # re-export
+from src.news.constants import CATEGORY_LABELS, CATEGORY_ORDER  # re-export
 
 # ── 路径常量 ─────────────────────────────────────────────────────
 
@@ -34,32 +34,13 @@ _dot_env = load_dot_env(OUTPUT_DIR / ".env")
 # dedup_data 需要 _dot_env 注入 API Key，因此保留薄包装层。
 
 def fetch_data(target_date=None, config=None):
-    """Step 1: 获取每日新闻原始数据（aihot 主源 → newsnow 备用源）。返回 (data, date_str)。"""
+    """Step 1: 获取每日新闻原始数据（aihot 主源 → newsnow 备用源）。返回 (items, ts)。"""
     return _fetch_data_impl(target_date, config)
 
 
-def dedup_data(data, config=None):
-    """Step 2: URL 去重 + 语义去重，重建分类分组。返回 items_by_cat。"""
-    # 1. 从 sections 中提取所有 item，标注 category
-    sections = data.get("sections", [])
-    all_items = []
-    for sec in sections:
-        label = sec.get("label", "")
-        cat = LABEL_TO_SLUG.get(label, "")
-        for item in sec.get("items", []):
-            item["category"] = cat
-            all_items.append(item)
-
-    # 2. 调用底层去重（输入输出均为 item 列表）
-    deduped = _dedup_data_impl(all_items, config, _dot_env)
-
-    # 3. 重建 items_by_cat（按 category 分组）
-    items_by_cat = {}
-    for it in deduped:
-        cat = it.get("category", "")
-        items_by_cat.setdefault(cat, []).append(it)
-
-    return items_by_cat
+def dedup_data(items, config=None):
+    """Step 2: URL 去重 + 语义去重。返回去重后的 item 列表。"""
+    return _dedup_data_impl(items, config, _dot_env)
 
 
 # ── Main ─────────────────────────────────────────────────────────
@@ -68,16 +49,17 @@ def main():
     target_date = sys.argv[1] if len(sys.argv) > 1 else None
     config = load_config(CONFIG_FILE)
 
-    # Step 1: 获取数据，存在无法获取到当前日期，只能获取服务端最新日期的情况，因此返回 (data, date_str)
-    data, date_str = fetch_data(target_date, config)
+    # Step 1: 获取数据，返回 (items, ts)
+    items, ts = fetch_data(target_date, config)
 
     # Step 2: 去重
-    items_by_cat = dedup_data(data, config)
+    items = dedup_data(items, config)
 
     # Step 3: 生成 HTML
-    html = generate_html(items_by_cat, data, date_str)
+    html = generate_html(items, ts)
 
     # Step 4: 写入文件
+    date_str = get_now_date_str(target_date)
     write_files(html, date_str, INDEX_FILE, ARCHIVE_DIR)
 
     # Step 5: Git 提交
