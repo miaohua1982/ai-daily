@@ -50,20 +50,20 @@ def main():
     config = load_config(CONFIG_FILE)
 
     # Step 1: 获取数据，返回 (items, ts)
-    items, ts = fetch_data(target_date, config)
+    news, fetched_date_str = fetch_data(target_date, config)
 
     # Step 2: 去重
-    items = dedup_data(items, config)
+    news = dedup_data(news, config)
 
     # Step 3: 生成 HTML
-    html = generate_html(items, ts)
+    html = generate_html(news, fetched_date_str)
 
     # Step 4: 写入文件
-    date_str = get_now_date_str(target_date)
-    write_files(html, date_str, INDEX_FILE, ARCHIVE_DIR)
+    gen_date_str = get_now_date_str(target_date) # 可能与数据获取时间不一致！
+    write_files(html, gen_date_str, INDEX_FILE, ARCHIVE_DIR)
 
     # Step 5: Git 提交
-    git_commit(date_str, ["daily_news.html", f"news-archive/{date_str}.html"], "daily dashboard", OUTPUT_DIR)
+    git_commit(gen_date_str, ["daily_news.html", f"news-archive/{gen_date_str}.html"], "daily news dashboard", OUTPUT_DIR)
 
 
 if __name__ == "__main__":

@@ -8,8 +8,7 @@ so the generator logic stays readable.
 from datetime import datetime
 
 
-WEEKDAY_NAMES = ["星期日", "星期一", "星期二",
-                 "星期三", "星期四", "星期五", "星期六"]
+WEEKDAY_NAMES = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
 
 
 PAPERS_CSS = """\

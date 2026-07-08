@@ -5,13 +5,28 @@ trending.renderer — HTML 渲染（含辅助工具函数）。
 from datetime import datetime, timezone, timedelta
 from typing import Any, Dict, List, Tuple
 
-from utils import esc_html, esc_attr
+from utils import esc_html, esc_attr, WEEKDAY_NAMES
 from utils.html_template import (
     render_trending_html,
     TRENDING_CARD_TEMPLATE,
     TRENDING_SECTION_TEMPLATE,
 )
 
+SOURCES = {
+    # ── 综合热榜 ──────────────────────────────────
+    "weibo":        {"name": "微博热搜",   "icon": "🔥",   "group": "综合热榜"},
+    "toutiao":      {"name": "今日头条",   "icon": "📰",   "group": "综合热榜"},
+
+    # ── 财经 / 金融 ──────────────────────────────────
+    "jin10":        {"name": "金十数据",   "icon": "📊",   "group": "财经/金融"},
+    "cls":          {"name": "财联社",     "icon": "📰",   "group": "财经/金融"},
+    "wallstreetcn": {"name": "华尔街见闻", "icon": "💹",   "group": "财经/金融"},
+
+    # ── 国际 / 深度新闻 ─────────────────────────────
+    "cankaoxiaoxi": {"name": "参考消息",   "icon": "🌏",   "group": "国际/深度新闻"},
+    "zaobao":       {"name": "联合早报",   "icon": "🗞️",  "group": "国际/深度新闻"},
+    "thepaper":     {"name": "澎湃新闻",   "icon": "📝",   "group": "国际/深度新闻"},
+}
 
 def source_meta(item: Dict[str, Any], config: Dict[str, Any]) -> Tuple[str, str, str]:
     """返回 (来源名称, 图标, 热度文本)。"""
@@ -35,11 +50,7 @@ def format_updated(ts: Any) -> str:
         return ""
 
 
-def generate_html(
-    grouped_items: Dict[str, List[Dict[str, Any]]],
-    config: Dict[str, Any],
-    build_time: datetime,
-) -> str:
+def generate_html(grouped_items: Dict[str, List[Dict[str, Any]]]) -> str:
     """Step 4: 纯 HTML 渲染，不含去重或过滤逻辑。"""
     # 强制按固定顺序展示分组
     desired_order = ["国际局势", "财经资讯", "AI大模型", "智能汽车", "机器人与具身智能", "其他"]
@@ -96,7 +107,7 @@ def generate_html(
             title = esc_html(it.get("title", "无标题"))
             url = it.get("url") or it.get("mobileUrl") or "#"
             url_attr = esc_attr(url)
-            src_name, _, _ = source_meta(it, config)
+            src_name = SOURCES.get(it.get("source_id", ""), {}).get("name", "未知来源")
 
             source_class = "source-x"
             if "wechat" in src_name.lower() or "微信" in src_name:
@@ -146,8 +157,9 @@ def generate_html(
 
     sections_html = "\n".join(sections_parts)
 
+    build_time = datetime.now(timezone(timedelta(hours=8)))
     display_date = build_time.strftime("%Y-%m-%d %H:%M")
-    wd = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"][build_time.weekday()]
+    wd = WEEKDAY_NAMES[build_time.weekday()]
 
     return render_trending_html(
         total=total,

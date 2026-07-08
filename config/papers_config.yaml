@@ -18,9 +18,9 @@ aihot:
   enabled: true
   api_base: "https://aihot.virxact.com/api/public"
   # 单次抓取上限
-  take: 150
+  take: 30
   # 每页条数
-  page_size: 100
+  page_size: 10
 
 # 数据源 2: arXiv（全量论文检索，按分类/关键词/日期）
 arxiv:
@@ -92,6 +92,6 @@ semantic_dedup:
   # embedding 模型名
   model: "text-embedding-v4"
   # 余弦相似度阈值（0.0-1.0），>= 此值视为重复
-  threshold: 0.80
+  threshold: 0.75
   # 单次请求最大文本数（阿里 Qwen embedding 限制为 10 条）
   batch_size: 10

@@ -8,7 +8,7 @@ import json
 from datetime import datetime
 from typing import Any, Dict, List, Tuple
 
-from utils.html_template import render_papers_html, WEEKDAY_NAMES
+from utils import render_papers_html, WEEKDAY_NAMES
 from .constants import SOURCE_COLORS
 
 
@@ -59,7 +59,7 @@ def group_by_date(papers: List[Dict[str, Any]]) -> Tuple[Dict[str, List[Dict[str
 
 # ── Step 3: 生成 HTML ────────────────────────────────────────────
 
-def generate_html(papers: List[Dict[str, Any]], date_str: str) -> str:
+def generate_html(papers: List[Dict[str, Any]]) -> str:
     """Step 3: 纯 HTML 渲染，不含去重逻辑。"""
     groups, sorted_dates = group_by_date(papers)
     total = len(papers)

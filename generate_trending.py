@@ -69,19 +69,11 @@ def main():
     # Step 3: 过滤
     grouped_items = filter_data(items, config)
 
-    # 构建时间戳
-    now = datetime.now(timezone(timedelta(hours=8)))
-    if len(sys.argv) > 1:
-        try:
-            now = datetime.strptime(sys.argv[1], "%Y-%m-%d").replace(tzinfo=timezone(timedelta(hours=8)))
-        except Exception:
-            pass
-
     # Step 4: 生成 HTML
-    html = generate_html(grouped_items, config, now)
+    html = generate_html(grouped_items)
 
     # Step 5: 写入文件
-    date_str = now.strftime("%Y-%m-%d-%H")
+    date_str = datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d-%H")
     write_files(html, date_str, INDEX_FILE, ARCHIVE_DIR)
 
     # Step 6: Git 提交
