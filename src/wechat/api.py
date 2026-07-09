@@ -57,7 +57,10 @@ def get_access_token(base_url: str, appid: str, appsecret: str) -> Optional[str]
         f"/cgi-bin/token?grant_type=client_credential&appid={appid}&secret={appsecret}"
     )
     if not resp or "access_token" not in resp:
-        print("[ERROR] Failed to get WeChat access_token", file=sys.stderr)
+        if resp and "errmsg" in resp:
+            print(f"[ERROR] Failed to get WeChat access_token, errmsg: {resp['errmsg']}", file=sys.stderr)
+        else:
+            print(f"[ERROR] Failed to get WeChat access_token, response: {resp}", file=sys.stderr)
         return None
     token = resp["access_token"]
     print(f"[INFO] Got access_token (expires in {resp.get('expires_in', '?')}s)")
