@@ -26,6 +26,5 @@ from .html_template import (
     render_news_html,
     render_papers_html,
     render_trending_html,
-    render_wechat_html,
     WEEKDAY_NAMES,
 )

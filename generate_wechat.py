@@ -11,6 +11,7 @@ Scheduled after daily (05:00) and papers (06:00) - Beijing time.
   - src/wechat/fetcher.py   内容获取（复用 generate_daily/papers 的 fetch + dedup）
   - src/wechat/cover.py     封面图生成（Pillow 绘图 + 字体查找）
   - src/wechat/api.py       微信 API 客户端（HTTP + access_token + 上传 + 草稿）
+  - src/wechat/renderer.py  微信草稿 HTML 渲染（组合 news + papers）
   - generate_wechat.py      编排（配置加载 + gate 检查 + 主流程）
 """
 
@@ -20,7 +21,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from utils import load_dot_env, load_config
-from utils.html_template import render_wechat_html
+from src.wechat.renderer import render_wechat_html
 from src.wechat.fetcher import fetch_news, fetch_papers
 from src.wechat.cover import generate_cover
 from src.wechat.api import get_access_token, upload_image, create_draft
