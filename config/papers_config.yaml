@@ -18,7 +18,7 @@ aihot:
   enabled: true
   api_base: "https://aihot.virxact.com/api/public"
   # 单次抓取上限
-  take: 30
+  take: 15
   # 每页条数
   page_size: 10
 
@@ -36,7 +36,7 @@ arxiv:
     - "cs.RO"    # Robotics
     - "stat.ML"  # Statistics - Machine Learning
   # 单次返回上限（≤ 2000）
-  max_results: 30
+  max_results: 15
   # 排序字段
   sort_by: "submittedDate"
   sort_order: "descending"
@@ -52,7 +52,7 @@ huggingface:
   endpoint_paper: "https://huggingface.co/api/papers"
   endpoint_search: "https://huggingface.co/api/papers/search"
   # 分页每页条数
-  page_limit: 10
+  page_limit: 5
   # 连续调用间隔（秒）
   rate_limit_seconds: 1
   # 请求超时（秒）

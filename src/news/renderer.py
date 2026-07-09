@@ -12,7 +12,7 @@ from utils.html_template import (
     NEWS_SECTION_TEMPLATE,
     NEWS_EMPTY_SECTION_TEMPLATE,
 )
-from src.news.constants import CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_COLORS, EMPTY_ICONS
+from src.news.constants import CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_LBL, CATEGORY_COLORS, EMPTY_ICONS
 
 
 def fmt_time(dt_str: str) -> str:
@@ -92,7 +92,7 @@ def generate_html(
         lbl = it.get("category", "")
         items_by_lbl.setdefault(lbl, []).append(it)
 
-    cat_counts = {lbl: len(items_by_lbl.get(lbl, [])) for lbl in items_by_lbl.keys()}
+    cat_counts = {lbl: len(items_by_lbl.get(lbl, [])) for lbl in CATEGORY_LBL}
     total = sum(cat_counts.values())
 
     # 展示日期

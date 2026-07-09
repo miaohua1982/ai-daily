@@ -9,6 +9,7 @@ CATEGORY_LABELS = {
 }
 
 CATEGORY_ORDER = ["ai-models", "ai-products", "industry", "paper", "tip"]
+CATEGORY_LBL = ["模型发布/更新", "产品发布/更新", "行业动态", "论文研究", "技巧与观点"]
 
 CATEGORY_COLORS = {
     "ai-models": "#6366f1",
