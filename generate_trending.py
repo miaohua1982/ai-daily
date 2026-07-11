@@ -6,7 +6,7 @@ Trending Radar Generator
 
 辅助函数已拆分至 src/trending/ 目录：
   - src/trending/fetcher.py   数据获取（NewsNow 多源抓取）
-  - src/trending/dedup.py     去重（URL + 语义）
+  - utils.dedup_data          去重（URL + 语义，与 news/papers 共用）
   - src/trending/filter.py    关键词 / AI 过滤 + 分组
   - src/trending/renderer.py  HTML 渲染
 """
@@ -15,9 +15,9 @@ import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-from utils import load_dot_env, load_config, write_files, git_commit
+from utils import load_config, write_files, git_commit
 from src.trending.fetcher import fetch_data as _fetch_data_impl
-from src.trending.dedup import dedup_data as _dedup_data_impl
+from utils import dedup_data as _dedup_data_impl
 from src.trending.filter import filter_data as _filter_data_impl
 from src.trending.renderer import generate_html
 
@@ -28,13 +28,8 @@ CONFIG_FILE = OUTPUT_DIR / "config" / "trending_config.yaml"
 ARCHIVE_DIR = OUTPUT_DIR / "trending-archive"
 INDEX_FILE = OUTPUT_DIR / "trending.html"
 
-# Load secrets (env > .env file)
-_dot_env = load_dot_env(OUTPUT_DIR / ".env")
-
-
 # ── 向后兼容包装 ─────────────────────────────────────────────────
-# test/test.py 通过 gt.fetch_data / gt.filter_data 等调用，
-# dedup_data 和 filter_data 需要 _dot_env 注入 API Key，因此保留薄包装层。
+# test/test.py 通过 gt.fetch_data / gt.filter_data 等调用。
 
 def fetch_data(config):
     """Step 1: 获取所有 NewsNow 数据源。返回 items。"""
@@ -43,12 +38,12 @@ def fetch_data(config):
 
 def dedup_data(items, config):
     """Step 2: URL 去重 + 语义去重。返回去重后的 items。"""
-    return _dedup_data_impl(items, config, _dot_env)
+    return _dedup_data_impl(items, config)
 
 
 def filter_data(items, config):
     """Step 3: 关键词 / AI 过滤 + 分组。返回 grouped_items。"""
-    return _filter_data_impl(items, config, _dot_env)
+    return _filter_data_impl(items, config)
 
 
 # ── Main ─────────────────────────────────────────────────────────

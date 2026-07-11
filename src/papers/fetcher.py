@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
-from utils import api_get, filter_by_date, get_now_date_str
+from utils import api_get, filter_by_date, get_now_date_str, get_dot_env
 
 
 # ── 通用 HTTP GET（带重试 + 指数退避 + 抖动）────────────────────
@@ -275,16 +275,14 @@ def merge_papers(*sources: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 # ── Step 1 入口：三源拉取 + 合并 ─────────────────────────────────
 
 def fetch_data(
-    target_date: Optional[str] = None,
-    config: Optional[Dict[str, Any]] = None,
-    dot_env: Optional[Dict[str, str]] = None,
-) -> Tuple[List[Dict[str, Any]], str]:
-    """Step 1: 多源获取论文原始数据。返回 (items, date_str)。"""
+    config: Dict[str, Any]
+) -> List[Dict[str, Any]]:
+    """Step 1: 多源获取论文原始数据。返回 items 列表。"""
     if config is None:
         raise ValueError("config is required — pass load_config(CONFIG_FILE) result")
 
     # 确定 target_date（北京时间 8 点前用前一天）
-    target_date = get_now_date_str(target_date)
+    target_date = get_now_date_str(config['target_date'])
 
     # 优先拉取 aihot，成功则直接使用，不再请求 arXiv / HuggingFace
     aihot_items = fetch_aihot_papers(config, target_date)
@@ -302,9 +300,9 @@ def fetch_data(
               f"(arxiv:{len(arxiv_items)} hf:{len(hf_items)})", file=sys.stderr)
 
         # 翻译英文论文（arxiv / huggingface 来源）
-        all_items = translate_papers(all_items, config, dot_env)
+        all_items = translate_papers(all_items, config)
 
-    return all_items, target_date
+    return all_items
 
 
 # ── 翻译（arXiv / HuggingFace 英文论文 → 中文）─────────────────
@@ -312,7 +310,6 @@ def fetch_data(
 def translate_papers(
     papers: List[Dict[str, Any]],
     config: Dict[str, Any],
-    dot_env: Optional[Dict[str, str]] = None,
 ) -> List[Dict[str, Any]]:
     """将 arXiv / HuggingFace 来源的英文论文标题和摘要翻译为中文。
 
@@ -322,7 +319,6 @@ def translate_papers(
     Args:
         papers:   论文列表
         config:   配置字典（需包含 translation 段）
-        dot_env:  .env 解析结果字典（用于获取 API Key）
     """
     cfg = config["translation"]
     if not cfg["enabled"]:
@@ -334,7 +330,7 @@ def translate_papers(
         return papers
 
     api_key_env = cfg["api_key_env"]
-    api_key = os.environ.get(api_key_env) or (dot_env or {}).get(api_key_env, "")
+    api_key = os.environ.get(api_key_env) or get_dot_env().get(api_key_env, "")
     if not api_key:
         print(f"[WARN] Translation enabled but {api_key_env} not set, skipping", file=sys.stderr)
         return papers

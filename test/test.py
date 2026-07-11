@@ -91,20 +91,23 @@ class PatchPaths:
 
 # ── Stub data (used when API is unreachable or --live not set) ───
 def _stub_news_items():
-    """Minimal news items matching flattened structure (items + ts)."""
+    """Minimal news items matching flattened structure. 每条含 publishTime。"""
     ts = datetime.now(timezone(timedelta(hours=8))).isoformat()
     items = [
         {"id": "n1", "title": "OpenAI 发布 GPT-5 Turbo，推理速度提升 3 倍",
          "summary": "推理延迟大幅下降", "sourceName": "TechCrunch",
-         "sourceUrl": "https://example.com/1", "category": "ai-models"},
+         "sourceUrl": "https://example.com/1", "category": "ai-models",
+         "publishTime": ts},
         {"id": "n2", "title": "Claude 4 开放 API 公测",
          "summary": "上下文窗口扩展至 200K tokens", "sourceName": "Anthropic Blog",
-         "sourceUrl": "https://example.com/2", "category": "ai-models"},
+         "sourceUrl": "https://example.com/2", "category": "ai-models",
+         "publishTime": ts},
         {"id": "n3", "title": "Google DeepMind 在蛋白质折叠领域再突破",
          "summary": "AlphaFold 3 新版本", "sourceName": "Nature",
-         "url": "https://example.com/3", "category": "industry"},
+         "url": "https://example.com/3", "category": "industry",
+         "publishTime": ts},
     ]
-    return items, ts
+    return items
 
 
 def _stub_papers_items():
@@ -159,17 +162,17 @@ def test_news_pipeline() -> bool:
     config = load_config(NEWS_CONFIG)
 
     # Step 1: Fetch
-    items, ts = None, None
+    items = None
     if LIVE:
         try:
-            items, ts = news_fetch(config=config)
-            ok(f"Step 1 Fetch (live): {len(items)} items, ts={ts}")
+            items = news_fetch(config=config)
+            ok(f"Step 1 Fetch (live): {len(items)} items")
         except Exception as e:
             fail(f"Step 1 Fetch (live) failed: {e}")
-            items, ts = _stub_news_items()
+            items = _stub_news_items()
             ok(f"  Fallback to stub data: {len(items)} items")
     else:
-        items, ts = _stub_news_items()
+        items = _stub_news_items()
         ok(f"Step 1 Fetch (stub): {len(items)} items")
 
     ok(f"  Raw items: {len(items)}")
@@ -184,7 +187,7 @@ def test_news_pipeline() -> bool:
 
     # Step 3: Generate HTML
     try:
-        html = news_html(items, ts)
+        html = news_html(items)
         ok(f"Step 3 HTML: {len(html):,} chars")
     except Exception as e:
         fail(f"Step 3 HTML failed: {e}")
@@ -264,7 +267,7 @@ def test_papers_pipeline() -> bool:
 
     # Step 3: Generate HTML
     try:
-        html = papers_html(papers, date_str)
+        html = papers_html(papers)
         ok(f"Step 3 HTML: {len(html):,} chars")
     except Exception as e:
         fail(f"Step 3 HTML failed: {e}")
@@ -351,23 +354,28 @@ def test_trending_pipeline() -> bool:
 
     # Step 3: Filter (keyword or AI, per test_config)
     try:
-        grouped = trending_filter(deduped, test_config)
-        total = sum(len(v) for v in grouped.values())
-        ok(f"Step 3 Filter: {total} items in {len(grouped)} groups")
-        for gname, gitems in grouped.items():
+        items = trending_filter(deduped, test_config)
+        total = len(items)
+        # 统计分组用于日志输出
+        groups = {}
+        for it in items:
+            gname = it.get("group_name", "其他")
+            groups.setdefault(gname, []).append(it)
+        ok(f"Step 3 Filter: {total} items in {len(groups)} groups")
+        for gname, gitems in groups.items():
             ok(f"    {gname}: {len(gitems)}")
     except Exception as e:
         fail(f"Step 3 Filter failed: {e}")
         return False
 
-    if not grouped:
-        fail("No groups after filtering")
+    if not items:
+        fail("No items after filtering")
         return False
 
     # Step 4: Generate HTML
     build_time = datetime.now(timezone(timedelta(hours=8)))
     try:
-        html = trending_html(grouped, test_config, build_time)
+        html = trending_html(items)
         ok(f"Step 4 HTML: {len(html):,} chars")
     except Exception as e:
         fail(f"Step 4 HTML failed: {e}")

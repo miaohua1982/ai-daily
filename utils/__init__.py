@@ -7,6 +7,7 @@ Utils — 公共工具函数包
 
 from .utils import (
     load_dot_env,
+    get_dot_env,
     load_config,
     get_embeddings,
     cosine_similarity,

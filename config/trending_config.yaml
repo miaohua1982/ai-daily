@@ -55,29 +55,28 @@ newsnow:
       icon: "📝"
       group: 国际/深度新闻
 
+# 语义去重：对条目做 embedding 相似度去重（与 news/papers 配置对齐）
+# 需要 OpenAI 兼容的 embedding API
+# 默认关闭，需要时设置 enabled: true 并填写 embedding API 信息
+semantic_dedup:
+  enabled: true
+  # 读取 API Key 的环境变量名
+  api_key_env: "EMBEDDING_API_KEY"
+  # OpenAI 兼容的 embedding API 地址
+  base_url: "https://llm-860ckp050tycaw8n.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+  # embedding 模型名
+  model: "text-embedding-v4"
+  # 余弦相似度阈值（0.0-1.0），≥ 此值视为重复
+  threshold: 0.85
+  # 单次请求最大文本数（阿里 Qwen embedding 限制为 10 条）
+  batch_size: 10
+
 filter:
   # keyword | ai | both
   # keyword: 本地关键词匹配（不消耗 AI Token）
   # ai:      调用大模型打分（需要配置 ai.api_key_env）
   # both:    先用关键词初筛，再经 AI 打分过滤
   method: ai
-  dedup: true
-
-  # 语义去重：对同一分组内不同 source 的条目做 embedding 相似度去重
-  # 需要 OpenAI 兼容的 embedding API（DeepSeek 不支持 embedding，需单独配置）
-  # 默认关闭，需要时设置 enabled: true 并填写 embedding API 信息
-  semantic_dedup:
-    enabled: true
-    # 读取 API Key 的环境变量名（可与 ai.api_key_env 相同，但该服务需支持 embedding）
-    api_key_env: "EMBEDDING_API_KEY"
-    # OpenAI 兼容的 embedding API 地址
-    base_url: "https://llm-860ckp050tycaw8n.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
-    # embedding 模型名
-    model: "text-embedding-v4"
-    # 余弦相似度阈值（0.0-1.0），≥ 此值视为重复
-    threshold: 0.85
-    # 单次请求最大文本数（阿里 Qwen embedding 限制为 10 条）
-    batch_size: 10
 
 keywords:
   # 关键词组，标题命中任一词即被归入该组

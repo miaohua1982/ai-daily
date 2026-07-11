@@ -9,6 +9,8 @@ fetch:
   fallback_path: "/api/s?id=aihot&latest"
   # 单个 API 请求失败时的最大重试次数（默认 3）
   max_retries: 3
+  # 目标日期（YYYY-MM-DD），默认取当前
+  target_date: null
 
 # 语义去重配置
 # 对同一新闻在不同来源重复出现的情况做 embedding 相似度去重

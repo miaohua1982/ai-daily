@@ -64,6 +64,28 @@ def load_dot_env(path: Path) -> Dict[str, str]:
     return result
 
 
+# ── 模块级 .env 缓存（惰性单例）──────────────────────────────────
+# 所有需要 .env 的功能函数直接调用 get_dot_env()，无需调用方层层透传。
+
+_dot_env_cache: Optional[Dict[str, str]] = None
+
+
+def get_dot_env() -> Dict[str, str]:
+    """懒加载 .env 解析结果。首次调用时自动从项目根目录读取 .env 文件。
+
+    调用方示例::
+
+        from utils import get_dot_env
+        env = get_dot_env()
+        api_key = env.get("SOME_API_KEY", "")
+    """
+    global _dot_env_cache
+    if _dot_env_cache is None:
+        project_root = Path(__file__).parent.parent
+        _dot_env_cache = load_dot_env(project_root / ".env")
+    return _dot_env_cache
+
+
 # ── YAML 配置加载 ───────────────────────────────────────────────
 
 def load_config(path: Path) -> Dict[str, any]:
@@ -382,8 +404,7 @@ def semantic_dedup(
 
 def dedup_data(
     items: List[dict],
-    config: Optional[Dict] = None,
-    dot_env: Optional[Dict[str, str]] = None,
+    config: Dict[str, Any],
 ) -> List[dict]:
     """URL 去重 + 语义去重（papers / news 共用）。
 
@@ -393,7 +414,6 @@ def dedup_data(
     Args:
         items:   待去重的条目列表（每条需含 ``sourceUrl`` 或 ``url``）
         config:  配置字典（可选，含 ``semantic_dedup`` 段）
-        dot_env: .env 解析结果（可选，用于注入 embedding API Key）
 
     Returns:
         去重后的条目列表
@@ -402,7 +422,7 @@ def dedup_data(
     seen = set()
     url_deduped = []
     for p in items:
-        url = p.get("sourceUrl") or p.get("url") or ""
+        url = p.get("sourceUrl") or p.get("url") or p.get("mobileUrl") or ""
         key = urllib.parse.urldefrag(url)[0]
         if key and key in seen:
             continue
@@ -411,10 +431,10 @@ def dedup_data(
         url_deduped.append(p)
 
     # 2. 语义去重
-    sem_cfg = (config or {}).get("semantic_dedup", {})
+    sem_cfg = config.get("semantic_dedup", {})
     if sem_cfg.get("enabled", False):
         api_key_env = sem_cfg.get("api_key_env", "EMBEDDING_API_KEY")
-        api_key = os.environ.get(api_key_env) or (dot_env or {}).get(api_key_env, "")
+        api_key = os.environ.get(api_key_env) or get_dot_env().get(api_key_env, "")
         base_url = sem_cfg.get("base_url", "")
         model = sem_cfg.get("model", "text-embedding-3-small")
         threshold = float(sem_cfg.get("threshold", 0.85))

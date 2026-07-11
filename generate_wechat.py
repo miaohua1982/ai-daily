@@ -20,7 +20,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from utils import load_dot_env, load_config
+from utils import get_dot_env, load_config, get_now_date_str
 from src.wechat.renderer import render_wechat_html
 from src.wechat.fetcher import fetch_news, fetch_papers
 from src.wechat.cover import generate_cover
@@ -32,8 +32,7 @@ OUTPUT_DIR = Path(__file__).parent.resolve()
 CONFIG_FILE = OUTPUT_DIR / "config" / "wechat_config.yaml"
 
 # -- Load config & secrets -------------------------------------------------
-
-_dotenv = load_dot_env(OUTPUT_DIR / ".env")
+_env = get_dot_env()
 _config = load_config(CONFIG_FILE)
 
 WECHAT_BASE = _config["wechat_base"]
@@ -47,8 +46,8 @@ MAX_PAPERS = _config["max_papers"]
 
 appid_env = _config["appid_env"]
 appsecret_env = _config["appsecret_env"]
-APPID = (os.environ.get(appid_env) or _dotenv.get(appid_env, "")).strip()
-APPSECRET = (os.environ.get(appsecret_env) or _dotenv.get(appsecret_env, "")).strip()
+APPID = (os.environ.get(appid_env) or _env.get(appid_env, "")).strip()
+APPSECRET = (os.environ.get(appsecret_env) or _env.get(appsecret_env, "")).strip()
 
 
 # -- Main ------------------------------------------------------------------
@@ -61,22 +60,16 @@ def main() -> int:
 
     # 2. Fetch + dedup content via step functions
     print("[INFO] Fetching news...")
-    news, news_date = fetch_news(MAX_NEWS)
+    news = fetch_news(MAX_NEWS)
     print("[INFO] Fetching papers...")
-    papers, papers_date = fetch_papers(MAX_PAPERS)
+    papers = fetch_papers(MAX_PAPERS)
 
     if not news and not papers:
         print("[SKIP] No content fetched - nothing to publish")
         return 0
 
     # Use news date as primary; fallback to papers date or local calculation
-    date_str = news_date or papers_date
-    if not date_str:
-        bj = datetime.now(timezone(timedelta(hours=8)))
-        if bj.hour < 5:
-            bj = bj - timedelta(days=1)
-        date_str = bj.strftime("%Y-%m-%d")
-
+    date_str = get_now_date_str()
     print(f"[INFO] Target date: {date_str}, News: {len(news)}, Papers: {len(papers)}")
 
     # 3. Get WeChat access token

@@ -50,18 +50,19 @@ def format_updated(ts: Any) -> str:
         return ""
 
 
-def generate_html(grouped_items: Dict[str, List[Dict[str, Any]]]) -> str:
-    """Step 4: 纯 HTML 渲染，不含去重或过滤逻辑。"""
-    # 强制按固定顺序展示分组
+def generate_html(items: List[Dict[str, Any]]) -> str:
+    """Step 4: 纯 HTML 渲染，不含去重或过滤逻辑。内部按 group_name 分组并按固定顺序排列。"""
+    # 按固定顺序分组（一次遍历）
     desired_order = ["国际局势", "财经资讯", "AI大模型", "智能汽车", "机器人与具身智能", "其他"]
-    ordered = {}
-    for name in desired_order:
-        if name in grouped_items:
-            ordered[name] = grouped_items[name]
-    for name, items in grouped_items.items():
-        if name not in ordered:
-            ordered[name] = items
-    grouped_items = ordered
+    grouped_items: Dict[str, List[Dict]] = {name: [] for name in desired_order}
+    for it in items:
+        gname = it.get("group_name", "其他")
+        if gname in grouped_items:
+            grouped_items[gname].append(it)
+        else:
+            grouped_items["其他"].append(it)
+    # 删掉空分组
+    grouped_items = {k: v for k, v in grouped_items.items() if v}
 
     total = sum(len(v) for v in grouped_items.values())
 

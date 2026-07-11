@@ -7,7 +7,9 @@ import json
 import re
 import sys
 import urllib.request
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
+
+from utils import get_dot_env
 
 
 def assign_group_names(items: List[Dict[str, Any]], config: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -113,12 +115,11 @@ def ai_filter(
     items: List[Dict[str, Any]],
     config: Dict[str, Any],
     assign_groups: bool = True,
-    dot_env: Optional[Dict[str, str]] = None,
 ) -> List[Dict[str, Any]]:
     """对 items 进行 AI 打分过滤；若 assign_groups=True 则同时由 AI 分组。"""
     ai_cfg = config.get("ai", {})
     api_key_env = ai_cfg.get("api_key_env", "DEEPSEEK_API_KEY")
-    api_key = os.environ.get(api_key_env) or (dot_env or {}).get(api_key_env, "")
+    api_key = os.environ.get(api_key_env) or get_dot_env().get(api_key_env, "")
     if not api_key:
         print("[WARN] AI enabled but API key not found, skipping AI filter", file=sys.stderr)
         return items
@@ -149,21 +150,15 @@ def ai_filter(
 def filter_data(
     items: List[Dict[str, Any]],
     config: Dict[str, Any],
-    dot_env: Optional[Dict[str, str]] = None,
-) -> Dict[str, List[Dict[str, Any]]]:
-    """Step 3: 关键词 / AI 过滤 + 分组。返回 grouped_items。"""
+) -> List[Dict[str, Any]]:
+    """Step 3: 关键词 / AI 过滤 + 分组标注。返回 items 列表（每条含 group_name 字段）。"""
     method = config.get("filter", {}).get("method", "keyword")
 
     if method == "ai":
-        matched = ai_filter(items, config, assign_groups=True, dot_env=dot_env)
+        matched = ai_filter(items, config, assign_groups=True)
     else:
         matched, unmatched = keyword_filter(items, config)
         if method == "both":
-            matched = ai_filter(matched, config, assign_groups=False, dot_env=dot_env)
+            matched = ai_filter(matched, config, assign_groups=False)
 
-    grouped_items = {}
-    for it in matched:
-        gname = it.get("group_name", "其他")
-        grouped_items.setdefault(gname, []).append(it)
-
-    return grouped_items
+    return matched

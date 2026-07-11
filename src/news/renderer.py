@@ -83,9 +83,8 @@ def summarize(text: str, max_len: int = 60) -> str:
 
 def generate_html(
     items: List[Dict[str, Any]],
-    ts: str,
 ) -> str:
-    """Step 3: 纯 HTML 渲染，不含任何数据获取或去重逻辑。"""
+    """Step 3: 纯 HTML 渲染，不含任何数据获取或去重逻辑。每张卡片根据 item["publishTime"] 计算相对时间。"""
     # 按 category 分组（保留 CATEGORY_ORDER 顺序）
     items_by_lbl: Dict[str, List[Dict[str, Any]]] = {}
     for it in items:
@@ -104,23 +103,6 @@ def generate_html(
     except Exception:
         display_date = date_str
 
-    # 计算相对于日报窗口的时间
-    window_relative = ""
-    try:
-        w_end = datetime.fromisoformat(ts.replace("Z", "+00:00"))
-        w_end_bj = w_end.astimezone(timezone(timedelta(hours=8)))
-        now_bj = datetime.now(timezone(timedelta(hours=8)))
-        diff_hours = int((now_bj - w_end_bj).total_seconds() // 3600)
-        if diff_hours <= 0:
-            window_relative = "今天上午"
-        elif diff_hours < 24:
-            window_relative = f"{diff_hours} 小时前"
-        else:
-            days = diff_hours // 24
-            window_relative = f"{days} 天前"
-    except Exception:
-        window_relative = ""
-
     # ── 构建卡片 HTML（全局编号）──
     cards_parts = {}
     global_idx = 0
@@ -135,7 +117,8 @@ def generate_html(
             source_name = item.get("sourceName", "")
             source_short = esc_html(short_source(source_name))
             sc = source_class(source_name)
-            time_str = window_relative
+            # 逐条计算相对时间
+            time_str = fmt_time(item.get("publishTime", ""))
 
             cards_parts[lbl].append(
                 NEWS_CARD_TEMPLATE.format(

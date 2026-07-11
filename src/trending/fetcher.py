@@ -47,6 +47,9 @@ def fetch_source(api_url: str, source_id: str, max_retries: int = 3) -> List[Dic
 
 def fetch_data(config: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Step 1: 获取所有 NewsNow 数据源。返回 items。"""
+    if config is None:
+        raise ValueError("config is required — pass load_config(CONFIG_FILE) result")
+
     api_url = config["newsnow"]["api_url"]
     sources = config["newsnow"]["sources"]
     group_map = {s["id"]: s.get("group", "") for s in sources}

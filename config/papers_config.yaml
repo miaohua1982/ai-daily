@@ -12,7 +12,9 @@ fetch:
   max_retries: 3
   # 请求 User-Agent
   user_agent: "ai-daily/1.0"
-
+  # 目标日期（YYYY-MM-DD），默认取当前
+  target_date: null
+  
 # 数据源 1: AI HOT（原有，category=paper 过滤论文）
 aihot:
   enabled: true

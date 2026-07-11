@@ -1242,11 +1242,11 @@ WECHAT_NEWS_HEADER = """\
 
 WECHAT_ITEM_TEMPLATE = """\
 {{link_open}}<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color};transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
-  <p style="margin:0;line-height:1.45;text-align:left">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
     <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
-  </p>
-  <p style="margin:4px 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph">{summary}</p>
-  <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{section_badge}}<span style="margin-left:8px">来源：{source}</span></p>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>{summary}</section>
+  <section style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{section_badge}}<span style="margin-left:8px">来源：{source}</span></section>
 </section>{{link_close}}"""
 
 WECHAT_PAPERS_HEADER = """\
@@ -1258,11 +1258,11 @@ WECHAT_PAPERS_HEADER = """\
 
 WECHAT_PAPER_TEMPLATE = """\
 {{link_open}}<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color};transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
-  <p style="margin:0;line-height:1.45;text-align:left">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
     <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
-  </p>
-  <p style="margin:4px 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph">{summary}</p>
-  <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{source_badge}}</p>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>{summary}</section>
+  <section style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{source_badge}}</section>
 </section>{{link_close}}"""
 
 # ── 4-color pastel palette for alternating card styles ──
