@@ -63,10 +63,9 @@ class GeneratorPipeline(ABC):
         """生成日期字符串（YYYY-MM-DD），用于 write_files / git_commit。
 
         默认通过 get_now_date_str 计算，受 config.target_date 控制，
-        凌晨 8 点前归前一天。
         """
         from utils import get_now_date_str
-        return get_now_date_str(config.get("target_date"))
+        return get_now_date_str(config["fetch"]["target_date"])
 
     # ── 固定实现（write / git，默认不覆盖）───────────────────
 

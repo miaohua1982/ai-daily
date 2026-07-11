@@ -419,6 +419,7 @@ def dedup_data(
         去重后的条目列表
     """
     # 1. URL 去重
+    before_url = len(items)
     seen = set()
     url_deduped = []
     for p in items:
@@ -429,6 +430,8 @@ def dedup_data(
         if key:
             seen.add(key)
         url_deduped.append(p)
+    if len(url_deduped) != before_url:
+        print(f"[INFO] URL dedup: {before_url} -> {len(url_deduped)}", file=sys.stderr)
 
     # 2. 语义去重
     sem_cfg = config.get("semantic_dedup", {})
@@ -512,7 +515,6 @@ def get_now_date_str(target_date: Optional[str] = None) -> str:
     """获取当前日期字符串（YYYY-MM-DD）。
 
     若指定 target_date 则直接返回；否则按北京时间计算，
-    凌晨 8 点前归为前一天（与日报窗口对齐）。
 
     Args:
         target_date: 目标日期（格式 YYYY-MM-DD），为 None 时自动计算
@@ -522,9 +524,8 @@ def get_now_date_str(target_date: Optional[str] = None) -> str:
     """
     if target_date:
         return target_date
+    # 按北京时间计算日期
     bj = datetime.now(timezone(timedelta(hours=8)))
-    if bj.hour < 8:
-        bj = bj - timedelta(days=1)
     return bj.strftime("%Y-%m-%d")
 
 

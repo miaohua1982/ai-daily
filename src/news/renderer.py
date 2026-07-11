@@ -8,6 +8,7 @@ from typing import Any, Dict, List
 from utils import esc_html, esc_attr, get_now_date_str
 from utils.html_template import (
     render_news_html,
+    WEEKDAY_NAMES,
     NEWS_CARD_TEMPLATE,
     NEWS_SECTION_TEMPLATE,
     NEWS_EMPTY_SECTION_TEMPLATE,
@@ -98,7 +99,7 @@ def generate_html(
     date_str = get_now_date_str()
     try:
         d = datetime.strptime(date_str, "%Y-%m-%d")
-        wd = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"][d.weekday()]
+        wd = WEEKDAY_NAMES[d.weekday()]
         display_date = f"{d.year}年{d.month}月{d.day}日 · {wd}"
     except Exception:
         display_date = date_str

@@ -573,7 +573,7 @@ __PAPERS_CSS__
   <div class="header-inner">
     <div class="header-badge">📄 AI 学术档案库</div>
     <h1 class="header-title">近日 AI 论文精选</h1>
-    <p class="header-sub">数据来源 AI HOT · 过去 7 天精选 __PAPERS_TOTAL__ 篇</p>
+    <p class="header-sub">数据来源 AI HOT · 过去 5 天精选 __PAPERS_TOTAL__ 篇</p>
     <div class="header-stats">
       <div class="stat-card">
         <span class="stat-num" id="total-count">__PAPERS_TOTAL__</span>

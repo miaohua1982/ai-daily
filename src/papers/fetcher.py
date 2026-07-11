@@ -282,7 +282,7 @@ def fetch_data(
         raise ValueError("config is required — pass load_config(CONFIG_FILE) result")
 
     # 确定 target_date（北京时间 8 点前用前一天）
-    target_date = get_now_date_str(config['target_date'])
+    target_date = get_now_date_str(config["fetch"]['target_date'])
 
     # 优先拉取 aihot，成功则直接使用，不再请求 arXiv / HuggingFace
     aihot_items = fetch_aihot_papers(config, target_date)

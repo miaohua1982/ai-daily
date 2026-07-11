@@ -30,7 +30,7 @@ def fetch_data(
     if startup_jitter > 0.05:
         time.sleep(startup_jitter)
 
-    date_str = get_now_date_str(config['target_date'])
+    date_str = get_now_date_str(config["fetch"]['target_date'])
 
     print(f"[INFO] Fetching daily for {date_str} ...")
     data = api_get(f"/daily/{date_str}", base_url=api_base, max_retries=max_retries)

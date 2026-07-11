@@ -1,18 +1,21 @@
 """
 trending — 趋势雷达管线辅助模块。
 
+  - pipeline:  TrendingPipeline（继承 GeneratorPipeline）
   - fetcher:   数据获取（NewsNow 多源抓取）
   - dedup:     去重（复用 utils.dedup_data）
   - filter:    关键词 / AI 过滤 + 分组
   - renderer:  HTML 渲染
 """
 
+from .pipeline import TrendingPipeline
 from .fetcher import fetch_data
 from utils import dedup_data
 from .filter import filter_data, keyword_filter, ai_filter, ai_score_batch, assign_group_names
 from .renderer import generate_html, source_meta, format_updated
 
 __all__ = [
+    "TrendingPipeline",
     "fetch_data",
     "dedup_data",
     "filter_data",
