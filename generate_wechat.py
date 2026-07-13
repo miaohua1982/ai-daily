@@ -2,7 +2,8 @@
 """
 WeChat Official Account Draft Publisher
 - Fetches + dedup content via generate_daily / generate_papers step functions
-- Builds WeChat-compatible HTML and creates a draft on WeChat platform
+- Builds WeChat-compatible HTML → submits draft via API
+- Builds local Markdown → saves wechat.md (for preview / GitHub display)
 - Uses env vars: WECHAT_APPID, WECHAT_APPSECRET
 
 Scheduled after daily (05:00) and papers (06:00) - Beijing time.
@@ -11,7 +12,7 @@ Scheduled after daily (05:00) and papers (06:00) - Beijing time.
   - src/wechat/fetcher.py   内容获取（复用 generate_daily/papers 的 fetch + dedup）
   - src/wechat/cover.py     封面图生成（Pillow 绘图 + 字体查找）
   - src/wechat/api.py       微信 API 客户端（HTTP + access_token + 上传 + 草稿）
-  - src/wechat/renderer.py  微信草稿 HTML 渲染（组合 news + papers）
+  - src/wechat/renderer.py  微信草稿渲染（HTML + Markdown 双格式，组合 news + papers）
   - generate_wechat.py      编排（配置加载 + gate 检查 + 主流程）
 """
 
@@ -21,7 +22,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from utils import get_dot_env, load_config, get_now_date_str
-from src.wechat.renderer import render_wechat_html
+from src.wechat.renderer import render_wechat_html, render_wechat_md
 from src.wechat.fetcher import fetch_news, fetch_papers
 from src.wechat.cover import generate_cover
 from src.wechat.api import get_access_token, upload_image, create_draft
@@ -89,8 +90,14 @@ def main() -> int:
         print("[ERROR] Cover upload failed, cannot create draft", file=sys.stderr)
         return 1
 
-    # 6. Build WeChat-compatible HTML
+    # 6. Build WeChat-compatible HTML + local Markdown
     content_html = render_wechat_html(news, papers, date_str, REPO_URL)
+    content_md = render_wechat_md(news, papers, date_str, REPO_URL)
+
+    # Write MD to local file (for preview / GitHub display)
+    md_path = OUTPUT_DIR / "wechat.md"
+    md_path.write_text(content_md, encoding="utf-8")
+    print(f"[INFO] Markdown saved: {md_path} ({len(content_md)} chars)")
 
     # 7. Create draft
     date_fmt = date_str.replace("-", "")

@@ -95,6 +95,103 @@ def _wechat_build_paper_item(i: int, it: dict) -> str:
     return html
 
 
+def _wechat_md_news_item(i: int, it: dict) -> str:
+    """Build a single news item in Markdown format."""
+    title = it.get("title", "")
+    summary = it.get("summary") or it.get("description") or ""
+    source = it.get("sourceName") or it.get("source") or "来源"
+    category = it.get("category", "")
+    url = (it.get("sourceUrl") or it.get("url") or "").strip()
+    if url and not url.startswith(("http://", "https://")):
+        url = "https://" + url.lstrip("/")
+
+    # Title with optional link
+    if url:
+        head = f"**{i}. [{title}]({url})**"
+    else:
+        head = f"**{i}. {title}**"
+
+    # Summary as blockquote with full-width indent
+    lines = [head, ""]
+    if summary:
+        lines.append(f"> 　{summary}")
+        lines.append("")
+
+    # Tags: source + category
+    tags = []
+    if category:
+        tags.append(f"`{category}`")
+    tags.append(f"`{source}`")
+    lines.append(" ".join(tags))
+
+    return "\n".join(lines)
+
+
+def _wechat_md_paper_item(i: int, it: dict) -> str:
+    """Build a single paper item in Markdown format."""
+    title = it.get("title_zh") or it.get("title", "")
+    summary = it.get("summary_zh") or it.get("summary") or it.get("description") or ""
+    source = it.get("source") or "arXiv"
+    url = (it.get("url") or "").strip()
+    if url and not url.startswith(("http://", "https://")):
+        url = "https://" + url.lstrip("/")
+
+    if url:
+        head = f"**{i}. [{title}]({url})**"
+    else:
+        head = f"**{i}. {title}**"
+
+    lines = [head, ""]
+    if summary:
+        lines.append(f"> 　{summary}")
+        lines.append("")
+
+    lines.append(f"`{source}`")
+
+    return "\n".join(lines)
+
+
+def render_wechat_md(
+    news: list[dict], papers: list[dict], date_str: str, repo_url: str
+) -> str:
+    """Render Markdown version of the WeChat daily digest (for local preview / GitHub)."""
+    display = _wechat_format_date_cn(date_str)
+
+    parts = [
+        "# 📰 每日 AI 情报",
+        "",
+        f"> {display}",
+        "",
+        "---",
+        "",
+    ]
+
+    # ── AI News ──
+    if news:
+        parts.append(f"## 🔥 AI 热点资讯（{len(news)}条）")
+        parts.append("")
+        for i, it in enumerate(news, 1):
+            parts.append(_wechat_md_news_item(i, it))
+            parts.append("")
+            parts.append("---")
+            parts.append("")
+
+    # ── AI Papers ──
+    if papers:
+        parts.append(f"## 📄 AI 论文精选（{len(papers)}篇）")
+        parts.append("")
+        for i, it in enumerate(papers, 1):
+            parts.append(_wechat_md_paper_item(i, it))
+            parts.append("")
+            parts.append("---")
+            parts.append("")
+
+    # ── Footer ──
+    parts.append(f"> 📖 更多内容请访问 [ai-daily]({repo_url})")
+
+    return "\n".join(parts)
+
+
 def render_wechat_html(
     news: list[dict], papers: list[dict], date_str: str, repo_url: str
 ) -> str:
