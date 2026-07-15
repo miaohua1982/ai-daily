@@ -38,3 +38,17 @@ class NewsPipeline(GeneratorPipeline):
     def generate_html(self, items: List[Dict[str, Any]]) -> str:
         """Step 4: 将 item 列表渲染为 HTML 字符串。"""
         return _render_impl(items)
+
+    def filter_data(self, items: List[Dict[str, Any]], config: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Step 3: 过滤摘要过短的新闻（取 summary / description，阈值由 config.filter.min_summary_len 控制）。"""
+        min_len = config.get("filter", {}).get("min_summary_len", 20)
+        kept, dropped = [], 0
+        for it in items:
+            s = it.get("summary") or it.get("description") or ""
+            if len(s.strip()) < min_len:
+                dropped += 1
+                continue
+            kept.append(it)
+        if dropped:
+            print(f"[INFO] News filter_data dropped {dropped} short-summary items (<{min_len} chars)")
+        return kept

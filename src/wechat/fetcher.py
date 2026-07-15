@@ -31,10 +31,13 @@ def fetch_news(max_news: int) -> List[Dict]:
         return []
 
     # 使用 generate_daily 的去重（URL + 语义）
-    deduped_news_list = gd.dedup_data(items, config)
+    deduped_news = gd.dedup_data(items, config)
+    print(f"[INFO] News: {len(deduped_news)} items after dedup")
+    # 使用 generate_daily 的过滤（摘要长度）
+    filtered_news = gd.filter_data(deduped_news, config)
+    print(f"[INFO] News: {len(filtered_news)} items after filtering")
 
-    print(f"[INFO] News: {len(deduped_news_list)} items after dedup")
-    return deduped_news_list[:max_news]
+    return filtered_news[:max_news]
 
 
 def fetch_papers(max_papers: int) -> List[Dict]:
@@ -55,7 +58,10 @@ def fetch_papers(max_papers: int) -> List[Dict]:
         return []
 
     # 使用 generate_papers 的去重（URL + 语义 + top 选择）
-    papers = gp.dedup_data(items, config)
+    deduped_papers = gp.dedup_data(items, config)
+    print(f"[INFO] Papers: {len(deduped_papers)} items after dedup")
+    # 使用 generate_papers 的过滤（摘要长度）
+    filtered_papers = gp.filter_data(deduped_papers, config)
+    print(f"[INFO] Papers: {len(filtered_papers)} items after filtering")
 
-    print(f"[INFO] Papers: {len(papers)} items after dedup")
-    return papers[:max_papers]
+    return filtered_papers[:max_papers]

@@ -38,3 +38,17 @@ class PapersPipeline(GeneratorPipeline):
     def generate_html(self, papers: List[Dict[str, Any]]) -> str:
         """Step 4: 将 papers 列表渲染为 HTML 字符串。"""
         return _render_impl(papers)
+
+    def filter_data(self, papers: List[Dict[str, Any]], config: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Step 3: 过滤摘要过短的论文（优先 summary_zh 再回退 summary / description，阈值由 config.filter.min_summary_len 控制）。"""
+        min_len = config.get("filter", {}).get("min_summary_len", 20)
+        kept, dropped = [], 0
+        for p in papers:
+            s = p.get("summary_zh") or p.get("summary") or p.get("description") or ""
+            if len(s.strip()) < min_len:
+                dropped += 1
+                continue
+            kept.append(p)
+        if dropped:
+            print(f"[INFO] Papers filter_data dropped {dropped} short-summary items (<{min_len} chars)")
+        return kept

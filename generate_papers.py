@@ -39,6 +39,11 @@ def dedup_data(items, config):
     return _pipeline.dedup_data(items, config)
 
 
+def filter_data(items, config):
+    """Step 3: 过滤（复用 PapersPipeline.filter_data）。"""
+    return _pipeline.filter_data(items, config)
+
+
 # ── Main ─────────────────────────────────────────────────────────
 
 def main():

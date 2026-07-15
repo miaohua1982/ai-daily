@@ -23,6 +23,11 @@ semantic_dedup:
   # embedding 模型名
   model: "text-embedding-v4"
   # 余弦相似度阈值（0.0-1.0），>= 此值视为重复
-  threshold: 0.85
+  threshold: 0.75
   # 单次请求最大文本数（阿里 Qwen embedding 限制为 10 条）
   batch_size: 10
+
+# 过滤配置
+filter:
+  # 摘要有效字符数下限，低于此值的新闻将被过滤
+  min_summary_len: 20
