@@ -178,7 +178,7 @@ def render_wechat_md(
 
     # ── AI Papers ──
     if papers:
-        parts.append(f"## 📄 AI 论文精选（{len(papers)}篇）")
+        parts.append(f"## 📄 AI 前沿技术（{len(papers)}篇）")
         parts.append("")
         for i, it in enumerate(papers, 1):
             parts.append(_wechat_md_paper_item(i, it))
@@ -220,3 +220,24 @@ def render_wechat_html(
 
     parts.append(WECHAT_FOOT_SECTION.format(repo_url=repo_url))
     return "\n".join(parts)
+
+
+def wrap_wechat_html_doc(html_fragment: str, date_str: str) -> str:
+    """Wrap a WeChat-style HTML fragment into a complete, locally-viewable document.
+
+    render_wechat_html returns a fragment without <html>/<head>/<body> (what the
+    WeChat draft API expects). For local preview we add a minimal complete document
+    with charset + title so browsers render Chinese correctly.
+    """
+    return (
+        "<!DOCTYPE html>\n"
+        '<html lang="zh-CN">\n'
+        "<head>\n"
+        '<meta charset="utf-8">\n'
+        f"<title>每日 AI 情报 {date_str}</title>\n"
+        "</head>\n"
+        "<body>\n"
+        f"{html_fragment}\n"
+        "</body>\n"
+        "</html>\n"
+    )

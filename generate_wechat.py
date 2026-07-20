@@ -22,7 +22,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from utils import get_dot_env, load_config, get_now_date_str
-from src.wechat.renderer import render_wechat_html, render_wechat_md
+from src.wechat.renderer import render_wechat_html, render_wechat_md, wrap_wechat_html_doc
 from src.wechat.fetcher import fetch_news, fetch_papers
 from src.wechat.cover import generate_cover
 from src.wechat.api import get_access_token, upload_image, create_draft
@@ -98,6 +98,25 @@ def main() -> int:
     md_path = OUTPUT_DIR / "wechat.md"
     md_path.write_text(content_md, encoding="utf-8")
     print(f"[INFO] Markdown saved: {md_path} ({len(content_md)} chars)")
+
+    # Write HTML to local file (for preview / GitHub display).
+    # content_html is a WeChat-style fragment (no <html>/<head>/<body>); wrap it
+    # in a complete document via the renderer for proper local browser rendering.
+    html_path = OUTPUT_DIR / "wechat.html"
+    html_doc = wrap_wechat_html_doc(content_html, date_str)
+    html_path.write_text(html_doc, encoding="utf-8")
+    print(f"[INFO] HTML saved: {html_path} ({len(content_html)} chars)")
+
+    # Archive both local artifacts by date (mirrors news-archive / papers-archive
+    # convention: {archive_dir}/{date_str}.<ext>), creating the dir if missing.
+    archive_dir = OUTPUT_DIR / "wechat-archive"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    archive_html = archive_dir / f"{date_str}.html"
+    archive_html.write_text(html_doc, encoding="utf-8")
+    print(f"[INFO] HTML archived: {archive_html}")
+    archive_md = archive_dir / f"{date_str}.md"
+    archive_md.write_text(content_md, encoding="utf-8")
+    print(f"[INFO] MD archived: {archive_md}")
 
     # 7. Create draft
     date_fmt = date_str.replace("-", "")
