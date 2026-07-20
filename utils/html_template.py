@@ -1252,7 +1252,7 @@ WECHAT_ITEM_TEMPLATE = """\
 WECHAT_PAPERS_HEADER = """\
 <section style="padding:4px 15px">
   <h2 style="font-size:16px;color:#111827;margin:18px 0 10px;font-weight:700;line-height:1.4">
-    <span style="display:inline-block;width:4px;height:16px;background:#ec4899;vertical-align:middle;margin-right:8px;border-radius:2px"></span>📄 AI 论文精选（{count}篇）
+    <span style="display:inline-block;width:4px;height:16px;background:#ec4899;vertical-align:middle;margin-right:8px;border-radius:2px"></span>📄 AI 前沿技术（{count}篇）
   </h2>
 </section>"""
 
