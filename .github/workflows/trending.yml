@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -41,6 +42,18 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f trending.html trending-archive/
-          git diff --cached --quiet || (git commit -m "chore: auto-update trending radar" && git push)
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "chore: auto-update trending radar"
+          for i in 1 2 3; do
+            git pull --rebase origin main || { git rebase --abort; sleep $((RANDOM % 4 + 9)); continue; }
+            if git push origin main; then
+              echo "Pushed successfully (attempt $i)"
+              break
+            fi
+            echo "Push rejected (remote moved), retrying ($i/3)..."
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
