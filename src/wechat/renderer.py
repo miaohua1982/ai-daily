@@ -48,11 +48,18 @@ def _wechat_build_news_item(i: int, it: dict) -> str:
     if url and not url.startswith(("http://", "https://")):
         url = "https://" + url.lstrip("/")
 
-    # Cycle through 6-color palette
+    # Cycle through 4-color palette
     accent, bg = WECHAT_COLOR_PALETTE[(i - 1) % len(WECHAT_COLOR_PALETTE)]
 
+    # 方案A: 链接只包标题文字, 避免整卡 <a> 包块级 section 在微信内链场景被剥离 background
+    title_strong = '<strong style="color:#111827;font-size:15px;font-weight:700">'
+    if url:
+        title_block = f'{title_strong}<a href="{url}" style="color:inherit;text-decoration:none">{title}</a></strong>'
+    else:
+        title_block = f'{title_strong}{title}</strong>'
+
     html = WECHAT_ITEM_TEMPLATE.format(
-        num=i, title=title, summary=summary, source=source,
+        num=i, title_block=title_block, summary=summary, source=source,
         accent_color=accent, bg_color=bg,
     )
     if section:
@@ -60,12 +67,6 @@ def _wechat_build_news_item(i: int, it: dict) -> str:
         html = html.replace("{section_badge}", badge)
     else:
         html = html.replace("{section_badge}", "")
-
-    if url:
-        html = html.replace("{link_open}", f'<a href="{url}" style="text-decoration:none;color:inherit">')
-        html = html.replace("{link_close}", "</a>")
-    else:
-        html = html.replace("{link_open}", "").replace("{link_close}", "")
     return html
 
 
@@ -78,20 +79,22 @@ def _wechat_build_paper_item(i: int, it: dict) -> str:
     if url and not url.startswith(("http://", "https://")):
         url = "https://" + url.lstrip("/")
 
-    # Cycle through 6-color palette
+    # Cycle through 4-color palette
     accent, bg = WECHAT_COLOR_PALETTE[(i - 1) % len(WECHAT_COLOR_PALETTE)]
 
+    # 方案A: 链接只包标题文字, 避免整卡 <a> 包块级 section 在微信内链场景被剥离 background
+    title_strong = '<strong style="color:#111827;font-size:15px;font-weight:700">'
+    if url:
+        title_block = f'{title_strong}<a href="{url}" style="color:inherit;text-decoration:none">{title}</a></strong>'
+    else:
+        title_block = f'{title_strong}{title}</strong>'
+
     html = WECHAT_PAPER_TEMPLATE.format(
-        num=i, title=title, summary=summary, source=source,
+        num=i, title_block=title_block, summary=summary, source=source,
         accent_color=accent, bg_color=bg,
     )
     badge = _wechat_badge_html(source, accent)
     html = html.replace("{source_badge}", badge)
-    if url:
-        html = html.replace("{link_open}", f'<a href="{url}" style="text-decoration:none;color:inherit">')
-        html = html.replace("{link_close}", "</a>")
-    else:
-        html = html.replace("{link_open}", "").replace("{link_close}", "")
     return html
 
 

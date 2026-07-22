@@ -426,6 +426,15 @@
         </span>
         <span class="link-arrow">→</span>
       </a>
+
+      <a href="wechat.html" class="link-card">
+        <span class="link-icon">&#x1F4AC;</span>
+        <span class="link-info">
+          <div class="link-title">微信公众号</div>
+          <div class="link-desc">微信草稿版 &middot; 图文推送 &middot; 移动端阅读</div>
+        </span>
+        <span class="link-arrow">→</span>
+      </a>
     </nav>
 
     <div class="divider"></div>
@@ -436,6 +445,7 @@
       <div class="archive-group" id="archive-news"></div>
       <div class="archive-group" id="archive-papers"></div>
       <div class="archive-group" id="archive-trending"></div>
+      <div class="archive-group" id="archive-wechat"></div>
     </nav>
 
     <div class="divider"></div>
@@ -590,6 +600,7 @@
   scanArchive('news', '📰 AI 日报', 30);
   scanArchive('papers', '📄 AI 论文', 30);
   scanArchive('trending', '🔥 当日热点', 7);
+  scanArchive('wechat', '💬 微信公众号', 30);
 
   // ── Keyboard ──
   document.querySelectorAll('.link-card').forEach(card => {

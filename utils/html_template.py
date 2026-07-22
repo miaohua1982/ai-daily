@@ -1240,14 +1240,20 @@ WECHAT_NEWS_HEADER = """\
   </h2>
 </section>"""
 
+# 方案A(2026-07-22): 链接只包标题文字, 不再整卡 <a> 包裹。
+# 原因: <a> 包块级 <section> 且链接为微信内链(mp.weixin.qq.com)时,
+#   微信编辑器卡片化重组会剥离内层 section 的 background style,
+#   导致第1条(微信内链)背景色丢失, 外链正常。
+# 旧版(可回退): 整卡 <a> 包裹, 模板首尾为 {link_open}/{link_close},
+#   renderer 用 <a href><section>...</section></a> 实现, 标题占位符为 {title}。
 WECHAT_ITEM_TEMPLATE = """\
-{{link_open}}<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color};transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color};transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
   <section style="margin:0 0 4px;line-height:1.45;text-align:left">
-    <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
+    <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong>{title_block}
   </section>
   <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>{summary}</section>
   <section style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{section_badge}}<span style="margin-left:8px">来源：{source}</span></section>
-</section>{{link_close}}"""
+</section>"""
 
 WECHAT_PAPERS_HEADER = """\
 <section style="padding:4px 15px">
@@ -1256,22 +1262,23 @@ WECHAT_PAPERS_HEADER = """\
   </h2>
 </section>"""
 
+# 同 WECHAT_ITEM_TEMPLATE 方案A: 链接只包标题文字, 旧版可回退见上方注释。
 WECHAT_PAPER_TEMPLATE = """\
-{{link_open}}<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color};transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:{bg_color};border-radius:8px;border-left:3px solid {accent_color};transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
   <section style="margin:0 0 4px;line-height:1.45;text-align:left">
-    <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong><strong style="color:#111827;font-size:15px;font-weight:700">{title}</strong>
+    <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong>{title_block}
   </section>
   <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>{summary}</section>
   <section style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{source_badge}}</section>
-</section>{{link_close}}"""
+</section>"""
 
 # ── 4-color pastel palette for alternating card styles ──
 # Each entry: (accent, background)
 WECHAT_COLOR_PALETTE = [
-    ("#10b981", "#ecfdf5"),  # 薄荷绿
-    ("#ec4899", "#fdf2f8"),  # 樱花粉
-    ("#8b5cf6", "#f5f3ff"),  # 柔紫
-    ("#3b82f6", "#eff6ff"),  # 天空蓝
+    ("#10b981", "#d1fae5"),  # 薄荷绿(背景加深一档, 提升微信端可见度)
+    ("#ec4899", "#fce7f3"),  # 樱花粉(背景加深一档, 提升微信端可见度)
+    ("#8b5cf6", "#ede9fe"),  # 柔紫(背景加深一档, 提升微信端可见度)
+    ("#3b82f6", "#dbeafe"),  # 天空蓝(背景加深一档, 提升微信端可见度)
 ]
 
 WECHAT_FOOT_SECTION = """\
