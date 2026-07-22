@@ -63,6 +63,7 @@ ai-daily/
 ├── generate_trending.py       # Trending Radar entry point
 ├── generate_wechat.py         # WeChat draft publish entry point
 ├── index.html                 # Landing page (navigation + archive list)
+├── archive/                    # Runtime output: history archives (news / papers / trending / wechat_draft)
 │
 ├── src/
 │   ├── pipeline.py            # GeneratorPipeline abstract base class
@@ -316,7 +317,7 @@ from src.pipeline import GeneratorPipeline
 
 class MyPipeline(GeneratorPipeline):
     OUTPUT_DIR  = Path(__file__).parent.parent.parent
-    ARCHIVE_DIR = OUTPUT_DIR / "my-archive"
+    ARCHIVE_DIR = OUTPUT_DIR / "archive" / "my"
     INDEX_FILE  = OUTPUT_DIR / "my.html"
     CONFIG_FILE = OUTPUT_DIR / "config" / "my_config.yaml"
 

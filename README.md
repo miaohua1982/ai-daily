@@ -63,6 +63,7 @@ ai-daily/
 ├── generate_trending.py       # 趋势雷达入口
 ├── generate_wechat.py         # 微信草稿发布入口
 ├── index.html                 # 首页（导航 + 历史归档）
+├── archive/                    # 运行产物：历史归档（news / papers / trending / wechat_draft）
 │
 ├── src/
 │   ├── pipeline.py            # GeneratorPipeline 抽象基类
@@ -316,7 +317,7 @@ from src.pipeline import GeneratorPipeline
 
 class MyPipeline(GeneratorPipeline):
     OUTPUT_DIR  = Path(__file__).parent.parent.parent
-    ARCHIVE_DIR = OUTPUT_DIR / "my-archive"
+    ARCHIVE_DIR = OUTPUT_DIR / "archive" / "my"
     INDEX_FILE  = OUTPUT_DIR / "my.html"
     CONFIG_FILE = OUTPUT_DIR / "config" / "my_config.yaml"
 
