@@ -25,7 +25,7 @@ class PapersPipeline(GeneratorPipeline):
     """
 
     OUTPUT_DIR  = Path(__file__).parent.parent.parent  # ai-daily 根目录
-    ARCHIVE_DIR = OUTPUT_DIR / "papers-archive"
+    ARCHIVE_DIR = OUTPUT_DIR / "archive" / "papers"
     INDEX_FILE  = OUTPUT_DIR / "papers.html"
     CONFIG_FILE = OUTPUT_DIR / "config" / "papers_config.yaml"
 

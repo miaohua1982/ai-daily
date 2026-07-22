@@ -578,7 +578,7 @@ def write_files(html: str, date_str: str, index_file: Path, archive_dir: Path):
         html:        生成的 HTML 内容
         date_str:    日期字符串（用于归档文件名）
         index_file:  主页面路径（如 Path("daily_news.html")）
-        archive_dir: 归档目录路径（如 Path("news-archive")）
+        archive_dir: 归档目录路径（如 Path("archive/news")）
     """
     archive_dir.mkdir(parents=True, exist_ok=True)
 

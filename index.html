@@ -494,6 +494,8 @@
   async function scanArchive(prefix, label, daysBack) {
     const groupId = 'archive-' + prefix;
     const group = document.getElementById(groupId);
+    // Map UI prefix -> archive subdir (wechat 目录名为 wechat_draft)
+    const dir = prefix === 'wechat' ? 'wechat_draft' : prefix;
 
     // Label
     const labelEl = document.createElement('div');
@@ -528,7 +530,7 @@
       const probes = datetimes.map(dt => {
         const dateStr = fmtDate(dt.y, dt.m, dt.d);
         const datetimeStr = dateStr + '-' + pad(dt.h);
-        const url = prefix + '-archive/' + datetimeStr + '.html';
+        const url = 'archive/' + dir + '/' + datetimeStr + '.html';
         return probeFile(url).then(exists => exists ? { dt, datetimeStr, url } : null);
       });
 
@@ -572,7 +574,7 @@
     // Probe in parallel, collect results
     const probes = dates.map(dt => {
       const dateStr = fmtDate(dt.y, dt.m, dt.d);
-      const url = prefix + '-archive/' + dateStr + '.html';
+      const url = 'archive/' + dir + '/' + dateStr + '.html';
       return probeFile(url).then(exists => exists ? { dt, dateStr, url } : null);
     });
 

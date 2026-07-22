@@ -107,9 +107,9 @@ def main() -> int:
     html_path.write_text(html_doc, encoding="utf-8")
     print(f"[INFO] HTML saved: {html_path} ({len(content_html)} chars)")
 
-    # Archive both local artifacts by date (mirrors news-archive / papers-archive
+    # Archive both local artifacts by date (mirrors archive/news, archive/papers
     # convention: {archive_dir}/{date_str}.<ext>), creating the dir if missing.
-    archive_dir = OUTPUT_DIR / "wechat-archive"
+    archive_dir = OUTPUT_DIR / "archive" / "wechat_draft"
     archive_dir.mkdir(parents=True, exist_ok=True)
     archive_html = archive_dir / f"{date_str}.html"
     archive_html.write_text(html_doc, encoding="utf-8")

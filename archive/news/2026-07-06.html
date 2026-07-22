@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI HOT 晨报 — 2026年7月6日 · 星期一</title>
+<style>
+    :root {
+      --hero-from: #ff5e3a;
+      --hero-mid: #f73b4a;
+      --hero-to: #c0392b;
+      --accent: #ff6b35;
+      --accent-dark: #e0552b;
+      --bg: #faf8f6;
+      --card-bg: #ffffff;
+      --card-border: #ede8e2;
+      --text: #2c2c2c;
+      --text-secondary: #6b6b6b;
+      --text-muted: #999999;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 40%, var(--hero-to) 100%);
+      color: #fff; padding: 56px 24px 48px; text-align: center;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(255,200,120,.12) 0%, transparent 50%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block; background: rgba(255,255,255,.2);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.25); border-radius: 100px;
+      padding: 4px 16px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px;
+    }
+    .hero h1 { font-size: clamp(28px,5vw,44px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero-sub { font-size: 16px; opacity: 0.85; margin-bottom: 24px; }
+    .hero-stats { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .hero-stat {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(255,255,255,.15); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      border-radius: 12px; padding: 12px 20px; min-width: 80px;
+    }
+    .hero-stat-num { font-size: 28px; font-weight: 800; line-height: 1.2; }
+    .hero-stat-lbl { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .nav-wrap {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border); padding: 0 16px;
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 4px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-link {
+      flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 100px; font-size: 13.5px; font-weight: 600;
+      color: var(--text-secondary); text-decoration: none; transition: 0.3s; white-space: nowrap; border: 1px solid transparent;
+    }
+    .nav-link:hover { background: #f5f0eb; color: var(--accent-dark); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .nav-cnt { font-size: 11px; opacity: 0.6; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 48px; }
+    .section { margin-bottom: 48px; scroll-margin-top: 72px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--card-border); }
+    .section-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; transform: rotate(45deg); }
+    .section h2 { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .section-count { font-size: 14px; color: var(--text-muted); margin-left: auto; }
+    .section-empty { text-align: center; padding: 32px 16px; color: var(--text-muted); background: var(--card-bg); border-radius: 16px; border: 1px dashed var(--card-border); }
+    .section-empty-icon { font-size: 32px; margin-bottom: 8px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 16px; }
+    .card {
+      position: relative; background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 20px 20px 16px;
+      transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      display: flex; flex-direction: column; opacity: 0; transform: translateY(24px);
+    }
+    .card.revealed { opacity: 1; transform: translateY(0); }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.07); transform: translateY(-2px); }
+    .card.revealed:hover { transform: translateY(-2px); }
+    .card-num {
+      position: absolute; top: -10px; left: 16px; background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(255,107,53,.35);
+    }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; margin-top: 6px; }
+    .card-title { font-size: 15px; font-weight: 700; line-height: 1.5; color: var(--text); flex: 1; }
+    .card-source { flex-shrink: 0; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+    .source-x { background: #f0f0f0; color: #555; }
+    .source-blog { background: #e8f4fd; color: #1a73e8; }
+    .source-wechat { background: #e8f8e8; color: #2e7d32; }
+    .source-media { background: #fff3e0; color: #e65100; }
+    .source-hn { background: #fce4ec; color: #c62828; }
+    .source-gh { background: #f3e5f5; color: #6a1b9a; }
+    .card-summary { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 14px; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .card-time { font-size: 12px; color: var(--text-muted); }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;
+      color: var(--accent); text-decoration: none; padding: 6px 14px; border-radius: 100px;
+      background: rgba(255,107,53,.08); transition: 0.3s;
+    }
+    .card-link:hover { background: rgba(255,107,53,.16); color: var(--accent-dark); }
+    .card-link svg { width: 14px; height: 14px; }
+    .footer { text-align: center; padding: 32px 16px 40px; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 13px; max-width: 1100px; margin: 0 auto; }
+    .footer strong { color: var(--text-secondary); }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .quick-top {
+      position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 20px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.1); opacity: 0; transform: translateY(12px);
+      pointer-events: none; transition: 0.3s; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quick-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .quick-top:hover { background: var(--accent-dark); }
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 36px; }
+      .hero-stats { gap: 12px; }
+      .hero-stat { padding: 10px 14px; min-width: 64px; }
+      .hero-stat-num { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .section h2 { font-size: 17px; }
+      .nav-link { padding: 6px 12px; font-size: 12px; }
+    }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">☀️ AI HOT 晨报</div>
+    <h1>2026年7月6日 · 星期一</h1>
+    <p class="hero-sub">共 30 条资讯</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">30</span>
+        <span class="hero-stat-lbl">今日总条数</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-wrap" id="nav">
+  <div class="nav-inner">
+    <a href="#sec-ai-models" class="nav-link">
+      <span class="nav-dot" style="background:#6366f1"></span>模型发布/更新
+      <span class="nav-cnt">0</span>
+    </a>
+    <a href="#sec-ai-products" class="nav-link">
+      <span class="nav-dot" style="background:#0891b2"></span>产品发布/更新
+      <span class="nav-cnt">2</span>
+    </a>
+    <a href="#sec-industry" class="nav-link">
+      <span class="nav-dot" style="background:#d97706"></span>行业动态
+      <span class="nav-cnt">10</span>
+    </a>
+    <a href="#sec-paper" class="nav-link">
+      <span class="nav-dot" style="background:#7c3aed"></span>论文研究
+      <span class="nav-cnt">1</span>
+    </a>
+    <a href="#sec-tip" class="nav-link">
+      <span class="nav-dot" style="background:#059669"></span>技巧与观点
+      <span class="nav-cnt">17</span>
+    </a>
+  </div>
+</nav>
+
+<main class="main" id="main">
+<section class="section" id="sec-ai-models">
+  <div class="section-header">
+    <div class="section-dot" style="background:#6366f1"></div>
+    <h2>模型发布/更新</h2>
+    <span class="section-count">0 条</span>
+  </div>
+  <div class="section-empty">
+    <div class="section-empty-icon">📭</div>
+    <p>今日无模型发布/更新相关资讯</p>
+  </div>
+</section>
+
+<section class="section" id="sec-ai-products">
+  <div class="section-header">
+    <div class="section-dot" style="background:#0891b2"></div>
+    <h2>产品发布/更新</h2>
+    <span class="section-count">2 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">1</span>
+  <div class="card-top">
+    <h3 class="card-title">Deep Code 开源 AI 编程助手上线，专为 DeepSeek-V4 模型适配</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">Deep Code 是一款开源终端 AI 编程助手，专为 DeepSeek-V4 系列模型适配，支持深度思考、推理强度…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://www.ithome.com/0/972/910.htm" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">2</span>
+  <div class="card-top">
+    <h3 class="card-title">LandingAI 推出"先分类后抽取"文档解析范式</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">传统文档解析对所有页面套同一套字段模板，导致从税表抽"净薪资"、从身份证抽"账户号"。LandingAI 的 Agen…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/shao__meng/status/2073935533534036244" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-industry">
+  <div class="section-header">
+    <div class="section-dot" style="background:#d97706"></div>
+    <h2>行业动态</h2>
+    <span class="section-count">10 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">3</span>
+  <div class="card-top">
+    <h3 class="card-title">SiliconFlow GLM 5.2 Summer Rush 今晚截止，赢最高 $1000 代金券</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">硅基流动 SiliconFlow Summer Rush 活动今晚结束。活动期间运行 GLM 5.2 并发布用例推文，…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/SiliconFlowAI/status/2073960123329065463" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">4</span>
+  <div class="card-top">
+    <h3 class="card-title">谢赛宁邀约ICML首尔及周四晚mixer</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">在首尔ICML和周四晚上的AMI × SBVA mixer上见！期待与大家见面 ：）
+https://luma.com…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/sainingxie/status/2073953877800419652" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">5</span>
+  <div class="card-top">
+    <h3 class="card-title">美国富裕家庭弃普通学校，送孩子上Alpha School等AI私校</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">美国富裕家庭转投Alpha School等AI私校，每天2小时AI辅导加项目制工坊，学费最高7.5万美元/年。2025…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/xiaohu/status/2073949528743661751" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">6</span>
+  <div class="card-top">
+    <h3 class="card-title">阿里云新加坡合作伙伴大会聚焦Agentic AI</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">感谢所有参加新加坡阿里云合作伙伴连接之旅的人！
+我们共同探索了Agentic AI、AI原生云、MuleRun、Qod…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/alibaba_cloud/status/2073944483427717622" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">7</span>
+  <div class="card-top">
+    <h3 class="card-title">阿里云李飞飞：全栈就绪奠定智能体基石</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">李飞飞博士，阿里云CTO兼国际业务总裁，在Qwen大会上分享了阿里云如何推进全栈就绪。通过奠定智能体时代的四大基石，它…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/alibaba_cloud/status/2073940666955014156" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">8</span>
+  <div class="card-top">
+    <h3 class="card-title">SK 海力士将启动 280 亿美元美股上市，有望成史上第二大 IPO</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">SK 海力士于本周一启动规模约 280 亿美元的美股上市计划，将在纳斯达克通过存托凭证发行 1779 万股新股，每 1…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://www.ithome.com/0/972/896.htm" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">9</span>
+  <div class="card-top">
+    <h3 class="card-title">日本经产省公布AI机器人战略修订版，目标2040年部署1000万台机器人</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">日本经济产业省6月30日公布《人工智能机器人战略》修订版，计划到2040年在18个领域部署1000万台AI机器人，以应…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://www.ithome.com/0/972/895.htm" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">10</span>
+  <div class="card-top">
+    <h3 class="card-title">贾跃亭宣布法拉第未来机器人 Q3 战役启动，与洛杉矶两大公立学区合办夏令营</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">贾跃亭7月6日宣布法拉第未来机器人Q3战役启动，三季度将重点发力教育场景与工业场景两大拓荒市场，同时推进巡检安防等现有…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://www.ithome.com/0/972/891.htm" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">11</span>
+  <div class="card-top">
+    <h3 class="card-title">三星电子 Q2 营业利润预计同比暴涨 18 倍，AI 存储芯片需求持续引爆业绩</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">受 AI 产业扩张拉动存储芯片供给紧张、价格走高，三星电子第二季度营业利润预计同比暴涨约 18 倍至 86 万亿韩元（…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://www.ithome.com/0/972/890.htm" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">12</span>
+  <div class="card-top">
+    <h3 class="card-title">NVIDIA 推出新计划：AI 初创公司可用未来收益分成换取 GPU 计算资源</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">NVIDIA 推出新计划，允许 AI 初创公司以未来产品和云收入的分成换取高性能计算资源。NVIDIA 通过硬件销售和…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/rohanpaul_ai/status/2073924044420988932" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-paper">
+  <div class="section-header">
+    <div class="section-dot" style="background:#7c3aed"></div>
+    <h2>论文研究</h2>
+    <span class="section-count">1 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">13</span>
+  <div class="card-top">
+    <h3 class="card-title">Sky Computing Lab 在 ICML 2026 展示多项加速与推理研究</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">Sky Computing Lab 在 ICML 2026 首尔发布五项研究：MADQA 基准（2250 道人工问题、…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/haoailab/status/2073941724897140967" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-tip">
+  <div class="section-header">
+    <div class="section-dot" style="background:#059669"></div>
+    <h2>技巧与观点</h2>
+    <span class="section-count">17 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">14</span>
+  <div class="card-top">
+    <h3 class="card-title">Fable 任务偏好影响表现推测</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">我好奇 Fable 在它"喜欢"的任务上是否比不喜欢的做得更好。如果你让它做点"Fable 风格"的事，它会热情回应并…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/emollick/status/2073959909314416756" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">15</span>
+  <div class="card-top">
+    <h3 class="card-title">尽信AI不如没有AI</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">Oran Ge指出近期观察到人类自身的"幻觉"现象日益严重，包括：将AI撰写的文档视为自己写的（尽管自己记不住内容）；…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/oran_ge/status/2073959795544224161" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">16</span>
+  <div class="card-top">
+    <h3 class="card-title">Fable关闭记忆后仍持续学习用户偏好</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">关于Fable最诡异的事情是，即使关闭了记忆和个性化，它仍在不断了解我。思维痕迹中充满了对我偏好的引用。其中一部分是它…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/emollick/status/2073956895631593589" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">17</span>
+  <div class="card-top">
+    <h3 class="card-title">时间尽头ASI影响旧金山居民</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">"上帝给了我一个信号"
+
+（想起我住在旧金山）
+
+"我的意思是，我被时间尽头的ASI随意影响，以最大化人类的EV"</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/trq212/status/2073956140610924936" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">18</span>
+  <div class="card-top">
+    <h3 class="card-title">OpenAI放弃GPTs，企业仍在积极构建</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">我和很多公司交流过，他们仍在积极构建GPTs。
+（OpenAI在推出GPTs后又放弃它们，这仍然很奇怪。它们是技能的前…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/emollick/status/2073953911594004838" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">19</span>
+  <div class="card-top">
+    <h3 class="card-title">YC掌门人Garry Tan：四十岁创始人凭判断力成AI时代独角兽模板</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">YC掌门人Garry Tan指出，四十岁有品味和判断力的创始人正成为新一代独角兽模板，借助AI智能体可获得100倍到1…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/AYi_AInotes/status/2073947309130367090" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">20</span>
+  <div class="card-top">
+    <h3 class="card-title">分享8个Claude Fable 5下线前必跑的超实用Prompt</h3>
+    <span class="card-source source-wechat">公众号</span>
+  </div>
+  <p class="card-summary">Claude Fable 5即将下线，作者整理了8个经实战验证的提示词：/goal提示语让模型自主跑25次实验（花费1…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://mp.weixin.qq.com/s/ZkMsdeTK6wmgkaER0iPT8w" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">21</span>
+  <div class="card-top">
+    <h3 class="card-title">@waterloo_intern 蒸馏 Claude Fable 5 到 Qwen3-4B，数据 bug 致模型只会回答 "Egypt won"</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">@waterloo_intern 将 230 万条 Claude Fable 5 推理轨迹蒸馏到 Qwen3-4B，数…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/AYi_AInotes/status/2073938428626964700" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">22</span>
+  <div class="card-top">
+    <h3 class="card-title">Claude Code团队成员Thariq谈使用Fable 5后的工作方式转变</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">Claude Code团队成员Thariq分享使用Fable 5后工作方式根本转变：从"检查Claude有没有把活干对…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/xiaohu/status/2073936744010154150" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">23</span>
+  <div class="card-top">
+    <h3 class="card-title">亚马逊硬件主管 Panos Panay：正以自研芯片重塑沉浸式 AI 体验</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">亚马逊硬件主管 Panos Panay 表示，企业正以自研芯片 AZ3 / AZ3 Pro 为 2025 年发布的 E…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://www.ithome.com/0/972/889.htm" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">24</span>
+  <div class="card-top">
+    <h3 class="card-title">企业AI策略转向modelmaxxing，模型路由成控费核心</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">企业AI策略从堆Token转向模型最大化，模型路由成为控制支出的关键。廉价模型处理草稿、分类、摘要、测试等任务，前沿模…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/rohanpaul_ai/status/2073933749784629357" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">25</span>
+  <div class="card-top">
+    <h3 class="card-title">Anthropic新模型工具调用倒退：Opus 4.8与Sonnet 5在非主流schema上更不可靠</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">@mitsuhiko 发现，Claude Opus 4.8与Sonnet 5在Pi的edit工具（嵌套edits【】数…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/shao__meng/status/2073933413095288874" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">26</span>
+  <div class="card-top">
+    <h3 class="card-title">Agentic Coding Harness 本质是上下文编排工具</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">SemiAnalysis 指出，Agentic Coding Harness（如 Claude Code、Codex）…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/shao__meng/status/2073929746459824544" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">27</span>
+  <div class="card-top">
+    <h3 class="card-title">自用AI前端设计Skill即将开源</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">开发者Vista自研的前端设计Skill，通过调用Subagent并行生成四个设计方向，并弹出本地服务器预览，选中后回…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/vista8/status/2073928801046974479" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">28</span>
+  <div class="card-top">
+    <h3 class="card-title">Chollet：现实皆可编程，建模是关键</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">所有现实都是可编程的。
+你只需要弄清楚如何做。
+而方法就是建模。</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/fchollet/status/2073927440779694477" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">29</span>
+  <div class="card-top">
+    <h3 class="card-title">Google 工程负责人 Addy Osmani 开源 Agent Skills：24 个生产级工程技能</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">Agent Skills 由 Google 工程负责人 Addy Osmani 开源，包含 24 个生产级工程技能，旨…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/shao__meng/status/2073927149145428405" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">30</span>
+  <div class="card-top">
+    <h3 class="card-title">Jason Liu：艺术形式之间不可相互替代</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">相机拍摄的图像永远无法媲美画作。
+
+广播节目永远无法媲美百老汇演出。
+
+电视剧永远无法媲美电影。
+
+文字故事永远无法媲…</p>
+  <div class="card-footer">
+    <span class="card-time"></span>
+    <a class="card-link" href="https://x.com/jxnlco/status/2073922272596013387" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>共 <strong>30</strong> 条资讯 · 数据来源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">AI HOT</a></p>
+</footer>
+
+<button class="quick-top" id="quickTop" title="回到顶部">↑</button>
+
+<script>    (function(){
+      var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){ entry.target.classList.add('revealed'); observer.unobserve(entry.target); }
+        });
+      },{threshold:0.12,rootMargin:'0px 0px -20px 0px'});
+      document.querySelectorAll('[data-reveal]').forEach(function(el){ observer.observe(el); });
+
+      var qt = document.getElementById('quickTop'), ticking=false;
+      function onScroll(){ if(!ticking){ requestAnimationFrame(function(){ qt.classList.toggle('visible',window.scrollY>400); ticking=false; }); ticking=true; } }
+      window.addEventListener('scroll',onScroll,{passive:true});
+      qt.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+
+      document.querySelectorAll('.nav-link').forEach(function(link){
+        link.addEventListener('click',function(e){ e.preventDefault(); var t=document.querySelector(this.getAttribute('href')); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); });
+      });
+
+      var sections=[],navLinks=document.querySelectorAll('.nav-link');
+      document.querySelectorAll('.section').forEach(function(s){ sections.push({id:s.id,el:s}); });
+      function highlightNav(){ requestAnimationFrame(function(){ var y=window.scrollY+120,cur=sections[0]&&sections[0].id; for(var i=sections.length-1;i>=0;i--) if(sections[i].el.offsetTop<=y){cur=sections[i].id;break;} navLinks.forEach(function(l){ var a=l.getAttribute('href')==='#'+cur; l.style.color=a?'var(--accent)':''; l.style.background=a?'rgba(255,107,53,.08)':''; }); }); }
+      window.addEventListener('scroll',highlightNav,{passive:true});
+    })();</script>
+
+</body>
+</html>

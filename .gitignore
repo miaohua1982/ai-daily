@@ -37,8 +37,8 @@ wechat.html
 wechat.md
 
 # Archive folders (keep directory structure, ignore generated HTML)
-news-archive/*.html
-papers-archive/*.html
-trending-archive/*.html
-wechat-archive/*.html
-wechat-archive/*.md
+archive/news/*.html
+archive/papers/*.html
+archive/trending/*.html
+archive/wechat_draft/*.html
+archive/wechat_draft/*.md

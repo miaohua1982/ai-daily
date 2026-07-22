@@ -26,7 +26,7 @@ class TrendingPipeline(GeneratorPipeline):
     """
 
     OUTPUT_DIR  = Path(__file__).parent.parent.parent  # ai-daily 根目录
-    ARCHIVE_DIR = OUTPUT_DIR / "trending-archive"
+    ARCHIVE_DIR = OUTPUT_DIR / "archive" / "trending"
     INDEX_FILE  = OUTPUT_DIR / "trending.html"
     CONFIG_FILE = OUTPUT_DIR / "config" / "trending_config.yaml"
 
