@@ -200,7 +200,7 @@ semantic_dedup:
   api_key_env: "EMBEDDING_API_KEY"
   base_url: "https://llm-860ckp050tycaw8n.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
   model: "text-embedding-v4"
-  threshold: 0.85       # Cosine similarity >= this value is considered duplicate
+  threshold: 0.75       # Cosine similarity >= this value is considered duplicate
   batch_size: 10
 ```
 

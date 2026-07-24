@@ -200,7 +200,7 @@ semantic_dedup:
   api_key_env: "EMBEDDING_API_KEY"
   base_url: "https://llm-860ckp050tycaw8n.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
   model: "text-embedding-v4"
-  threshold: 0.85       # 余弦相似度 >= 此值视为重复
+  threshold: 0.75       # 余弦相似度 >= 此值视为重复
   batch_size: 10
 ```
 

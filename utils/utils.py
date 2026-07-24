@@ -439,8 +439,8 @@ def dedup_data(
         api_key_env = sem_cfg.get("api_key_env", "EMBEDDING_API_KEY")
         api_key = os.environ.get(api_key_env) or get_dot_env().get(api_key_env, "")
         base_url = sem_cfg.get("base_url", "")
-        model = sem_cfg.get("model", "text-embedding-3-small")
-        threshold = float(sem_cfg.get("threshold", 0.85))
+        model = sem_cfg.get("model", "text-embedding-v4")
+        threshold = float(sem_cfg.get("threshold", 0.75))
         batch_size = int(sem_cfg.get("batch_size", 10))
 
         if api_key and base_url:

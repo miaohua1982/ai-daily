@@ -104,4 +104,4 @@ semantic_dedup:
 
 filter:
   # 摘要有效字符数下限（优先 summary_zh 再回退 summary/description），低于此值的论文将被过滤
-  min_summary_len: 20
+  min_summary_len: 40

@@ -23,7 +23,7 @@ from pathlib import Path
 
 from utils import get_dot_env, load_config, get_now_date_str
 from src.wechat.renderer import render_wechat_html, render_wechat_md, wrap_wechat_html_doc
-from src.wechat.fetcher import fetch_news, fetch_papers
+from src.wechat.fetcher import fetch_news, fetch_papers, cross_dedup_news_papers
 from src.wechat.cover import generate_cover
 from src.wechat.api import get_access_token, upload_image, create_draft
 
@@ -59,11 +59,19 @@ def main() -> int:
         print("[SKIP] WECHAT_APPID or WECHAT_APPSECRET not set in environment")
         return 0
 
-    # 2. Fetch + dedup content via step functions
+    # 2. Fetch full raw pools (no dedup, no cap — dedup + truncation happen below)
     print("[INFO] Fetching news...")
-    news = fetch_news(MAX_NEWS)
+    news = fetch_news()
     print("[INFO] Fetching papers...")
-    papers = fetch_papers(MAX_PAPERS)
+    papers = fetch_papers()
+
+    # 2.5 Unified dedup (sole dedup entry): URL exact + full semantic
+    #     (intra- & cross-collection, single threshold; keep news on conflict)
+    news, papers = cross_dedup_news_papers(news, papers, _config)
+
+    # 2.6 Truncate AFTER cross dedup so each block still reaches its max
+    news = news[:MAX_NEWS]
+    papers = papers[:MAX_PAPERS]
 
     if not news and not papers:
         print("[SKIP] No content fetched - nothing to publish")
