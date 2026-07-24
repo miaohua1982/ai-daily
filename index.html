@@ -435,6 +435,15 @@
         </span>
         <span class="link-arrow">→</span>
       </a>
+
+      <a href="wechat_papers_weekly.html" class="link-card">
+        <span class="link-icon">&#x1F4DA;</span>
+        <span class="link-info">
+          <div class="link-title">论文周报</div>
+          <div class="link-desc">一周论文回顾 &middot; HF 高赞精选 &middot; 每周日更新</div>
+        </span>
+        <span class="link-arrow">→</span>
+      </a>
     </nav>
 
     <div class="divider"></div>
@@ -446,6 +455,7 @@
       <div class="archive-group" id="archive-papers"></div>
       <div class="archive-group" id="archive-trending"></div>
       <div class="archive-group" id="archive-wechat"></div>
+      <div class="archive-group" id="archive-weekly"></div>
     </nav>
 
     <div class="divider"></div>
@@ -494,8 +504,10 @@
   async function scanArchive(prefix, label, daysBack) {
     const groupId = 'archive-' + prefix;
     const group = document.getElementById(groupId);
-    // Map UI prefix -> archive subdir (wechat 目录名为 wechat_draft)
-    const dir = prefix === 'wechat' ? 'wechat_draft' : prefix;
+    // Map UI prefix -> archive subdir
+    // (wechat -> wechat_draft, weekly -> wechat_papers_weekly, 其余同名)
+    const dirMap = { wechat: 'wechat_draft', weekly: 'wechat_papers_weekly' };
+    const dir = dirMap[prefix] || prefix;
 
     // Label
     const labelEl = document.createElement('div');
@@ -603,6 +615,8 @@
   scanArchive('papers', '📄 AI 论文', 30);
   scanArchive('trending', '🔥 当日热点', 7);
   scanArchive('wechat', '💬 微信公众号', 30);
+  // 周报每周日一篇：回看 60 天可覆盖最近 ~8 期
+  scanArchive('weekly', '📚 论文周报', 60);
 
   // ── Keyboard ──
   document.querySelectorAll('.link-card').forEach(card => {

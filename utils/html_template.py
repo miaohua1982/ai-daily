@@ -1226,9 +1226,11 @@ def render_news_html(display_date, total, nav_items, sections_html):
 
 
 
+# {main_title} 占位: 日报为「📰 每日 AI 情报」(renderer 默认值),
+# 周报(generate_wechat_papers_weekly)传「📚 AI 一周论文回顾」。
 WECHAT_HEAD_SECTION = """\
 <section style="padding:12px 15px 0;text-align:center">
-  <p style="color:#6b7280;font-size:13px;margin:0 0 6px;letter-spacing:2px">📰 每日 AI 情报</p>
+  <p style="color:#6b7280;font-size:13px;margin:0 0 6px;letter-spacing:2px">{main_title}</p>
   <p style="color:#111827;font-size:24px;font-weight:800;margin:0;letter-spacing:-0.5px">{display_date}</p>
 </section>
 <section style="margin:16px 15px 12px;height:1px;background:#e5e7eb"></section>"""
@@ -1255,10 +1257,12 @@ WECHAT_ITEM_TEMPLATE = """\
   <section style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{section_badge}}<span style="margin-left:8px">来源：{source}</span></section>
 </section>"""
 
+# {papers_label} 占位: 日报为「📄 AI 前沿技术」(renderer 默认值),
+# 周报传「📄 本周精选论文」。
 WECHAT_PAPERS_HEADER = """\
 <section style="padding:4px 15px">
   <h2 style="font-size:16px;color:#111827;margin:18px 0 10px;font-weight:700;line-height:1.4">
-    <span style="display:inline-block;width:4px;height:16px;background:#ec4899;vertical-align:middle;margin-right:8px;border-radius:2px"></span>📄 AI 前沿技术（{count}篇）
+    <span style="display:inline-block;width:4px;height:16px;background:#ec4899;vertical-align:middle;margin-right:8px;border-radius:2px"></span>{papers_label}（{count}篇）
   </h2>
 </section>"""
 
@@ -1269,7 +1273,8 @@ WECHAT_PAPER_TEMPLATE = """\
     <strong style="color:{accent_color};font-size:14px;font-weight:700">{num}.</strong>{title_block}
   </section>
   <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>{summary}</section>
-  <section style="margin:0;font-size:11px;color:#9ca3af;line-height:1.5">{{source_badge}}</section>
+  {source_line}
+  {link_button_line}
 </section>"""
 
 # ── 4-color pastel palette for alternating card styles ──

@@ -29,12 +29,14 @@ env/
 # Draft / test output (local only, do not commit)
 craft/
 
-# Generated output (rebuilt daily by workflows, no need to track)
+# Generated output (rebuilt daily/weekly by workflows, no need to track)
 daily_news.html
 papers.html
 trending.html
 wechat.html
 wechat.md
+wechat_papers_weekly.html
+wechat_papers_weekly.md
 
 # Archive folders (keep directory structure, ignore generated HTML)
 archive/news/*.html
@@ -42,3 +44,5 @@ archive/papers/*.html
 archive/trending/*.html
 archive/wechat_draft/*.html
 archive/wechat_draft/*.md
+archive/wechat_papers_weekly/*.html
+archive/wechat_papers_weekly/*.md

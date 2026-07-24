@@ -1,7 +1,11 @@
 """
 wechat/cover - 微信公众号封面图生成（Pillow 绘图 + 字体查找）。
 
-generate_cover(today, news_count, papers_count) -> bytes (PNG)
+generate_cover(today, news_count, papers_count) -> bytes (PNG)   # 日报双卡封面
+generate_weekly_cover(today, papers_count)      -> bytes (PNG)   # 周报单卡封面
+
+两个入口共用 _draw_background（渐变/光晕/点阵/装饰圆/装饰条）与
+_load_fonts（跨平台中文字体查找），仅 header 文案与统计卡片布局不同。
 """
 
 import io
@@ -25,13 +29,8 @@ from src.wechat.constants import (
 )
 
 
-def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
-    """生成封面图 PNG bytes - 先绘制背景再叠加文字。"""
-    W, H = COVER_W, COVER_H
-
-    img = Image.new("RGB", (W, H), BG_TOP)
-    draw = ImageDraw.Draw(img)
-
+def _draw_background(img, draw, W: int, H: int):
+    """绘制封面公共背景（日报/周报共用）：渐变 + 光晕 + 点阵 + 装饰圆 + 装饰条。"""
     # 1a. 垂直渐变 - 白色到暖米色（上->下）
     for y in range(H):
         t = y / H
@@ -70,16 +69,39 @@ def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
     # 1g. 底部装饰条
     draw.rectangle([0, H - 5, W, H], fill=ACCENT_BAR_COLOR)
 
-    # ── STEP 2 - 文字叠加 ──
+
+def _load_fonts():
+    """加载封面所需的全套中文字体（日报/周报共用），失败时全部回退默认字体。
+
+    Returns:
+        (font_title, font_date, font_label, font_num, font_unit, font_foot)
+    """
     try:
-        font_title = _find_chinese_font(FONT_SIZE_TITLE)
-        font_date = _find_chinese_font(FONT_SIZE_DATE)
-        font_label = _find_chinese_font(FONT_SIZE_LABEL)
-        font_num = _find_chinese_font(FONT_SIZE_NUM)
-        font_unit = _find_chinese_font(FONT_SIZE_UNIT)
-        font_foot = _find_chinese_font(FONT_SIZE_FOOT)
+        return (
+            _find_chinese_font(FONT_SIZE_TITLE),
+            _find_chinese_font(FONT_SIZE_DATE),
+            _find_chinese_font(FONT_SIZE_LABEL),
+            _find_chinese_font(FONT_SIZE_NUM),
+            _find_chinese_font(FONT_SIZE_UNIT),
+            _find_chinese_font(FONT_SIZE_FOOT),
+        )
     except Exception:
-        font_title = font_date = font_label = font_num = font_unit = font_foot = ImageFont.load_default()
+        f = ImageFont.load_default()
+        return (f, f, f, f, f, f)
+
+
+def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
+    """生成日报封面图 PNG bytes（双卡：热点资讯 + 精选论文）。"""
+    W, H = COVER_W, COVER_H
+
+    img = Image.new("RGB", (W, H), BG_TOP)
+    draw = ImageDraw.Draw(img)
+
+    # ── STEP 1 - 背景 ──
+    _draw_background(img, draw, W, H)
+
+    # ── STEP 2 - 文字叠加 ──
+    font_title, font_date, font_label, font_num, font_unit, font_foot = _load_fonts()
 
     # ── Header ──
     draw.text((55, 45), "AI 情报", fill=TEXT_TITLE_COLOR, font=font_title)
@@ -96,6 +118,45 @@ def generate_cover(today: str, news_count: int, papers_count: int) -> bytes:
                      font_label, font_num, font_unit)
 
     _draw_stats_card(draw, px1, CARD_Y, "精选论文", str(papers_count), "篇",
+                     CARD_PAPERS_BG, CARD_PAPERS_OUTLINE, CARD_PAPERS_ACCENT,
+                     CARD_PAPERS_LABEL, CARD_PAPERS_UNIT,
+                     font_label, font_num, font_unit)
+
+    # ── Footer ──
+    draw.text((55, 345), "由 ai-daily 自动生成 · 仅供学习参考", fill=TEXT_FOOTER_COLOR, font=font_foot)
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return buf.getvalue()
+
+
+def generate_weekly_cover(today: str, papers_count: int) -> bytes:
+    """生成周报封面图 PNG bytes（单卡：本周精选论文）。
+
+    与日报 generate_cover 的差异：
+      - Header 文案为「AI 论文周报」
+      - 统计卡片只有一张（精选论文），水平居中，沿用论文卡配色
+      - 背景 / 字体 / Footer 与日报完全一致（复用 helper）
+    """
+    W, H = COVER_W, COVER_H
+
+    img = Image.new("RGB", (W, H), BG_TOP)
+    draw = ImageDraw.Draw(img)
+
+    # ── STEP 1 - 背景（与日报共用）──
+    _draw_background(img, draw, W, H)
+
+    # ── STEP 2 - 文字叠加 ──
+    font_title, font_date, font_label, font_num, font_unit, font_foot = _load_fonts()
+
+    # ── Header ──
+    draw.text((55, 45), "AI 论文周报", fill=TEXT_TITLE_COLOR, font=font_title)
+    draw.text((55, 112), today, fill=TEXT_DATE_COLOR, font=font_date)
+    draw.line([(55, 150), (440, 150)], fill=TEXT_DIVIDER_COLOR, width=2)
+
+    # ── 统计卡片（单卡水平居中，沿用论文卡配色）──
+    cx1 = (W - CARD_W) // 2
+    _draw_stats_card(draw, cx1, CARD_Y, "本周精选论文", str(papers_count), "篇",
                      CARD_PAPERS_BG, CARD_PAPERS_OUTLINE, CARD_PAPERS_ACCENT,
                      CARD_PAPERS_LABEL, CARD_PAPERS_UNIT,
                      font_label, font_num, font_unit)

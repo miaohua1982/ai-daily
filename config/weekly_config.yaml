@@ -1,0 +1,139 @@
+# ═══════════════════════════════════════════════════════════════
+# WeChat「一周论文回顾」周报配置（generate_wechat_papers_weekly.py）
+# ═══════════════════════════════════════════════════════════════
+# 与日报（wechat_config.yaml）的差异：
+#   1. 纯论文，无 news 块
+#   2. 数据源直接 HuggingFace Daily Papers（主力，按 upvotes 排序）
+#      + arXiv（补充，按时间倒序），跳过 aihot
+#   3. 时间窗口为「自然周」（本周一 ~ 运行日），每周日 17:00 北京时间运行
+#   4. 精选 top_n 篇（HF 高赞在前、arXiv 补位在后）
+# 本文件是周报的唯一配置入口（微信 API + 抓取 + 翻译 + 去重 + 精选参数），
+# 独立于 papers_config.yaml / wechat_config.yaml，互不影响。
+
+# ============================================================
+# 微信公众号发布配置
+# ============================================================
+
+# 微信公众号 API 地址
+wechat_base: "https://api.weixin.qq.com"
+
+# 站点地址（用于 HTML 中链接回源）
+repo_url: "https://miaohua1982.github.io/ai-daily/"
+
+# 草稿标题模板（{date} 替换为 YYYYMMDD 格式的运行日）
+title_template: "AI论文周报 | {date}"
+
+# 草稿摘要模板（{papers_count} 替换为论文篇数）
+digest_template: "本周精选 {papers_count} 篇 AI 论文 · 一周论文回顾"
+digest_fallback: "一周 AI 论文回顾"
+
+# 作者名
+author: "ai-daily"
+
+# 环境变量：从哪个环境变量读取微信 API 凭证（与日报共用同一账号）
+appid_env: "WECHAT_APPID"
+appsecret_env: "WECHAT_APPSECRET"
+
+# ============================================================
+# 周报精选参数
+# ============================================================
+
+weekly:
+  # 精选篇数上限：排序（HF upvotes 降序在前、arXiv 时间倒序在后）后截断
+  top_n: 30
+  # 时间窗口模式：natural = 自然周（本周一 00:00 ~ 运行日）。
+  # 周日运行时正好覆盖完整一周（周一~周日，7 天）；
+  # 其他日期手动运行则覆盖「本周一 ~ 当天」的部分周。
+  week_mode: "natural"
+
+# ============================================================
+# 数据源配置（沿用 papers_config 的抓取层，aihot 关闭）
+# ============================================================
+
+# 全局抓取参数
+fetch:
+  # 拉取天数兜底值。week_mode=natural 时会在 weekly_fetcher 中按
+  # 「运行日是本周第几天」动态覆盖（周日运行 = 7），此值仅作异常兜底。
+  days_back: 7
+  # 单个 API 请求失败时的最大重试次数
+  max_retries: 3
+  # 请求 User-Agent
+  user_agent: "ai-daily/1.0"
+  # 目标日期（YYYY-MM-DD），默认取当前（北京时间）
+  target_date: null
+
+# 数据源 1: AI HOT —— 周报明确跳过（直接走 arXiv + HF）
+aihot:
+  enabled: false
+  api_base: "https://aihot.virxact.com/api/public"
+  take: 30
+  page_size: 10
+
+# 数据源 2: arXiv（补充源：分类过滤 + 时间倒序，无热度信号）
+arxiv:
+  enabled: true
+  endpoint: "http://export.arxiv.org/api/query"
+  # AI 相关分类（与 papers_config 一致）
+  categories:
+    - "cs.AI"    # Artificial Intelligence
+    - "cs.CL"    # Computation and Language (NLP)
+    - "cs.LG"    # Machine Learning
+    - "cs.CV"    # Computer Vision
+    - "cs.MA"    # Multi-Agent Systems
+    - "cs.RO"    # Robotics
+    - "stat.ML"  # Statistics - Machine Learning
+  # 返回上限：一周窗口比日报大，从日报的 30 调大到 150（≤ 2000）
+  max_results: 50
+  sort_by: "submittedDate"
+  sort_order: "descending"
+  # 连续调用间隔（秒，arXiv 要求 ≥ 3）
+  rate_limit_seconds: 3
+  timeout_seconds: 30
+
+# 数据源 3: HuggingFace Daily Papers（主力源：社区 upvotes 即热度信号）
+huggingface:
+  enabled: true
+  endpoint_daily: "https://huggingface.co/api/daily_papers"
+  endpoint_paper: "https://huggingface.co/api/papers"
+  endpoint_search: "https://huggingface.co/api/papers/search"
+  # 每天一页的条数：日报为 15，周报调大到 50 尽量取全当日精选
+  page_limit: 50
+  rate_limit_seconds: 1
+  timeout_seconds: 30
+
+# ============================================================
+# 翻译配置（与 papers_config 一致；周报在截断 top_n 之后才翻译，
+# 每周仅翻译 top_n 篇，控制 API 成本）
+# ============================================================
+
+translation:
+  enabled: true
+  api_key_env: "DEEPSEEK_API_KEY"
+  base_url: "https://api.deepseek.com/v1"
+  model: "deepseek-chat"
+  # 单次翻译的论文数（批量翻译，减少 API 调用次数）
+  batch_size: 5
+  rate_limit_seconds: 1
+  timeout_seconds: 60
+
+# ============================================================
+# 去重配置（供 utils.dedup_data 使用：URL 精确去重 + 集合内语义去重）
+# ============================================================
+
+semantic_dedup:
+  enabled: true
+  api_key_env: "EMBEDDING_API_KEY"
+  base_url: "https://llm-860ckp050tycaw8n.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+  model: "text-embedding-v4"
+  # 余弦相似度阈值，>= 此值视为重复（与 wechat 日报统一为 0.75）
+  threshold: 0.75
+  # 单次请求最大文本数（阿里 Qwen embedding 限制为 10 条）
+  batch_size: 10
+
+# ============================================================
+# 过滤配置
+# ============================================================
+
+filter:
+  # 摘要有效字符数下限（优先 summary_zh 再回退 summary/description）
+  min_summary_len: 60

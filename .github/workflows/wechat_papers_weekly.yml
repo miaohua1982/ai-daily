@@ -1,0 +1,84 @@
+name: Publish Weekly Papers to WeChat Draft
+
+on:
+  schedule:
+    # Beijing time Sunday 17:00 = UTC Sunday 09:00
+    # 周日收官运行：自然周窗口（本周一~周日）数据基本齐全
+    - cron: '0 9 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-wechat-papers-weekly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          pip install Pillow
+
+      - name: Generate and publish weekly papers draft
+        run: python generate_wechat_papers_weekly.py
+        env:
+          WECHAT_APPID: ${{ secrets.WECHAT_APPID }}
+          WECHAT_APPSECRET: ${{ secrets.WECHAT_APPSECRET }}
+          EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f wechat_papers_weekly.md wechat_papers_weekly.html archive/wechat_papers_weekly/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "chore: auto-update weekly papers draft"
+          # 与其他 workflow 相同的 push 重试循环；sleep 错峰区间 17-20 秒
+          #（daily/papers/trending/wechat 分别为 1-4/5-8/9-12/13-16，互不重叠）
+          for i in 1 2 3; do
+            git pull --rebase origin main || { git rebase --abort; sleep $((RANDOM % 4 + 17)); continue; }
+            if git push origin main; then
+              echo "Pushed successfully (attempt $i)"
+              break
+            fi
+            echo "Push rejected (remote moved), retrying ($i/3)..."
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify success via Server酱
+        if: success()
+        run: |
+          curl -s "https://sctapi.ftqq.com/${{ secrets.SERVERCHAN_SENDKEY }}.send" \
+            -d "title=📚 AI 论文周报草稿已生成" \
+            -d "desp=## 微信周报草稿已自动生成
+
+          打开「订阅号助手」小程序
+          → 发表 → 草稿 → 手机预览
+          → 确认排版无误 → 点击发表
+
+          一周论文回顾，周日晚安 ❤️"
+
+      - name: Notify failure via Server酱
+        if: failure()
+        run: |
+          curl -s "https://sctapi.ftqq.com/${{ secrets.SERVERCHAN_SENDKEY }}.send" \
+            -d "title=❌ 论文周报草稿生成失败" \
+            -d "desp=请前往 GitHub Actions 查看详细日志：
+          https://github.com/miaohua1982/ai-daily/actions"
