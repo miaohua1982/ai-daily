@@ -13,7 +13,11 @@ Scheduled after daily (05:00) and papers (06:00) - Beijing time.
   - src/wechat/cover.py     封面图生成（Pillow 绘图 + 字体查找）
   - src/wechat/api.py       微信 API 客户端（HTTP + access_token + 上传 + 草稿）
   - src/wechat/renderer.py  微信草稿渲染（HTML + Markdown 双格式，组合 news + papers）
-  - generate_wechat.py      编排（配置加载 + gate 检查 + 主流程）
+  - generate_wechat.py      编排（配置加载 + 两阶段：本地产出 → 微信发布）
+
+本地预览模式：设置环境变量 WECHAT_LOCAL_ONLY=1 或加命令行参数 --local-only，
+只生成 wechat.md / wechat.html 及归档，不调用微信 API、不生成封面、不建草稿。
+本地模式不要求 WECHAT_APPID / WECHAT_APPSECRET，便于无密钥调试。
 """
 
 import os
@@ -51,72 +55,62 @@ APPID = (os.environ.get(appid_env) or _env.get(appid_env, "")).strip()
 APPSECRET = (os.environ.get(appsecret_env) or _env.get(appsecret_env, "")).strip()
 
 
-# -- Main ------------------------------------------------------------------
+# -- Local-only mode -------------------------------------------------------
+def is_local_only() -> bool:
+    """本地预览模式开关：只生成本地文件，不调用微信 API。
 
-def main() -> int:
-    # 1. Gate: must have credentials
-    if not APPID or not APPSECRET:
-        print("[SKIP] WECHAT_APPID or WECHAT_APPSECRET not set in environment")
-        return 0
+    触发方式（任一即可）：
+      - 环境变量 WECHAT_LOCAL_ONLY=1（或 true/yes）
+      - 命令行参数 --local-only
+    """
+    env_val = os.environ.get("WECHAT_LOCAL_ONLY", "").strip().lower()
+    if env_val in ("1", "true", "yes"):
+        return True
+    return "--local-only" in sys.argv
 
-    # 2. Fetch full raw pools (no dedup, no cap — dedup + truncation happen below)
+
+# -- Phase 1: build & write local artifacts --------------------------------
+def build_local_artifacts():
+    """抓取 + 去重 + 截断 + 渲染 + 写入本地 wechat.md / wechat.html + 归档。
+
+    Returns:
+        (news, papers, date_str, content_html) 元组；无内容时返回 None。
+    """
     print("[INFO] Fetching news...")
     news = fetch_news()
     print("[INFO] Fetching papers...")
     papers = fetch_papers()
 
-    # 2.5 Unified dedup (sole dedup entry): URL exact + full semantic
-    #     (intra- & cross-collection, single threshold; keep news on conflict)
+    # 统一去重（URL 精确 + 全量语义；冲突时保留 news）
     news, papers = cross_dedup_news_papers(news, papers, _config)
 
-    # 2.6 Truncate AFTER cross dedup so each block still reaches its max
+    # 去重后再截断，确保每个区块都达到上限
     news = news[:MAX_NEWS]
     papers = papers[:MAX_PAPERS]
 
     if not news and not papers:
         print("[SKIP] No content fetched - nothing to publish")
-        return 0
+        return None
 
-    # Use news date as primary; fallback to papers date or local calculation
     date_str = get_now_date_str()
     print(f"[INFO] Target date: {date_str}, News: {len(news)}, Papers: {len(papers)}")
 
-    # 3. Get WeChat access token
-    print("[INFO] Getting WeChat access token...")
-    token = get_access_token(WECHAT_BASE, APPID, APPSECRET)
-    if not token:
-        return 1
-
-    # 4. Generate cover image
-    print("[INFO] Generating cover image...")
-    cover_bytes = generate_cover(date_str, len(news), len(papers))
-
-    # 5. Upload cover image
-    print("[INFO] Uploading cover image to WeChat...")
-    thumb_media_id = upload_image(WECHAT_BASE, token, cover_bytes)
-    if not thumb_media_id:
-        print("[ERROR] Cover upload failed, cannot create draft", file=sys.stderr)
-        return 1
-
-    # 6. Build WeChat-compatible HTML + local Markdown
+    # 渲染微信 HTML + 本地 Markdown
     content_html = render_wechat_html(news, papers, date_str, REPO_URL)
     content_md = render_wechat_md(news, papers, date_str, REPO_URL)
 
-    # Write MD to local file (for preview / GitHub display)
+    # 写 MD 到本地
     md_path = OUTPUT_DIR / "wechat.md"
     md_path.write_text(content_md, encoding="utf-8")
     print(f"[INFO] Markdown saved: {md_path} ({len(content_md)} chars)")
 
-    # Write HTML to local file (for preview / GitHub display).
-    # content_html is a WeChat-style fragment (no <html>/<head>/<body>); wrap it
-    # in a complete document via the renderer for proper local browser rendering.
-    html_path = OUTPUT_DIR / "wechat.html"
+    # 写 HTML 到本地（content_html 是微信风格片段，包成完整文档便于浏览器预览）
     html_doc = wrap_wechat_html_doc(content_html, date_str)
+    html_path = OUTPUT_DIR / "wechat.html"
     html_path.write_text(html_doc, encoding="utf-8")
     print(f"[INFO] HTML saved: {html_path} ({len(content_html)} chars)")
 
-    # Archive both local artifacts by date (mirrors archive/news, archive/papers
-    # convention: {archive_dir}/{date_str}.<ext>), creating the dir if missing.
+    # 按日期归档（与 archive/news、archive/papers 约定一致：{archive_dir}/{date_str}.<ext>）
     archive_dir = OUTPUT_DIR / "archive" / "wechat_draft"
     archive_dir.mkdir(parents=True, exist_ok=True)
     archive_html = archive_dir / f"{date_str}.html"
@@ -126,7 +120,31 @@ def main() -> int:
     archive_md.write_text(content_md, encoding="utf-8")
     print(f"[INFO] MD archived: {archive_md}")
 
-    # 7. Create draft
+    return news, papers, date_str, content_html
+
+
+# -- Phase 2: publish to WeChat --------------------------------------------
+def publish_to_wechat(news, papers, date_str, content_html) -> int:
+    """取 access token → 生成封面 → 上传封面 → 建草稿。需要 WECHAT_APPID/APPSECRET。"""
+    # Gate: 发布阶段必须有凭据
+    if not APPID or not APPSECRET:
+        print("[SKIP] WECHAT_APPID or WECHAT_APPSECRET not set - skip publishing")
+        return 0
+
+    print("[INFO] Getting WeChat access token...")
+    token = get_access_token(WECHAT_BASE, APPID, APPSECRET)
+    if not token:
+        return 1
+
+    print("[INFO] Generating cover image...")
+    cover_bytes = generate_cover(date_str, len(news), len(papers))
+
+    print("[INFO] Uploading cover image to WeChat...")
+    thumb_media_id = upload_image(WECHAT_BASE, token, cover_bytes)
+    if not thumb_media_id:
+        print("[ERROR] Cover upload failed, cannot create draft", file=sys.stderr)
+        return 1
+
     date_fmt = date_str.replace("-", "")
     title = TITLE_TEMPLATE.format(date=date_fmt)
     digest_parts = []
@@ -145,8 +163,31 @@ def main() -> int:
     if ok:
         print("[INFO] WeChat draft published successfully!")
         return 0
-    else:
-        return 1
+    return 1
+
+
+# -- Main ------------------------------------------------------------------
+def main() -> int:
+    # 判断是否本地预览模式（WECHAT_LOCAL_ONLY=1 或 --local-only）
+    local = is_local_only()
+    if local:
+        print("[INFO] Local-only mode: building wechat.md / wechat.html, skip WeChat API")
+
+    # 阶段一：抓取 → 去重 → 截断 → 渲染 → 写入本地 wechat.md/wechat.html → 归档
+    result = build_local_artifacts()
+    # 无内容可发布，直接结束
+    if result is None:
+        return 0
+
+    # 本地模式：阶段一（本地产出）已完成即返回，不调用微信 API / 不生成封面 / 不建草稿
+    if local:
+        print("[INFO] Local-only mode done. Skipped WeChat publish (token/cover/draft).")
+        return 0
+
+    # 解包阶段一产物，供发布阶段复用
+    news, papers, date_str, content_html = result
+    # 阶段二：发布到微信（取 token → 生成封面 → 上传封面 → 创建草稿）
+    return publish_to_wechat(news, papers, date_str, content_html)
 
 
 if __name__ == "__main__":

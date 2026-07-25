@@ -161,6 +161,16 @@ python generate_trending.py
 
 # 发布微信草稿（需配置微信凭证）
 python generate_wechat.py
+
+# 仅生成本地预览（wechat.md / wechat.html，不调用微信 API、无需微信凭证）
+WECHAT_LOCAL_ONLY=1 python generate_wechat.py
+# 或用命令行参数：python generate_wechat.py --local-only
+
+# 生成并发布周报草稿（需配置微信凭证）
+python generate_wechat_papers_weekly.py
+# 仅生成本地预览（wechat_papers_weekly.md / .html，不调用微信 API、无需微信凭证）
+WECHAT_LOCAL_ONLY=1 python generate_wechat_papers_weekly.py
+# 或用命令行参数：python generate_wechat_papers_weekly.py --local-only
 ```
 
 ### 5. 运行测试

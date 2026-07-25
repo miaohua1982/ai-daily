@@ -161,6 +161,16 @@ python generate_trending.py
 
 # Publish WeChat draft (requires WeChat credentials)
 python generate_wechat.py
+
+# Local preview only (wechat.md / wechat.html, no WeChat API, no credentials needed)
+WECHAT_LOCAL_ONLY=1 python generate_wechat.py
+# or with CLI flag: python generate_wechat.py --local-only
+
+# Generate and publish weekly draft (requires WeChat credentials)
+python generate_wechat_papers_weekly.py
+# Local preview only (wechat_papers_weekly.md / .html, no WeChat API, no credentials needed)
+WECHAT_LOCAL_ONLY=1 python generate_wechat_papers_weekly.py
+# or with CLI flag: python generate_wechat_papers_weekly.py --local-only
 ```
 
 ### 5. Run Tests
