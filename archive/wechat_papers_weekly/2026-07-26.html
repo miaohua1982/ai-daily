@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>AI 一周论文回顾 2026-07-26</title>
+</head>
+<body>
+<style>.ai-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08);border-left-width:5px}.ai-card:active{transform:translateY(0);box-shadow:0 3px 10px rgba(0,0,0,.06)}</style>
+<section style="padding:12px 15px 0;text-align:center">
+  <p style="color:#6b7280;font-size:13px;margin:0 0 6px;letter-spacing:2px">📚 AI 一周论文回顾</p>
+  <p style="color:#111827;font-size:24px;font-weight:800;margin:0;letter-spacing:-0.5px">2026年7月26日 · 周日</p>
+</section>
+<section style="margin:16px 15px 12px;height:1px;background:#e5e7eb"></section>
+<section style="padding:4px 15px">
+  <h2 style="font-size:16px;color:#111827;margin:18px 0 10px;font-weight:700;line-height:1.4">
+    <span style="display:inline-block;width:4px;height:16px;background:#ec4899;vertical-align:middle;margin-right:8px;border-radius:2px"></span>📄 本周精选论文（30篇）
+  </h2>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#d1fae5;border-radius:8px;border-left:3px solid #10b981;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#10b981;font-size:14px;font-weight:700">1.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.19191" style="color:inherit;text-decoration:none">ABot-World-0：单桌面GPU上的无限交互世界生成</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>我们提出ABot-World-0，一个基于动作条件的视频世界模型，用于实时、长时域闭环交互。该模型依托覆盖AAA游戏、仿真引擎和互联网视频的多源数据基础设施，学习可控的世界动态。WorldExplorer通过训练反馈引导智能体驱动的数据采集，统一流程应用14项确定性质量检查、基于VLM的评估以及同步的动作与文本标注。我们逐步蒸馏出一个</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.19191" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.19191</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#fce7f3;border-radius:8px;border-left:3px solid #ec4899;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#ec4899;font-size:14px;font-weight:700">2.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.17977" style="color:inherit;text-decoration:none">RynnBrain 1.1：迈向更强大、更通用的具身基础模型</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>我们提出RynnBrain 1.1，一个涵盖2B、9B和122B-A10B参数规模的具身基础模型系列。通过统一的时空与物理基础框架训练，RynnBrain 1.1支持具身感知、空间推理、定位与规划。相较于RynnBrain 1.0，该系列进一步引入了跨模型家族的接触点预测，并为2B和9B模型提供原生3D定位能力，从而生成更直接对齐机器人操控的表征与输出。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.17977" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.17977</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#ede9fe;border-radius:8px;border-left:3px solid #8b5cf6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#8b5cf6;font-size:14px;font-weight:700">3.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.17423" style="color:inherit;text-decoration:none">TimeLens2：基于多模态大语言模型的通用视频时间定位</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>视频多模态大语言模型（MLLMs）能够描述视频中发生的事件，但很少能识别支持性证据发生的时间。我们研究通用视频时间定位，即单一模型需跨视频长度、领域、查询形式和视角预测可变基数的证据区间集合。现有训练策略与该集合值任务不匹配：长视频标签常依赖脆弱的单遍标注，而强化学习奖励要么</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.17423" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.17423</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#dbeafe;border-radius:8px;border-left:3px solid #3b82f6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#3b82f6;font-size:14px;font-weight:700">4.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.21461" style="color:inherit;text-decoration:none">AREX：面向深度研究的递归自改进智能体</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>深度研究要求智能体找到同时满足多个约束的答案。发现此类答案成本高昂，而验证候选答案通常可分解为易处理的逐约束检查。这种发现-验证不对称性表明，研究智能体不应仅延长搜索时间，而应通过验证中间结果并利用部分验证状态指导后续改进，递归地优化当前答案。我们提出ARE</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.21461" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.21461</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#d1fae5;border-radius:8px;border-left:3px solid #10b981;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#10b981;font-size:14px;font-weight:700">5.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.17250" style="color:inherit;text-decoration:none">EvolvingWorld：交互式文学世界中角色扮演智能体与世界模型协同演化的开放模式框架</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>本文提出EvolvingWorld，一个面向交互式文学世界中角色与世界协同演化的框架与基准。现有系统要么将交互式文学模拟视为静态角色模仿，要么视为孤立场景生成，未能捕捉角色与世界随时间共同演化的过程。为此，EvolvingWorld将文学模拟建模为长时域过程，其中角色互动、场景推进，角色与世界状态持续</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.17250" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.17250</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#fce7f3;border-radius:8px;border-left:3px solid #ec4899;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#ec4899;font-size:14px;font-weight:700">6.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.18703" style="color:inherit;text-decoration:none">游戏级速度的生成式世界渲染器</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>生成式世界渲染器AlayaRenderer接收从物理引擎导出的结构化世界状态，并合成RGB帧。与从文本/控制提示生成帧的模型不同，AlayaRenderer在不改变底层世界动态的情况下保留场景结构。这展示了通往交互式世界建模和用户可控游戏的一条替代路径。然而，原始的AlayaRenderer计算成本过高，无法实现实时部署。本技术报告...</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.18703" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.18703</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#ede9fe;border-radius:8px;border-left:3px solid #8b5cf6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#8b5cf6;font-size:14px;font-weight:700">7.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.18213" style="color:inherit;text-decoration:none">SWE-Pruner Pro：代码大语言模型已知晓剪枝对象</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>为编码智能体剪枝长上下文一直是高效上下文管理的关键技术。虽然现有上下文剪枝方法（如SWE-Pruner）通过附加独立的代码分类器实现这一点，但我们发现智能体自身在读取工具输出时编码了指示代码上下文相关性的内部表征。基于这一发现，我们提出SWE-Pruner Pro，直接在智能体内部剪枝工具输出。具体而言，一个小型头部将智能体自身的内部表征...</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.18213" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.18213</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#dbeafe;border-radius:8px;border-left:3px solid #3b82f6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#3b82f6;font-size:14px;font-weight:700">8.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.19139" style="color:inherit;text-decoration:none">文本模板标记是扩散Transformer中的隐式语义寄存器</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>文本到图像扩散Transformer（DiTs）联合处理文本和图像标记，但其在去噪过程中的内部计算仍未被充分理解。我们为现代大规模DiTs引入了一个因果可解释性框架，该框架结合了注意力分解与跨标记跨度、头部和层的定向干预。利用该框架将提示内容标记与结构模板标记分离，我们发现结构标记在早期携带的提示特定信息很少...</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.19139" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.19139</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#d1fae5;border-radius:8px;border-left:3px solid #10b981;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#10b981;font-size:14px;font-weight:700">9.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.19064" style="color:inherit;text-decoration:none">Mage-Flow：面向图像生成与编辑的高效原生分辨率基础模型</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>大规模视觉生成器能力日益增强，但训练、微调和部署成本高昂。我们引入Mage-Flow，一个紧凑的4B规模生成堆栈，用于高效的文本到图像生成和基于指令的图像编辑。该堆栈由两个协同设计的组件构成：Mage-VAE（一个轻量级高保真潜在分词器）和一个采用整流流匹配训练的原生分辨率多模态扩散Transformer。Mage-VAE使用单步扩散式编码和解码...</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.19064" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.19064</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#fce7f3;border-radius:8px;border-left:3px solid #ec4899;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#ec4899;font-size:14px;font-weight:700">10.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.18217" style="color:inherit;text-decoration:none">HOMIE：通过多模态智能增强实现以人-物为中心的视频个性化</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>以人-物为中心的视频个性化（HOCVP）是主体驱动视频生成中的核心任务。然而，现有方法存在两个关键限制。首先，大多数关注主体间个性化的方法仍难以在主体高保真度与人类与多样化物体（尤其是当物体代表抽象概念如标志时）之间的精确交互模式之间取得平衡。其次，虽然主体内参考（例如OCR图、多视图图像）...</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.18217" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.18217</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#ede9fe;border-radius:8px;border-left:3px solid #8b5cf6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#8b5cf6;font-size:14px;font-weight:700">11.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2605.09635" style="color:inherit;text-decoration:none">K12-KGraph：面向课程对齐的知识图谱，用于教育大语言模型的基准测试与训练</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>大语言模型在K-12教育中的应用日益广泛，但现有基准测试主要考察试题解答能力，而非理解课程知识的结构化与可视化呈现方式。我们将这种能力称为课程认知，涵盖先决条件链、概念分类体系、实验-概念关联、教学序列设计及视觉基础。我们提出K12-KGraph——一个从人民教育出版社官方教材中提取的课程对齐知识图谱。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2605.09635" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2605.09635</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#dbeafe;border-radius:8px;border-left:3px solid #3b82f6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#3b82f6;font-size:14px;font-weight:700">12.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.20145" style="color:inherit;text-decoration:none">SLAI T-Rex：基于昇腾SuperPOD的DeepSeek-V4系列全参数后训练</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>万亿参数级MoE模型的全参数后训练为大规模分布式训练带来了严峻的系统级挑战，包括严重的内存压力、非重叠通信开销以及低效的内核执行。尽管大多数大规模LLM训练系统基于GPU集群构建，本报告展示了在昇腾NPU SuperPOD上的端到端优化实践。以DeepSeek-V4模型系列为目标负载，我们开发了一套高效方案。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.20145" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.20145</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#d1fae5;border-radius:8px;border-left:3px solid #10b981;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#10b981;font-size:14px;font-weight:700">13.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.18367" style="color:inherit;text-decoration:none">AlayaWorld：交互式长时域世界建模——完整技术报告</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>与依赖劳动密集型资产制作、动画、物理及编程流程的传统视频游戏开发不同，视频世界模型能根据用户输入即时生成交互式环境。它使我们能够从文本、图像或视频中创建可定制、可探索且持续演化的虚拟世界。实现这一愿景需要四种紧密耦合的能力：交互性、持久时空一致性、稳定长时域生成以及高效性。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.18367" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.18367</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#fce7f3;border-radius:8px;border-left:3px solid #ec4899;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#ec4899;font-size:14px;font-weight:700">14.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.20061" style="color:inherit;text-decoration:none">ReferTrack：面向具身视觉跟踪的指代后跟踪方法</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>具身视觉跟踪要求移动智能体仅依靠机载视觉持续追踪自然语言描述的特定目标。尽管近期视觉-语言-动作策略统一了目标识别与轨迹规划，但其思维链推理常运行于难以监督且与显式图像空间检测弱对齐的抽象空间潜变量中。为此，我们提出ReferTrack——一种指代后跟踪范式。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.20061" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.20061</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#ede9fe;border-radius:8px;border-left:3px solid #8b5cf6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#8b5cf6;font-size:14px;font-weight:700">15.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.18227" style="color:inherit;text-decoration:none">FlowMimic：基于像素对扭曲流场的无掩码视觉编辑与生成——面向在线视频编辑数据生成与模态模仿</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>顺应视觉研究的主流方向，我们探索在单一模型中整合视频与图像模态的生成与编辑能力。当前收集视频编辑数据的方法通常依赖劳动密集、耗时的人工流程——涉及对象掩码标注、通过I2V模型与ControlNet类引导引入错误的配对合成、以及基于VLM的质量过滤或优化——且表现出有限性。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.18227" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.18227</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#dbeafe;border-radius:8px;border-left:3px solid #3b82f6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#3b82f6;font-size:14px;font-weight:700">16.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.21556" style="color:inherit;text-decoration:none">视觉对比自蒸馏</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>在线策略自蒸馏（OPSD）前景广阔，因为它去除了在线策略蒸馏（OPD）所需的外部教师，但仍需教师与学生之间的非对称信息，以确保自教师提供比学生更强的学习信号。现有方法通过特权答案或视觉证据创建这种非对称性。我们探究是否两者均可去除，从而得到一种更简单的、仅由输入条件驱动的OPSD形式。为此，我们</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.21556" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.21556</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#d1fae5;border-radius:8px;border-left:3px solid #10b981;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#10b981;font-size:14px;font-weight:700">17.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.01774" style="color:inherit;text-decoration:none">潜意识时钟：扩散语言模型中的潜在时间建模</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>扩散语言模型（DLM）近期成为自回归模型的一种有前景的替代方案。与标准扩散方法不同，DLM并未显式地以时间步为条件，这引发了一个自然问题：这些模型是否内部表示去噪进度，以及此类信息如何在下游被利用？在本工作中，我们证明DLM确实在其残差流中编码了与扩散时间步相关的潜在表示。我们发现，该信号可以</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.01774" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.01774</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#fce7f3;border-radius:8px;border-left:3px solid #ec4899;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#ec4899;font-size:14px;font-weight:700">18.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.21072" style="color:inherit;text-decoration:none">展示而非讲述：在生成像素而非LLM文本中评估空间认知</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>空间智能对于智能体从静态语义理解转向与物理世界交互至关重要。许多空间任务基于连续的视觉场景，其中位置、区域和路径通过指向、标记或绘制来表达，比报告精确坐标或离散文本符号更为自然。然而，现有空间推理基准通常要求坐标、选项或文本，这为图像生成任务造成了答案接口不匹配。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.21072" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.21072</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#ede9fe;border-radius:8px;border-left:3px solid #8b5cf6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#8b5cf6;font-size:14px;font-weight:700">19.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.18722" style="color:inherit;text-decoration:none">陈旧但稳定：用于稳定异步强化学习的陈旧性自适应信任区域</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>异步强化学习通过解耦轨迹生成与优化来提高吞吐量，但陈旧性是由策略滞后、引擎延迟和混合专家路由共同导致的不可避免的副产品。从信任区域的角度看，这种不匹配至关重要：训练-推理差异控制着有限时域界限中的近似误差，而PPO裁剪仅对采样的外向更新进行门控，充当采样替代而非全策略约束。因此，</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.18722" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.18722</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#dbeafe;border-radius:8px;border-left:3px solid #3b82f6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#3b82f6;font-size:14px;font-weight:700">20.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.20368" style="color:inherit;text-decoration:none">自梯度强制：原生长视频外推</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>近期自回归视频扩散方法越来越多地基于自强制（Self Forcing），其中学生模型在其自身生成的轨迹历史而非真实视频上下文上进行训练。这减少了曝光偏差，但历史键值缓存仍仅作为冻结的轨迹状态供未来帧使用。因此，未来损失无法监督早期生成的潜在变量应如何被写入对后续视频潜在生成更有用的键和值中。我们称此为</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.20368" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.20368</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#d1fae5;border-radius:8px;border-left:3px solid #10b981;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#10b981;font-size:14px;font-weight:700">21.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.19747" style="color:inherit;text-decoration:none">超越相关性检索：基于评分准则的文档集选择与排序</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>随着大语言模型和AI代理成为搜索结果的主要消费者，文档集质量决定了下游生成的上限。然而，现有评估系统仍局限于独立评分文档并通过nDCG聚合，忽略了文档间交互（冗余、冲突、互补性），且无法回答是什么使得一个文档集优于另一个。为解决这些问题，我们提出了一个完整的评估-诊断-优化框架。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.19747" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.19747</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#fce7f3;border-radius:8px;border-left:3px solid #ec4899;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#ec4899;font-size:14px;font-weight:700">22.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.20709" style="color:inherit;text-decoration:none">NVIDIA实验室面向对象代理：原生Python面向对象代理</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>传统代理开发分散在提示模板、工具模式、回调代码和工作流图中。我们提出NVIDIA面向对象代理（NOOA），一个模型无关的Python框架，用于构建可靠的AI代理。NOOA采用更简单的方法：代理是一个Python对象。其方法是模型可执行的动作，字段是其状态，文档字符串是其提示，类型注解是其契约。代码体由“...”组成的方法在运行时由模型完成。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.20709" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.20709</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#ede9fe;border-radius:8px;border-left:3px solid #8b5cf6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#8b5cf6;font-size:14px;font-weight:700">23.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.18754" style="color:inherit;text-decoration:none">AgentDebugX：面向LLM代理的故障可观测性、归因与恢复的开源工具包</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>LLM代理故障难以调试，因为错误显现的步骤往往不是导致错误的步骤。现有可观测性工具重放执行轨迹，但很少支持识别根本原因或将诊断转化为恢复。我们提出AgentDebugX，一个开源调试框架，将调试组织为检测、归因、恢复和重跑的闭环。其核心DeepDebug通过全局轨迹进行多轮根本原因诊断。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.18754" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.18754</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#dbeafe;border-radius:8px;border-left:3px solid #3b82f6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#3b82f6;font-size:14px;font-weight:700">24.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.21553" style="color:inherit;text-decoration:none">SANA-Video 2.0：基于注意力残差的混合线性注意力实现高效视频生成</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>我们介绍SANA-Video 2.0，一个在统一架构下实例化为5B和14B规模的混合视频扩散Transformer。设计用于在单个GPU上生成高达720p的高质量视频，SANA-Video 2.0在质量上匹配全softmax视频DiTs，同时保留线性注意力的有利长序列扩展性。为避免全程二次注意力，混合线性-softmax注意力将门控线性注意力用于O(N)主导的混合，与周期性门控softmax锚点结合。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.21553" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.21553</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#d1fae5;border-radius:8px;border-left:3px solid #10b981;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#10b981;font-size:14px;font-weight:700">25.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.18091" style="color:inherit;text-decoration:none">SciForma：科学图表的结构忠实生成</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>结构忠实性对科学方法论图表至关重要。为传达研究逻辑，这些图表必须忠实呈现组件、方向关系和文本注释。由于单个错误（如箭头反向或方程不可读）可能使整个图形无效，结构忠实性本质上是合取性的：一个轴上的正确性无法弥补另一个轴上的失败。当前开源模型无法满足这一标准。监督微调...</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.18091" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.18091</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#fce7f3;border-radius:8px;border-left:3px solid #ec4899;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#ec4899;font-size:14px;font-weight:700">26.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.20911" style="color:inherit;text-decoration:none">腾讯WorkBuddy Bench：基于抗污染任务构建的多领域编码智能体基准</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>我们提出了腾讯WorkBuddy Bench，这是一个面向编码智能体的多领域评估套件；本报告记录了其构建方法、评分协议以及跨模型排行榜。其核心是一个统一的评估框架，用于在代码、网页、办公和安全四个工作领域中构建并运行符合分布特征的编码智能体任务。每个任务并非改编自公开的问题文本，而是从真实的代码提交、拉取请求或业务场景中逆向工程而来，并重新...</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.20911" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.20911</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#ede9fe;border-radius:8px;border-left:3px solid #8b5cf6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#8b5cf6;font-size:14px;font-weight:700">27.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.20734" style="color:inherit;text-decoration:none">大语言模型在用户意图演化中迷失</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>随着大语言模型能力日益增强，它们越来越多地被部署为协作智能体，通过迭代交互来执行用户委托的任务。然而，真正的交互本质上是动态的：用户很少事先明确说明其意图，而是随着对话的展开逐步披露、修正和重塑意图。尽管如此，大语言模型目前仍主要在单轮、完全指定的设置下进行评估或训练，这留下了一个根本性问题：大语言模型在多大程度上能够追踪并依据用户意图行动？</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.20734" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.20734</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#dbeafe;border-radius:8px;border-left:3px solid #3b82f6;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#3b82f6;font-size:14px;font-weight:700">28.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.21576" style="color:inherit;text-decoration:none">从视频中自监督学习结构化动态</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>理解视频中的运动是视觉学习的一项基本挑战，因为帧间变化交织了两种动态来源：相机运动和物体运动。这种分解在表示学习中仍未得到充分探索，部分原因是这些因素在自然视频中紧密耦合，难以分别进行监督。然而，恢复这种分解对于学习能够将有意义的物体动态与相机引起的变化分离开来的鲁棒运动表示至关重要。我们...</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.21576" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.21576</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#d1fae5;border-radius:8px;border-left:3px solid #10b981;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#10b981;font-size:14px;font-weight:700">29.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.19604" style="color:inherit;text-decoration:none">基于超网络的大语言模型知识注入缩放定律</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>将事实知识可靠且大规模地注入大语言模型仍是一个未解决的挑战。超网络为大规模知识注入提供了一种有前景的解决方案。尽管超网络通常用于测试时自适应，但我们探索了其在训练时知识注入中的应用：给定一个大规模事实语料库，我们训练一个超网络来生成固定的LoRA适配器，当将其插入目标模型时，能使模型回答关于这些事实的问题。</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.19604" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.19604</a></section>
+</section>
+<section class="ai-card" style="margin:0 15px 10px;padding:12px 14px 10px;background:#fce7f3;border-radius:8px;border-left:3px solid #ec4899;transition:transform .2s ease,box-shadow .2s ease,border-left-width .2s ease">
+  <section style="margin:0 0 4px;line-height:1.45;text-align:left">
+    <strong style="color:#ec4899;font-size:14px;font-weight:700">30.</strong><strong style="color:#111827;font-size:15px;font-weight:700"><a href="https://arxiv.org/abs/2607.14186" style="color:inherit;text-decoration:none">NexForge：通过需求驱动的任务合成扩展大语言模型智能体能力</a></strong>
+  </section>
+  <section style="margin:0 0 6px;font-size:13px;color:#4b5563;line-height:1.65;text-align:justify;text-justify:inter-ideograph"><span style="display:inline-block;width:2em"></span>为大语言模型后训练扩展可执行的智能体训练数据，受限于基于底层的绑定方法，这些方法将任务生成与预定义工具、代码仓库或技能图谱绑定：扩展覆盖范围需要手动进行底层工程，每个新领域都需要定制化的流水线，且生成的任务分布往往反映底层偏差而非实际需求。我们提出了NexForge，一个需求驱动的框架，它以高层能力需求为输入，并合成...</section>
+  
+  <section style="margin:8px 0 0;font-size:11px;color:#2563eb;line-height:1.5;word-break:break-all">🔗 arXiv: <a href="https://arxiv.org/abs/2607.14186" style="color:#2563eb;text-decoration:none;word-break:break-all">https://arxiv.org/abs/2607.14186</a></section>
+</section>
+<section style="margin:20px 15px 16px;height:1px;background:#e5e7eb"></section>
+<section style="padding:0 15px 30px">
+  <p style="text-align:center;font-size:12px;color:#9ca3af;line-height:1.8">
+    由 <a href="https://miaohua1982.github.io/ai-daily/" style="color:#10b981;text-decoration:none">ai-daily</a> 自动生成 · 仅供学习参考
+  </p>
+</section>
+</body>
+</html>
