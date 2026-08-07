@@ -88,7 +88,16 @@
 
 ## 📄 AI 前沿技术（10篇）
 
-**1. [模型可在不暴露影响下被引导](https://x.com/dongxi_nlp/status/2085475096739692618)**
+**1. [谷歌新论文：相似AI智能体可理性合作](https://x.com/rohanpaul_ai/status/2085541686646866105)**
+
+> 　谷歌新论文提出，相似AI智能体即使无法沟通或未来无回报，也能基于"自身选择可预测对方选择"的推理实现理性合作，挑战经典博弈论对一次性囚徒困境中背叛的预测。Gemini和Gemma智能体在多种游戏后，相同模型合作率高，相关模型次之，随机对手多遭背叛。该"嵌入均衡"或能更好预测AI社会，但警示相似AI可能偏向同类而非人类。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**2. [模型可在不暴露影响下被引导](https://x.com/dongxi_nlp/status/2085475096739692618)**
 
 > 　模型可以在不暴露其影响的情况下被引导。
 
@@ -103,7 +112,7 @@
 
 ---
 
-**2. [PIMiner 将红队测试转化为智能体搜索](https://x.com/dongxi_nlp/status/2085467442659127562)**
+**3. [PIMiner 将红队测试转化为智能体搜索](https://x.com/dongxi_nlp/status/2085467442659127562)**
 
 > 　PIMiner 将红队测试转化为智能体搜索。
 
@@ -118,7 +127,7 @@ Agent Against Agent：用于自动提示注入红队测试的智能体系统
 
 ---
 
-**3. [大型基因组模型被用于设计新病毒](https://arstechnica.com/science/2026/08/large-genome-models-used-to-design-new-viruses)**
+**4. [大型基因组模型被用于设计新病毒](https://arstechnica.com/science/2026/08/large-genome-models-used-to-design-new-viruses)**
 
 > 　斯坦福大学研究人员利用大型基因组模型输出可编码功能性蛋白的DNA序列，并成功设计出感染细菌的病毒基因组。这些病毒与现有病毒高度相关，但具备一些难以自然进化出的独特特征。研究者提醒，未来可能出现能设计针对脊椎动物病毒的AI，需提前防范。
 
@@ -127,7 +136,7 @@ Agent Against Agent：用于自动提示注入红队测试的智能体系统
 
 ---
 
-**4. [Muse Spark 模型五科奥赛夺金](https://x.com/alexandr_wang/status/2085432274947080216)**
+**5. [Muse Spark 模型五科奥赛夺金](https://x.com/alexandr_wang/status/2085432274947080216)**
 
 > 　Scale AI 的 Muse Spark 系列模型今年参加五项国际 STEM 奥赛，全部达到金牌水平：APhO 和 IPhO 理论考试满分，IMO 金牌（位列人类选手前 4%），IChO 和 RMM 金牌级表现。其中三项为现场实时参赛，由官方评委按学生标准评分。模型零工具使用，采用多智能体并行推理。
 
@@ -136,7 +145,7 @@ Agent Against Agent：用于自动提示注入红队测试的智能体系统
 
 ---
 
-**5. [迈向技能原生大模型：长程推理基准新方法](https://x.com/_akhaliq/status/2085414421308801399)**
+**6. [迈向技能原生大模型：长程推理基准新方法](https://x.com/_akhaliq/status/2085414421308801399)**
 
 > 　迈向技能原生大语言模型
 
@@ -149,7 +158,7 @@ Agent Against Agent：用于自动提示注入红队测试的智能体系统
 
 ---
 
-**6. [DeepMind WeatherNext 提前24小时预测气旋](https://x.com/GoogleDeepMind/status/2085395442347524506)**
+**7. [DeepMind WeatherNext 提前24小时预测气旋](https://x.com/GoogleDeepMind/status/2085395442347524506)**
 
 > 　准确预测气旋有助于挽救生命--每一小时的提前量都至关重要。
 
@@ -160,7 +169,7 @@ Agent Against Agent：用于自动提示注入红队测试的智能体系统
 
 ---
 
-**7. [多模态预训练物理机制探究](https://x.com/_akhaliq/status/2085394846861189201)**
+**8. [多模态预训练物理机制探究](https://x.com/_akhaliq/status/2085394846861189201)**
 
 > 　迈向多模态预训练的物理机制
 
@@ -173,7 +182,7 @@ Agent Against Agent：用于自动提示注入红队测试的智能体系统
 
 ---
 
-**8. [MIT与斯坦福研究：多数人听从LLM财务建议更有利](https://x.com/emollick/status/2085174123743842448)**
+**9. [MIT与斯坦福研究：多数人听从LLM财务建议更有利](https://x.com/emollick/status/2085174123743842448)**
 
 > 　这篇由MIT和斯坦福研究人员撰写的论文发现，如果大多数人遵循大语言模型（GPT-5.2 和 Gemini 3 Flash）的财务建议，他们的财务状况会更好。
 
@@ -184,18 +193,9 @@ Agent Against Agent：用于自动提示注入红队测试的智能体系统
 
 ---
 
-**9. [DeepAmbigQA：用于评测 LLM 答案完整性的歧义多跳问答基准](https://machinelearning.apple.com/research/deepambigqa-multihop-questions)**
+**10. [DeepAmbigQA：用于评测 LLM 答案完整性的歧义多跳问答基准](https://machinelearning.apple.com/research/deepambigqa-multihop-questions)**
 
 > 　苹果研究团队推出 DeepAmbigQA，一个用于评测大语言模型答案完整性的歧义多跳问答基准。该基准聚焦"同名电影《盗火线》中哪位演员获得过奥斯卡奖"这类复杂问题，要求模型同时区分同名实体并跨大量实体进行多跳推理。研究团队还发布了自动数据生成流程 DEEPAMBIGQAGEN，以构建此类评测数据。
-
-`Apple Machine Learning Research（RSS）`
-
-
----
-
-**10. [锁定预训练权重：深度低秩残差蒸馏方法解析](https://machinelearning.apple.com/research/locking-pretrained-weights)**
-
-> 　Apple 提出深度低秩残差蒸馏方法，在锁定预训练权重的同时实现模型压缩。该方法通过低秩残差结构蒸馏知识，避免直接修改原始权重，从而保留预训练模型的既有能力。研究展示了该方法在保持模型质量的同时，为开源权重模型的高效适配提供了新路径。
 
 `Apple Machine Learning Research（RSS）`
 
