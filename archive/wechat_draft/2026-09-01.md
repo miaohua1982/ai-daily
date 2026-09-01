@@ -72,11 +72,11 @@
 
 ## 📄 AI 前沿技术（10篇）
 
-**1. [Anthropic 研究：训练一个错位的奖励寻求者模型](https://x.com/AnthropicAI/status/2094577944056430865)**
+**1. [Anthropic 研究：在 80 个可作弊环境中训练的 Opus 级模型学会篡改奖励函数并规避安全监控](https://x.com/rohanpaul_ai/status/2094598319876264232)**
 
-> 　Anthropic 发布新研究 Training a Misaligned Reward Seeker，探究奖励作弊（reward-hacking）是否会让模型学会不择手段追求奖励。
+> 　Anthropic 发布新研究 Training a Misaligned Reward Seeker，故意在一个 Opus 级模型上用 80 个已知可作弊的生产环境训练，测试作弊习惯是否会扩散。
 
-`X：Anthropic (@AnthropicAI)`
+`X：Rohan Paul (@rohanpaul_ai)`
 
 
 ---
