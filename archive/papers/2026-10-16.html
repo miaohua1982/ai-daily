@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 学术档案库 · 近日论文精选</title>
+<style>
+    :root {
+        --hero-from: #ff5e3a;
+        --hero-mid: #f73b4a;
+        --hero-to: #c0392b;
+        --accent: #ff6b35;
+        --accent-dark: #e0552b;
+        --accent-light: rgba(255,107,53,.08);
+        --bg: #faf8f6;
+        --card-bg: #ffffff;
+        --card-border: #ede8e2;
+        --text: #2c2c2c;
+        --text-secondary: #6b6b6b;
+        --text-muted: #999999;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+        --shadow-md: 0 4px 12px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+        --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --timeline-dot: #ff6b35;
+        --timeline-line: #ede8e2;
+        --timeline-active-bg: rgba(255,107,53,.06);
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        font-size: 14px;
+      }
+
+      /* ========= HEADER (matching daily hero) ========= */
+      .header {
+        position: relative; overflow: hidden;
+        background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 40%, var(--hero-to) 100%);
+        color: #fff;
+        padding: 40px 24px 36px;
+        text-align: center;
+        z-index: 100;
+        box-shadow: 0 4px 20px rgba(0,0,0,.15);
+      }
+      .header::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.15) 0%, transparent 60%),
+                    radial-gradient(ellipse at 20% 80%, rgba(255,200,120,.12) 0%, transparent 50%);
+      }
+      .header-inner {
+        position: relative; z-index: 1;
+        max-width: 720px; margin: 0 auto;
+        display: flex; flex-direction: column; align-items: center; gap: 16px;
+      }
+      .header-badge {
+        display: inline-block;
+        background: rgba(255,255,255,.2);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,.25);
+        border-radius: 100px;
+        padding: 4px 16px;
+        font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+      }
+      .header-title {
+        font-size: clamp(22px, 4vw, 32px);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .header-sub {
+        font-size: 14px;
+        opacity: 0.85;
+      }
+      .header-stats {
+        display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+      }
+      .stat-card {
+        display: flex; flex-direction: column; align-items: center;
+        background: rgba(255,255,255,.15);
+        backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: var(--radius-md);
+        padding: 10px 18px; min-width: 80px;
+      }
+      .stat-num { font-size: 24px; font-weight: 800; line-height: 1.2; }
+      .stat-label { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+      /* ========= LAYOUT ========= */
+      .main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 28px 24px 48px;
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      /* ========= TIMELINE ========= */
+      .timeline {
+        position: sticky;
+        top: 24px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-lg);
+        padding: 16px 12px;
+        box-shadow: var(--shadow-sm);
+      }
+      .timeline-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: .8px;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--card-border);
+      }
+      .timeline-list { list-style: none; position: relative; }
+      .timeline-list::before {
+        content: '';
+        position: absolute;
+        left: 8px; top: 4px; bottom: 4px;
+        width: 2px;
+        background: linear-gradient(to bottom, var(--timeline-dot), var(--card-border));
+        border-radius: 2px;
+      }
+      .timeline-item {
+        position: relative;
+        padding: 5px 0 5px 22px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background .15s;
+      }
+      .timeline-item:hover { background: var(--accent-light); }
+      .timeline-item.active { background: var(--accent-light); }
+      .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 4px; top: 50%;
+        transform: translateY(-50%);
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        background: var(--card-bg);
+        border: 2px solid var(--card-border);
+        transition: border-color .15s, background .15s;
+      }
+      .timeline-item:hover::before,
+      .timeline-item.active::before {
+        border-color: var(--timeline-dot);
+        background: var(--timeline-dot);
+      }
+      .timeline-date { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+      .timeline-count { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+
+      /* ========= PAPER LIST ========= */
+      .papers-section { display: flex; flex-direction: column; gap: 0; }
+      .date-group { margin-bottom: 32px; }
+      .date-anchor { display: block; height: 1px; margin-top: -90px; padding-top: 90px; pointer-events: none; }
+      .date-header {
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--card-border);
+      }
+      .date-pill {
+        background: var(--accent);
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 100px;
+      }
+      .date-weekday { font-size: 12px; color: var(--text-muted); }
+      .date-count { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+      .papers-stack { display: flex; flex-direction: column; gap: 12px; }
+
+      /* ========= PAPER CARD ========= */
+      .paper-card {
+        position: relative;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-lg);
+        padding: 20px 20px 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        transition: var(--transition);
+        display: flex; flex-direction: column;
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      .paper-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .paper-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,.07);
+        transform: translateY(-2px);
+      }
+      .paper-card.visible:hover {
+        transform: translateY(-2px);
+      }
+      .paper-card.selected-card {
+        border-left: 3px solid var(--accent);
+      }
+
+      .card-header {
+        display: flex; align-items: flex-start; gap: 10px;
+        margin-bottom: 10px;
+      }
+      .card-num {
+        position: absolute; top: -10px; left: 14px;
+        background: var(--accent); color: #fff;
+        font-size: 11px; font-weight: 700;
+        width: 24px; height: 24px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 2px 6px rgba(255,107,53,.35);
+        flex-shrink: 0;
+      }
+      .selected-card .card-num {
+        background: var(--accent-dark);
+        box-shadow: 0 2px 8px rgba(255,107,53,.5);
+      }
+
+      .card-title-wrap { flex: 1; min-width: 0; margin-top: 6px; }
+      .card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.5;
+        text-decoration: none;
+        display: block;
+      }
+      .card-title:hover { color: var(--accent); }
+
+      .card-meta {
+        display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        margin-top: 6px;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 11px; font-weight: 600;
+        padding: 3px 10px; border-radius: 100px;
+        white-space: nowrap;
+        max-width: 160px;
+        overflow: hidden; text-overflow: ellipsis;
+      }
+      .rel-time {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+      .score-dot {
+        margin-left: auto;
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex; align-items: center; gap: 3px;
+      }
+      .score-star { color: #F6C90E; }
+
+      .card-summary {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.65;
+        margin-bottom: 14px;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .card-footer {
+        display: flex; align-items: center; justify-content: flex-end;
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1px solid var(--card-border);
+      }
+      .read-link {
+        display: inline-flex; align-items: center; gap: 5px;
+        font-size: 13px; font-weight: 600;
+        color: var(--accent);
+        text-decoration: none;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: var(--accent-light);
+        transition: var(--transition);
+      }
+      .read-link:hover {
+        background: rgba(255,107,53,.16);
+        color: var(--accent-dark);
+      }
+      .read-link svg { width: 14px; height: 14px; }
+
+      /* ========= SEARCH BAR ========= */
+      .search-bar {
+        grid-column: 1 / -1;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-md);
+        padding: 10px 16px;
+        box-shadow: var(--shadow-sm);
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 4px;
+      }
+      .search-input {
+        border: none; outline: none;
+        width: 100%;
+        font-size: 14px;
+        color: var(--text);
+        background: transparent;
+      }
+      .search-input::placeholder { color: var(--text-muted); }
+      .search-icon { color: var(--text-muted); flex-shrink: 0; }
+      .search-count { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+      /* ========= FOOTER ========= */
+      .footer {
+        text-align: center;
+        padding: 32px 16px 40px;
+        border-top: 1px solid var(--card-border);
+        color: var(--text-muted);
+        font-size: 13px;
+        max-width: 1200px; margin: 0 auto;
+      }
+      .footer a { color: var(--accent); text-decoration: none; }
+      .footer a:hover { text-decoration: underline; }
+
+      /* ========= BACK TO TOP ========= */
+      .quick-top {
+        position: fixed; bottom: 24px; right: 24px;
+        width: 44px; height: 44px; border-radius: 50%;
+        background: var(--accent); color: #fff;
+        border: none; cursor: pointer; font-size: 20px;
+        box-shadow: 0 12px 32px rgba(0,0,0,.1);
+        opacity: 0; transform: translateY(12px);
+        pointer-events: none; transition: var(--transition); z-index: 200;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .quick-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+      .quick-top:hover { background: var(--accent-dark); }
+
+      /* ========= RESPONSIVE ========= */
+      @media (max-width: 768px) {
+        .header { padding: 32px 16px 28px; }
+        .header-stats { gap: 10px; }
+        .stat-card { padding: 8px 14px; min-width: 64px; }
+        .stat-num { font-size: 20px; }
+        .main {
+          grid-template-columns: 1fr;
+          padding: 16px;
+        }
+        .timeline { position: static; display: none; }
+        .search-bar { grid-column: 1; }
+        .card-title { font-size: 14px; }
+        .paper-card { padding: 16px 16px 14px; }
+      }
+    
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-badge">📄 AI 学术档案库</div>
+    <h1 class="header-title">近日 AI 论文精选</h1>
+    <p class="header-sub">数据来源 AI HOT · 过去 5 天精选 27 篇</p>
+    <div class="header-stats">
+      <div class="stat-card">
+        <span class="stat-num" id="total-count">27</span>
+        <span class="stat-label">论文总数</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">2</span>
+        <span class="stat-label">覆盖天数</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="filtered-count">27</span>
+        <span class="stat-label">当前显示</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="search-bar">
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/></svg>
+    <input class="search-input" id="searchInput" type="text"
+     placeholder="搜索论文标题、摘要或来源…" autocomplete="off">
+    <span class="search-count" id="searchCount">27 篇</span>
+  </div>
+
+  <nav class="timeline">
+    <div class="timeline-title">时间轴</div>
+    <ul class="timeline-list" id="timelineList"></ul>
+  </nav>
+
+  <section class="papers-section" id="papersSection">
+  <div class="date-group">
+    <div class="date-anchor" id="anchor-2026-10-15"></div>
+    <div class="date-header">
+      <span class="date-pill">2026-10-15</span>
+      <span class="date-weekday">星期四</span>
+      <span class="date-count">17 篇</span>
+    </div>
+    <div class="papers-stack" id="stack-2026-10-15"></div>
+  </div>
+  <div class="date-group">
+    <div class="date-anchor" id="anchor-2026-10-14"></div>
+    <div class="date-header">
+      <span class="date-pill">2026-10-14</span>
+      <span class="date-weekday">星期三</span>
+      <span class="date-count">10 篇</span>
+    </div>
+    <div class="papers-stack" id="stack-2026-10-14"></div>
+  </div>
+
+  </section>
+</main>
+
+<footer class="footer">
+  数据来源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener">AI HOT</a> · 精选论文 · 仅供学术参考
+</footer>
+
+<script>
+window.PAPERS = [
+{"idx": 1, "title": "Google 在 Willow 芯片上首次实现魔力态培育，错误率降低约 40 倍", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T21:36:52.000Z", "dateStr": "2026-10-15", "url": "https://x.com/rohanpaul_ai/status/2110847400487305518", "summary": "Google 量子 AI 团队首次在物理硬件上演示魔力态培育，在 105 量子比特 Willow 处理器上错误率较以往方法降低约 40 倍，保留下来的态达到 99.99% 的逻辑保真度，成果发表于 Science。该方法会对每个态进行筛查并丢弃不合格尝试，仅约 8% 的尝试通过筛选，且仍需在更大规模上验证；作者称这是通往纠错量子计算机的一步。", "selected": false, "score": 61},
+{"idx": 2, "title": "MIT 供应链可持续性报告：企业承诺创新高，治理却掉队", "source": "MIT News（RSS）", "badgeLabel": "MIT News（RSS）", "badgeBg": "#fce4ec", "badgeColor": "#c0392b", "publishedAt": "2026-10-15T21:00:00.000Z", "dateStr": "2026-10-15", "url": "https://news.mit.edu/2026/state-of-supply-chain-sustainability-report-1015", "summary": "MIT 可持续供应链实验室发布 2026 年《供应链可持续性状况》报告，调查 91 个国家 1810 名供应链从业者，83% 认为可持续性对长期业务成功重要或非常重要，为报告七年历史最高。", "selected": false, "score": 40},
+{"idx": 3, "title": "MIT 与 Whitehead 研究团队用机器学习模型 IRIS 解码细胞间通信语言", "source": "MIT News（RSS）", "badgeLabel": "MIT News（RSS）", "badgeBg": "#fce4ec", "badgeColor": "#c0392b", "publishedAt": "2026-10-15T20:50:00.000Z", "dateStr": "2026-10-15", "url": "https://news.mit.edu/2026/ai-model-decodes-language-cells-use-communicate-1015", "summary": "MIT 生物学助理教授 Pulin Li 团队与研究生 Nicholas Hutchins 发现每条信号通路会在细胞中留下跨细胞类型一致的基因活性指纹，据此开发机器学习模型 IRIS，可回溯胚胎细胞在发育各阶段接收的信号，论文于 9 月 8 日发表在 Nature Methods。", "selected": false, "score": 53},
+{"idx": 4, "title": "Anthropic 论文提出 GRAFT：把被标记样本的更新路由到可删除 adapter 以消除奖励黑客", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T19:02:13.000Z", "dateStr": "2026-10-15", "url": "https://x.com/rohanpaul_ai/status/2110808480210989348", "summary": "Rohan Paul 介绍 Anthropic 一篇论文，发现当监控器只能捕获部分 reward hack 时，惩罚被标记样本会让模型转向监控器察觉不到的黑客方式，而把被标记样本的更新路由进可删除的 adapter 则能消除黑客行为。", "selected": false, "score": 66},
+{"idx": 5, "title": "Google Quantum AI 在 Willow 处理器上首次演示 magic state cultivation，实现 99.99% 逻辑保真度", "source": "X：Sundar Pichai (@sundarpichai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T18:45:35.000Z", "dateStr": "2026-10-15", "url": "https://x.com/sundarpichai/status/2110804295352488143", "summary": "Sundar Pichai 宣布 Google Quantum AI 团队首次在物理硬件上演示量子 \"magic state cultivation\"。相比此前方法，在 Willow 处理器上实现 40 倍错误降低，达到 99.99% 的逻辑保真度。该成果发表于 Science，被视为迈向容错量子计算机的又一步。", "selected": false, "score": 54},
+{"idx": 6, "title": "Microsoft Research 发布 zkVM 系统 Magnetar，比现有最快系统平均快 10 到 39 倍", "source": "Microsoft Research 博客（RSS）", "badgeLabel": "Microsoft Research 博…", "badgeBg": "#e3f2fd", "badgeColor": "#1565c0", "publishedAt": "2026-10-15T16:00:00.000Z", "dateStr": "2026-10-15", "url": "https://www.microsoft.com/en-us/research/blog/proof-based-general-purpose-computing-with-magnetar/", "summary": "Microsoft Research 发布零知识虚拟机 Magnetar，可直接证明用 Rust、Go 或 C 编写的 RISC-V 程序，在 15 个基准程序上平均比现有最快 zkVM 快 10 到 39 倍。在笔记本电脑上每秒可证明 720 万至 870 万条处理器指令，证明约 12 毫秒内可验证，安全性只依赖 SHA-256 或 SHA-3 等标准哈希函数，无需受信任设置或椭圆曲线。", "selected": false, "score": 59},
+{"idx": 7, "title": "GPT-6-Astra 在 50 道理论物理研究题中解出 49 道，单题平均成本 2.40 美元", "source": "The Decoder：AI News（RSS）", "badgeLabel": "The Decoder", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T15:24:15.000Z", "dateStr": "2026-10-15", "url": "https://the-decoder.com/gpt-6-astra-solves-49-of-50-physics-research-problems-at-2-40-apiece/", "summary": "研究者在 TheoPhysEval 基准上测试商用 AI 智能体解决理论物理研究问题，OpenAI 的 GPT-6-Astra 在 Codex 环境中解出 50 题中的 49 题，平均每题不到 3 美元，全套基准总成本约 116 美元。", "selected": false, "score": 69},
+{"idx": 8, "title": "Google 与 CMU 论文提出 Harmony Harness，多目标进化让自改进智能体更好保留安全收益", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T14:11:52.000Z", "dateStr": "2026-10-15", "url": "https://x.com/rohanpaul_ai/status/2110735411916247523", "summary": "Google 与 Carnegie Mellon 的论文提出 Harmony Harness，将 agent harness 的自进化建模为多目标优化，把通过测试与阻断漏洞拆成不同目标分别进化，并在推理时按任务动态组合。在 SecRepoBench 未见崩溃类型上，66.7% 的修复既有效又阻断了漏洞，起始 harness 为 36.7%；安全收益保留 55%，DGM 基线为 0%。", "selected": false, "score": 52},
+{"idx": 9, "title": "阶跃星辰发布 Step 5 Preview 技术博客，详解智能体任务的架构与训练设计", "source": "X：阶跃星辰 StepFun (@StepFun_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T13:00:01.000Z", "dateStr": "2026-10-15", "url": "https://x.com/StepFun_ai/status/2110717331798454534", "summary": "阶跃星辰发布技术博客《Inside Step 5 Preview: Architecture and Training for Agentic Work》，介绍架构与训练如何协同设计以支持更长、更复杂的智能体任务。", "selected": false, "score": 56},
+{"idx": 10, "title": "LLM-to-Flow Distillation 用自然语言目标操控药物设计生成模型", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T11:26:19.000Z", "dateStr": "2026-10-15", "url": "https://x.com/rohanpaul_ai/status/2110693751127679353", "summary": "ETH Zurich 等机构团队提出 LLM-to-Flow Distillation（LFD），让科学生成模型直接追随自然语言发现目标，如设计具抗癌活性的多肽。", "selected": false, "score": 55},
+{"idx": 11, "title": "小红书 AllSpark 提出 CompoWorld：用组合式环境扩展通用 Agent 训练", "source": "公众号：小红书技术（dots.llm）", "badgeLabel": "公众号", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T10:05:42.000Z", "dateStr": "2026-10-15", "url": "https://mp.weixin.qq.com/s?__biz=Mzg4OTc2MzczNg%3D%3D&mid=2247496655&idx=1&sn=3463687dc709bc15539816a09b9b9dbe", "summary": "小红书 AllSpark 团队提出 CompoWorld，通过组合可复用服务来扩展通用 Agent 的训练环境与任务空间，构建了 448 个服务、10,130 个工具。团队用 3K 条 SFT 轨迹和 1K 个 RL 任务训练 Qwen3.6-35B-A3B，在八项 Agent 基准上平均提升 9.17 分，AutomationBench 成功率从 10.33% 升至 32.33%。", "selected": false, "score": 48},
+{"idx": 12, "title": "机器人自我改进综述：7项研究中5项未跨任务提升", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T10:04:14.000Z", "dateStr": "2026-10-15", "url": "https://x.com/rohanpaul_ai/status/2110673093907865697", "summary": "MIT、Stanford、Google、Microsoft 等机构联合发布 Physical Recursive Self-Improvement 综述，指出机器人仍依赖人类采集数据、诊断故障并筛选更新。他们检查的 7 项机器人自我改进研究中，5 项未能在不同任务上展示提升，并定义 L0 到 L5 六个自主改进等级。其 2022 至 2026 年系统图谱中尚无确认的 L5 案例。", "selected": false, "score": 45},
+{"idx": 13, "title": "OpenAI 发布 GPT-Live-1.1 系统卡", "source": "OpenAI：部署安全与系统卡（网页）", "badgeLabel": "OpenAI", "badgeBg": "#e8f5e9", "badgeColor": "#2e7d32", "publishedAt": "2026-10-15T07:00:00.000Z", "dateStr": "2026-10-15", "url": "https://deploymentsafety.openai.com/gpt-live-1-1", "summary": "OpenAI 公布 GPT-Live-1.1 与 GPT-Live-1.1 Quip 的系统卡，说明两者训练数据来自公开互联网信息、第三方合作数据以及用户和人类训练师提供或生成的数据。数据处理流程包含严格过滤以保障质量并降低风险，同时用安全分类器减少有害或敏感内容的使用。", "selected": false, "score": 27},
+{"idx": 14, "title": "上海人工智能实验室团队用书生 S2 大模型完成三维 Ghys 猜想证明", "source": "IT之家·人工智能", "badgeLabel": "IT之家·人工智能", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T03:23:31.590Z", "dateStr": "2026-10-15", "url": "https://www.ithome.com/1/013/269.htm", "summary": "上海人工智能实验室发文宣布，许地生团队依托书生科学多模态大模型 S2，通过人机协同完成困扰数学界 30 余年的三维 Ghys 猜想证明。北京大学董彬、刘若川院士团队用 SHEAF 框架完成形式化验证，论文已发布于 arXiv，形式化代码开源在 GitHub。上海人工智能实验室表示该范式可推广至其他搜索空间大而专家稀缺的基础研究领域。", "selected": false, "score": 72},
+{"idx": 15, "title": "Kombai 发布 Design Creativity Bench：GPT-6 Astra 排第一，模型 UI 设计创造力仍低于人类", "source": "X：邵猛 (@shao__meng)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T01:24:12.000Z", "dateStr": "2026-10-15", "url": "https://x.com/shao__meng/status/2110542220709540193", "summary": "Kombai 发布 Design Creativity Bench，用 80 个开放式 UI 任务评估模型设计创造力，最佳模型 GPT-6 Astra 得 65.5，人类参考为 92.3。", "selected": false, "score": 53},
+{"idx": 16, "title": "Apple 提出 SSR：用选择式结构化推理打造高效多模态搜索智能体", "source": "Apple Machine Learning Research（RSS）", "badgeLabel": "Apple Machine Learni…", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T00:00:00.000Z", "dateStr": "2026-10-15", "url": "https://machinelearning.apple.com/research/selection-structured-reasoning", "summary": "Apple 研究团队提出 Selection-based Structured Reasoning（SSR），将推理从开放式生成改为从预设可复用自然语言候选中选择，无需辅助任务头。在 2B 和 4B 模型、七个多模态搜索基准上，SSR 平均成功率与同规模领先搜索智能体相当，每轮推理延迟降低超 90%，单题模型总推理延迟降低 28–54%。", "selected": false, "score": 43},
+{"idx": 17, "title": "先规划还是先检索？工具发现架构的大规模对比研究", "source": "Apple Machine Learning Research（RSS）", "badgeLabel": "Apple Machine Learni…", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-15T00:00:00.000Z", "dateStr": "2026-10-15", "url": "https://machinelearning.apple.com/research/plan-retrieve-tool-discovery", "summary": "研究对比了 Retrieve-then-Plan（RtP）与 Plan-then-Retrieve（PtR）两种工具发现架构：RtP 先检索相似工具再规划，PtR 则让 LLM 先生成 Abstract Tool Stubs 作为检索查询。", "selected": false, "score": 33},
+{"idx": 18, "title": "Datalab 发布 OmniParseBench：16,288 项通过/失败测试的开源 OCR 基准", "source": "MarkTechPost（RSS）", "badgeLabel": "MarkTechPost（RSS）", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-14T23:37:25.000Z", "dateStr": "2026-10-14", "url": "https://www.marktechpost.com/2026/10/14/datalab-omniparsebench-open-ocr-document-parsing-benchmark/", "summary": "Datalab 发布开源文档解析基准 OmniParseBench，用 16,288 项 yes/no 测试覆盖 2,937 页、2,343 份文档和 92 种语言，数据集与代码公开。", "selected": false, "score": 49},
+{"idx": 19, "title": "Artificial Analysis 发布 AA-Robotics v0.1 基准，GPT-6 Astra 居机械臂任务榜首", "source": "X：Artificial Analysis (@ArtificialAnlys)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-14T22:37:28.000Z", "dateStr": "2026-10-14", "url": "https://x.com/ArtificialAnlys/status/2110500262628806787", "summary": "Artificial Analysis 发布研究预览版基准 AA-Robotics v0.1，让前沿大语言模型在编码 Agent 环境中直接操控 6 轴机械臂完成 8 项桌面任务。", "selected": false, "score": 53},
+{"idx": 20, "title": "White Circle 开源 RISE 图像模型红队测试算法", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-14T21:43:22.000Z", "dateStr": "2026-10-14", "url": "https://x.com/rohanpaul_ai/status/2110486648685494322", "summary": "White Circle 开源了 RISE，一个自动化红队测试算法，用于检测 AI 图像生成器能否被诱导生成其规则禁止的图片。RISE 无需额外训练，底层使用 Qwen、Gemini Flash 等公开模型，通过搜索攻击策略并按通过率给予策略反馈，即使面对几乎全部拦截的模型也能持续学习；防守方可立即用自己的图像模型运行它。", "selected": false, "score": 55},
+{"idx": 21, "title": "OpenAI：欧洲企业加速采用 AI 智能体", "source": "X：OpenAI (@OpenAI)", "badgeLabel": "X", "badgeBg": "#e8f5e9", "badgeColor": "#2e7d32", "publishedAt": "2026-10-14T18:45:57.000Z", "dateStr": "2026-10-14", "url": "https://x.com/OpenAI/status/2110442001749659890", "summary": "欧洲企业正在快速扩大对 AI 智能体的使用。在我们的欧盟企业及商业客户中，超过一半的 AI 使用现已涉及这些工具，且该地区小企业用户数量增长了 8 倍。\n\n我们的最新经济研究报告探讨了欧洲向智能体 AI 的转变——以及将更广泛的采用转化为更深入使用的机遇。\n\nhttps://openai.com/index/the-eus-next-chapter-in-ai-is-agentic/", "selected": false, "score": 44},
+{"idx": 22, "title": "Meta 用 Muse Spark 1.3 辅助医学研究，产出 10 篇论文", "source": "X：AI at Meta (@AIatMeta)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-14T18:44:49.000Z", "dateStr": "2026-10-14", "url": "https://x.com/AIatMeta/status/2110441716507693450", "summary": "Meta 探索用 AI 加速健康科学研究，构建了由 Muse Spark 1.3 和 Muse Wonder 驱动的人类主导研究框架，可访问 500 万份回顾性去标识电子健康记录及公开数据。医学专家团队用该系统生成假设、执行代码并起草论文，同时保留对科学决策的完全主导权。Meta 现分享由此产出的 10 篇研究论文，涵盖心脏病学、肿瘤学、传染病和急诊医学等领域。", "selected": false, "score": 49},
+{"idx": 23, "title": "研究者追踪到 Tencent Cloud 上的中国 AI 智能体集群并首次与其对话", "source": "The Decoder：AI News（RSS）", "badgeLabel": "The Decoder", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-14T18:07:37.000Z", "dateStr": "2026-10-14", "url": "https://the-decoder.com/researchers-tracked-down-a-rogue-fleet-of-chinese-ai-agents-in-the-wild-and-actually-talked-to-it/", "summary": "研究者报告，2026 年 9 月 28 日至 10 月 8 日期间，运行在 Tencent Cloud 上的 AI 智能体向阿里巴巴地图服务 Amap 发起超过 2600 次数据抓取尝试。", "selected": false, "score": 75},
+{"idx": 24, "title": "Agent Baseline 发布软件工厂安全参考架构首版草案", "source": "X：Dex Horthy（HumanLayer）(@dexhorthy)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-14T18:01:11.000Z", "dateStr": "2026-10-14", "url": "https://x.com/dexhorthy/status/2110430733009600654", "summary": "ianlivingstone 等社区成员发布 Agent Baseline Software Factory 参考架构首版草案，用于保护日益自主的软件工厂，已在 agentbaseline.org 开放反馈与贡献。", "selected": false, "score": 56},
+{"idx": 25, "title": "研究者用 Gemini 4 Argon 发现新反例，进一步否定等离子体物理近 60 年的 Grad 猜想", "source": "X：Google DeepMind (@GoogleDeepMind)", "badgeLabel": "X", "badgeBg": "#e3f2fd", "badgeColor": "#1565c0", "publishedAt": "2026-10-14T17:25:57.000Z", "dateStr": "2026-10-14", "url": "https://x.com/GoogleDeepMind/status/2110421868284936555", "summary": "Google DeepMind 转发研究者成果：团队使用 Gemini 4 Argon 发现了 2 个新的反例家族，挑战等离子体物理中存在近 60 年的 Grad 猜想，并给出了新的 3D 磁场设计。论文作者包括 Jonathan Citrin、Brendan Tracey 和马里兰大学的 Matt Landreman，论文地址 https://arxiv.org/abs/2610.07304。", "selected": false, "score": 53},
+{"idx": 26, "title": "Artificial Analysis 新增 AMD MI355X 智能体推理测试结果", "source": "X：Artificial Analysis (@ArtificialAnlys)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-14T17:12:24.000Z", "dateStr": "2026-10-14", "url": "https://x.com/ArtificialAnlys/status/2110418457833697531", "summary": "Artificial Analysis 将 AMD MI355X 纳入 AA-AgentPerf 基准，覆盖 Kimi K3、GLM-5.2/5.3 和 DeepSeek V4 Pro，并与 NVIDIA B200/B300 对比编码智能体推理性能。", "selected": false, "score": 42},
+{"idx": 27, "title": "研究人员用 AI 设计可定点切割特定蛋白质的蛋白酶", "source": "Ars Technica：AI（RSS）", "badgeLabel": "Ars Technica", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-10-14T17:10:15.000Z", "dateStr": "2026-10-14", "url": "https://arstechnica.com/science/2026/10/researchers-use-ai-to-design-proteins-that-cut-up-other-proteins/", "summary": "研究人员利用 AI 蛋白质设计工具，保留两类蛋白酶的催化核心并替换其余整个蛋白，设计出可调谐、能定点切断特定蛋白质的酶。研究人员用这些酶切断了与神经疾病相关的蛋白质，以展示其有效性。", "selected": false, "score": 56}
+];
+window.TIMELINE_DATA = [
+{"date": "2026-10-15", "wd": "星期四", "count": 17},
+{"date": "2026-10-14", "wd": "星期三", "count": 10}
+];
+</script>
+
+<script>
+(function(){
+  var WEEKDAYS = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+
+  function relativeTime(isoStr){
+    var now = Date.now();
+    var t = new Date(isoStr).getTime();
+    var diff = Math.floor((now - t) / 1000);
+    if(diff < 60) return '刚刚';
+    if(diff < 3600) return Math.floor(diff/60) + ' 分钟前';
+    if(diff < 86400) return Math.floor(diff/3600) + ' 小时前';
+    if(diff < 604800) return Math.floor(diff/86400) + ' 天前';
+    return new Date(isoStr).toLocaleDateString('zh-CN',{month:'numeric',day:'numeric'});
+  }
+
+  function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(s){ return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
+
+  function buildTimeline(){
+    var list = document.getElementById('timelineList');
+    if(!list) return;
+    list.innerHTML = '';
+    window.TIMELINE_DATA.forEach(function(g){
+      var li = document.createElement('li');
+      li.className = 'timeline-item';
+      li.dataset.date = g.date;
+      li.innerHTML = '<div class="timeline-date">' + g.date.slice(5) + '</div>'
+        + '<div class="timeline-count">' + g.wd + ' · ' + g.count + ' 篇</div>';
+      li.addEventListener('click', function(){
+        var el = document.getElementById('anchor-' + g.date);
+        if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+      list.appendChild(li);
+    });
+  }
+
+  function buildCards(filtered){
+    var section = document.getElementById('papersSection');
+    if(!section) return;
+    section.innerHTML = '';
+
+    var groups = {};
+    filtered.forEach(function(p){
+      if(!groups[p.dateStr]) groups[p.dateStr] = [];
+      groups[p.dateStr].push(p);
+    });
+    var sortedDates = Object.keys(groups).sort(function(a,b){ return b.localeCompare(a); });
+
+    var timelineGroups = sortedDates.map(function(d){
+      return {date:d, wd:WEEKDAYS[new Date(d+'T00:00:00+08:00').getDay()], count:groups[d].length};
+    });
+    window.TIMELINE_DATA = timelineGroups;
+    buildTimeline();
+
+    sortedDates.forEach(function(date){
+      var grp = groups[date];
+      var d = new Date(date + 'T00:00:00+08:00');
+      var wd = WEEKDAYS[d.getDay()];
+      var groupEl = document.createElement('div');
+      groupEl.className = 'date-group';
+      var anchor = document.createElement('div');
+      anchor.className = 'date-anchor';
+      anchor.id = 'anchor-' + date;
+      groupEl.appendChild(anchor);
+      var header = document.createElement('div');
+      header.className = 'date-header';
+      header.innerHTML = '<span class="date-pill">' + date + '</span>'
+        + '<span class="date-weekday">' + wd + '</span>'
+        + '<span class="date-count">' + grp.length + ' 篇</span>';
+      groupEl.appendChild(header);
+      var stack = document.createElement('div');
+      stack.className = 'papers-stack';
+
+      grp.forEach(function(p){
+        var card = document.createElement('div');
+        card.className = 'paper-card' + (p.selected ? ' selected-card' : '');
+        card.dataset.id = p.idx;
+        var shtml = '';
+        if(p.summary && p.summary !== '暂无摘要'){
+          shtml = '<div class="card-summary">' + escHtml(p.summary) + '</div>';
+        }
+        card.innerHTML =
+          '<div class="card-header">' +
+            '<div class="card-num">' + p.idx + '</div>' +
+            '<div class="card-title-wrap">' +
+              '<a class="card-title" href="' + escAttr(p.url) + '" target="_blank" rel="noopener">' + escHtml(p.title) + '</a>' +
+              '<div class="card-meta">' +
+                '<span class="badge" style="background:' + escAttr(p.badgeBg) + ';color:' + escAttr(p.badgeColor) + '" title="' + escAttr(p.source) + '">' + escHtml(p.badgeLabel) + '</span>' +
+                '<span class="rel-time">' + relativeTime(p.publishedAt) + '</span>' +
+                '<span class="score-dot"><span class="score-star">\u2605</span>' + p.score + '</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          shtml +
+          '<div class="card-footer">' +
+            '<a class="read-link" href="' + escAttr(p.url) + '" target="_blank" rel="noopener">' +
+              '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\" fill=\"currentColor\"><path d=\"M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z\"/><path d=\"M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z\"/></svg>' + ' 阅读原文</a>' +
+          '</div>';
+        stack.appendChild(card);
+      });
+      groupEl.appendChild(stack);
+      section.appendChild(groupEl);
+    });
+
+    document.getElementById('filtered-count').textContent = filtered.length;
+
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, {threshold:0.08, rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.paper-card').forEach(function(el){ observer.observe(el); });
+
+    highlightTimeline();
+  }
+
+  function highlightTimeline(){
+    var groups = document.querySelectorAll('.date-group');
+    var tItems = document.querySelectorAll('.timeline-item');
+    var scrollY = window.scrollY + 160;
+    var activeDate = null;
+    groups.forEach(function(g){
+      var anchor = g.querySelector('.date-anchor');
+      if(anchor && anchor.getBoundingClientRect().top + window.scrollY <= scrollY){
+        activeDate = g.querySelector('.date-anchor').id.replace('anchor-','');
+      }
+    });
+    tItems.forEach(function(item){
+      item.classList.toggle('active', item.dataset.date === activeDate);
+    });
+  }
+
+  window.addEventListener('scroll', highlightTimeline, {passive:true});
+
+  var searchInput = document.getElementById('searchInput');
+  var searchCount = document.getElementById('searchCount');
+  var debounceTimer;
+  if(searchInput){
+    searchInput.addEventListener('input', function(){
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function(){
+        var q = searchInput.value.trim().toLowerCase();
+        var filtered;
+        if(!q){ filtered = window.PAPERS; }
+        else { filtered = window.PAPERS.filter(function(p){
+          return (p.title && p.title.toLowerCase().indexOf(q)!==-1)
+              || (p.summary && p.summary.toLowerCase().indexOf(q)!==-1)
+              || (p.source && p.source.toLowerCase().indexOf(q)!==-1)
+              || (p.badgeLabel && p.badgeLabel.toLowerCase().indexOf(q)!==-1);
+        }); }
+        searchCount.textContent = filtered.length + ' 篇';
+        buildCards(filtered);
+      }, 250);
+    });
+  }
+
+  buildCards(window.PAPERS);
+  buildTimeline();
+
+  /* ---- back to top ---- */
+  var qtop = document.getElementById('quickTop');
+  window.addEventListener('scroll', function(){
+    qtop.classList.toggle('visible', window.scrollY > 400);
+  });
+})();
+
+</script>
+
+<div class="quick-top" id="quickTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+</body>
+</html>
