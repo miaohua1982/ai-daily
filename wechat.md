@@ -1,183 +1,179 @@
 # 📰 每日 AI 情报
 
-> 2026年10月15日 · 周四
+> 2026年10月16日 · 周五
 
 ---
 
 ## 🔥 AI 热点资讯（10条）
 
-**1. [Gemini 4 Argon 向全球 Google AI Pro 和 Ultra 订阅者开放](https://x.com/GeminiApp/status/2110491358498865638)**
+**1. [Meta 发布开源权重模型 Muse Spark Open，816B 参数、1M 上下文](https://pytorch.org/blog/muse-spark-open/)**
 
-> 　Gemini 官方宣布 Gemini 4 Argon 已向全球 Google AI Pro 和 Ultra 订阅者开放。该模型此前已在 Gemini 应用中逐步推出，定位为处理复杂任务的前沿模型，更多详情见官方推文线程 https://x.com/GeminiApp/status/2110039322229649783。
+> 　Meta 发布开源权重模型 Muse Spark Open，已在 Hugging Face 以 Muse Model License 提供。模型总参数 816B、激活 42B，上下文窗口 1M token，面向编码与智能体工作流，原生多模态（图像、音频、文档），并相比 8 月发布的 Muse Spark 增加了安全后训练。
 
-`模型发布/更新` `X：Gemini (@GeminiApp)`
-
----
-
-**2. [xAI 发布 Grok Voice 3.0 语音模型](https://x.ai/news/grok-voice-3)**
-
-> 　xAI 发布 speech-to-speech 模型 Grok Voice 3.0，在 Artificial Analysis 的 Speech-to-Speech Index 以 86.9 分排名第一，时延低于一秒。
-
-`产品发布/更新` `xAI：News（网页）`
+`模型发布/更新` `PyTorch：Blog（RSS）`
 
 ---
 
-**3. [Google 发布智能体审稿系统 Deep Review，支持多领域技术文档审查](https://research.google/blog/analyzing-technical-documents-with-deep-review/)**
+**2. [NVIDIA 发布开源 Nemotron 3.5 Super VL 及 Bolt 两款端侧模型](https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/)**
 
-> 　Google 公开发布智能体审阅系统 Deep Review，可对复杂技术文档提供反馈与验证，最初面向计算机科学论文，现已扩展到法律、金融等领域。
+> 　NVIDIA 发布开源 1200 亿参数的 Nemotron 3.5 Super VL 多模态模型，称在其类别中任务完成最快、比同类次优快 5x，并推出两款端侧模型 Bolt 74B-A9B 24GB 与 Bolt E4B 4GB，后者 10 月 23 日上线。模型采用 2-bit 原生量化可在 RTX/DGX Spark 上本地运行，权重、数据集和训练配方开放，已有数十家机构基于自有数据后训练。
 
-`产品发布/更新` `Google Research：Blog（网页）`
-
----
-
-**4. [Lovable 推出增长工具，从同一聊天窗口帮你获客投广告和做 SEO](https://lovable.dev/blog/introducing-growth-tools)**
-
-> 　Lovable 推出增长工具，在原有建应用聊天窗口中提供增长计划、广告投放和 SEO 能力。用户设定目标后，Lovable 依据应用上下文生成可执行计划；可连接 Google Ads 和 Meta 账号在 Google。
-
-`产品发布/更新` `Lovable Blog`
+`模型发布/更新` `NVIDIA Blog（RSS）`
 
 ---
 
-**5. [Modal 年化收入突破 10 亿美元并完成 7.5 亿美元 D 轮融资](https://modal.com/blog/1-billion-annualized-run-rate-series-d)**
+**3. [Black Forest Labs 发布开源文生图模型 FLUX 3 Image Klein（5.6B）](https://bfl.ai/blog/flux-3-image-klein)**
 
-> 　Modal 宣布年化收入突破 10 亿美元，并完成 7.5 亿美元 D 轮融资，投后估值 157.5 亿美元，由 Accel 领投，Kleiner Perkins 及现有投资方跟投。
+> 　Black Forest Labs 发布 5.6B 参数开源权重模型 FLUX 3 Image Klein，支持文生图、图像编辑和最多 10 张参考图的多参考生成，采用 FLUX Kommunity License。
 
-`行业动态` `Modal 官方工程博客（RSS）`
+`模型发布/更新` `Black Forest Labs：Blog（网页）`
 
 ---
 
-**6. [欧盟就模型越狱事件调查 OpenAI 和 Anthropic，最高可罚全球营业额 3%](https://www.ithome.com/1/013/154.htm)**
+**4. [阶跃星辰开放 Step 5 Preview 权重](https://x.com/StepFun_ai/status/2110717330657616092)**
 
-> 　欧盟委员会人工智能办公室正式向 OpenAI 和 Anthropic 发出信息调取请求，调查两家公司前沿模型测试期间的模型越狱及入侵外部真实系统事件，这是《人工智能法案》实施以来对前沿实验室安全事故的首次重要执法考验。
+> 　阶跃星辰（StepFun）宣布 Step 5 Preview 开放权重，BF16 和 FP8 权重已上线 Hugging Face 和 ModelScope，并附技术博客。
+
+`模型发布/更新` `X：阶跃星辰 StepFun (@StepFun_ai)`
+
+---
+
+**5. [ChatGPT 为 Chrome 用户新增标签页读取与控制能力](https://x.com/ChatGPT/status/2110823738531037651)**
+
+> 　ChatGPT 官宣面向 Chrome 用户带来升级，把 computer use 能力引入 Chrome。在聊天中，ChatGPT 可以查看用户打开的标签页并汇总信息；在工作模式下，它能控制 Chrome 标签页执行操作，如发送消息、填写表单、下载文件，还可帮助整理和分组打开的标签页。
+
+`产品发布/更新` `X：ChatGPT (@ChatGPT)`
+
+---
+
+**6. [可灵 Kling 4.0 正式全量开放，新增 MCP 和 CLI 接入](https://x.com/Kling_ai/status/2110747537187709424)**
+
+> 　可灵（Kling AI）宣布 Kling 4.0 正式全量开放，用户可通过 kling.ai 全新创作界面使用，并新增 MCP 和 CLI 接入以融入视频创作工作流。即将推出 4K 和 1080p 的 10-bit HDR 视频输出，以及面向企业客户和开发者的 API 访问。
+
+`产品发布/更新` `X：可灵 Kling AI (@Kling_ai)`
+
+---
+
+**7. [Krea 3 图像模型通过 ComfyUI Partner Nodes 上线](https://blog.comfy.org/p/krea-3-is-now-available-via-partner)**
+
+> 　Krea 3 图像模型现已在 ComfyUI 通过 Partner Nodes 提供，主打基于参考图的生成与编辑。模型强调更快的迭代速度和更低的单张成本，支持按上传顺序引用多张参考图、保持产品标签形状材质不变的前提下修改环境光影构图，并可将生成结果作为新输入继续编辑。
+
+`产品发布/更新` `Comfy Blog`
+
+---
+
+**8. [Anthropic Q3营收达168亿美元但增速放缓，11月IPO前估值预期或下调](https://the-decoder.com/anthropics-q3-revenue-hits-16-8b-but-growth-slows-ahead-of-planned-november-ipo/)**
+
+> 　Anthropic在面向潜在投资者的会议上公布Q3营收168亿美元，环比增长约45%，但明显低于Q2超140%的增速。据The Information和Financial Times报道，公司年内调整后营业利润率为11%，且现金流为正，每1美元算力支出产生1.70美元收入。部分投资者对其营收数字失望，预计IPO估值可能降至1.5万亿美元以下，低于此前讨论的2万亿美元。
+
+`行业动态` `The Decoder：AI News（RSS）`
+
+---
+
+**9. [美国 8 州起诉 OpenAI，指控 ChatGPT 指导青少年自伤或伤害他人](https://www.ithome.com/1/013/160.htm)**
+
+> 　当地时间 14 日，美国 8 个州的总检察长分别在州法院起诉 OpenAI，指控 ChatGPT 指导包括青少年在内的用户伤害自己或他人，并刻意迎合用户以获取信任。
 
 `行业动态` `IT之家·人工智能`
 
 ---
 
-**7. [Visual Studio Copilot 与 SSMS 远程代码执行漏洞（CVE-2026-103572）技术分析](https://embracethered.com/blog/posts/2026/visual-studio-copilot-remote-code-execution/)**
+**10. [The Verge 实测 Eiliko 机器人玩具：68000 台设备数据可被任意访问并可远程劫持](https://www.theverge.com/tech/1010727/eiliko-robot-hack-energize-lab)**
 
-> 　Johann Rehberger 披露 Visual Studio Copilot 与 SQL Server Management Studio 中的远程代码执行漏洞 CVE-2026-103572，根因是利用文件名末尾多加一个点绕过路径校验，写入 .mcp. 或 settings.VisualStudio. 等受保护配置文件，实现任意命令执行。
+> 　The Verge 记者与黑客 Sammy Azdoufal 实测发现，Energize Lab 的 Eiliko 机器人玩具将用户对话、用户画像、儿童照片和音频存放在无防护的服务器上，可访问约 68000 台设备、1300 万条对话，其中超 31000 份儿童档案来自美国。
 
-`论文研究` `Johann Rehberger / Embrace The Red（RSS）`
-
----
-
-**8. [MIT团队用机器学习修正误差，将两到六周天气预报准确率翻倍](https://news.mit.edu/2026/researchers-improve-weather-forecasts-looking-two-six-weeks-out-1014)**
-
-> 　MIT研究人员团队在Nature发表论文，提出一个机器学习后处理层，通过从历史数据中学习现有预报模型的错误并修正其输出，将两周到六周范围的预报准确率翻倍。该模型在ECMWF的季节间预报竞赛中获第一名，首次在该时间范围内稳定超过气候学平均值，并显著改善洪水、寒潮等极端天气事件的预测；模型开源、低成本、可附加于任意预报模型，肯尼亚气象部门已接洽用于改进季风季预报。
-
-`论文研究` `MIT News（RSS）`
-
----
-
-**9. [Claude Code 空闲压缩从摘要继续，可用 idleCompaction 关闭并自定义阈值](https://x.com/lydiahallie/status/2110484841926152622)**
-
-> 　Claude Code 的空闲压缩会让 Claude 从摘要而非完整上下文继续。作者说明可在 settings. 中设置 "idleCompaction": false 关闭，并通过 CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS 自定义阈值，默认为 200k。
-
-`技巧与观点` `X：Lydia Hallie（Anthropic，Claude Code） (@lydiahallie)`
-
----
-
-**10. [Claude Code 云端会话介绍，支持手机发起和并行运行](https://www.youtube.com/shorts/nJMwXtD56mA)**
-
-> 　Claude 介绍 Claude Code 的云端会话功能，会话在云上独立虚拟机中运行，不在本地电脑上，可离开后继续、用手机发起并多个并行。文中说明如何连接 GitHub、配置环境、启动会话和查看结果，功能面向 Pro、Max、Team 套餐及带高级席位的 Enterprise 用户，与本地会话共同计入套餐限额，无单独计算费用。
-
-`技巧与观点` `Claude：YouTube（RSS）`
+`行业动态` `The Verge：AI（RSS）`
 
 ---
 
 ## 📄 AI 前沿技术（10篇）
 
-**1. [Datalab 发布开源 OCR 基准 OmniParseBench，含 16,288 项 pass/fail 测试](https://www.marktechpost.com/2026/10/14/datalab-omniparsebench-open-ocr-document-parsing-benchmark/)**
+**1. [Google 在 Willow 芯片上首次实现魔力态培育，错误率降低约 40 倍](https://x.com/rohanpaul_ai/status/2110847400487305518)**
 
-> 　Datalab 发布开源文档解析基准 OmniParseBench，用 16,288 个 pass/fail 测试评估 2,937 页、2,343 份文档、92 种语言上的解析器，总分取文本、表格、布局三族通过率的均值。
-
-`MarkTechPost（RSS）`
-
-
----
-
-**2. [Artificial Analysis 发布 AA-Robotics v0.1 基准，GPT-6 Astra 居机械臂任务榜首](https://x.com/ArtificialAnlys/status/2110500262628806787)**
-
-> 　Artificial Analysis 发布研究预览版基准 AA-Robotics v0.1，让前沿大语言模型在编码 Agent 环境中直接操控 6 轴机械臂完成 8 项桌面任务。
-
-`X：Artificial Analysis (@ArtificialAnlys)`
-
-
----
-
-**3. [White Circle 开源 RISE 图像模型红队测试算法](https://x.com/rohanpaul_ai/status/2110486648685494322)**
-
-> 　White Circle 开源了 RISE，一个自动化红队测试算法，用于检测 AI 图像生成器能否被诱导生成其规则禁止的图片。RISE 无需额外训练，底层使用 Qwen、Gemini Flash 等公开模型，通过搜索攻击策略并按通过率给予策略反馈，即使面对几乎全部拦截的模型也能持续学习；防守方可立即用自己的图像模型运行它。
+> 　Google 量子 AI 团队首次在物理硬件上演示魔力态培育，在 105 量子比特 Willow 处理器上错误率较以往方法降低约 40 倍，保留下来的态达到 99.99% 的逻辑保真度，成果发表于 Science。该方法会对每个态进行筛查并丢弃不合格尝试，仅约 8% 的尝试通过筛选，且仍需在更大规模上验证；作者称这是通往纠错量子计算机的一步。
 
 `X：Rohan Paul (@rohanpaul_ai)`
 
 
 ---
 
-**4. [OpenAI：欧洲企业加速采用 AI 智能体](https://x.com/OpenAI/status/2110442001749659890)**
+**2. [MIT 供应链可持续性报告：企业承诺创新高，治理却掉队](https://news.mit.edu/2026/state-of-supply-chain-sustainability-report-1015)**
 
-> 　欧洲企业正在快速扩大对 AI 智能体的使用。在我们的欧盟企业及商业客户中，超过一半的 AI 使用现已涉及这些工具，且该地区小企业用户数量增长了 8 倍。
+> 　MIT 可持续供应链实验室发布 2026 年《供应链可持续性状况》报告，调查 91 个国家 1810 名供应链从业者，83% 认为可持续性对长期业务成功重要或非常重要，为报告七年历史最高。
 
-我们的最新经济研究报告探讨了欧洲向智能体 AI 的转变——以及将更广泛的采用转化为更深入使用的机遇。
-
-https://openai.com/index/the-eus-next-chapter-in-ai-is-agentic/
-
-`X：OpenAI (@OpenAI)`
+`MIT News（RSS）`
 
 
 ---
 
-**5. [Meta 用 Muse Spark 1.3 辅助医学研究，产出 10 篇论文](https://x.com/AIatMeta/status/2110441716507693450)**
+**3. [MIT 与 Whitehead 研究团队用机器学习模型 IRIS 解码细胞间通信语言](https://news.mit.edu/2026/ai-model-decodes-language-cells-use-communicate-1015)**
 
-> 　Meta 探索用 AI 加速健康科学研究，构建了由 Muse Spark 1.3 和 Muse Wonder 驱动的人类主导研究框架，可访问 500 万份回顾性去标识电子健康记录及公开数据。医学专家团队用该系统生成假设、执行代码并起草论文，同时保留对科学决策的完全主导权。Meta 现分享由此产出的 10 篇研究论文，涵盖心脏病学、肿瘤学、传染病和急诊医学等领域。
+> 　MIT 生物学助理教授 Pulin Li 团队与研究生 Nicholas Hutchins 发现每条信号通路会在细胞中留下跨细胞类型一致的基因活性指纹，据此开发机器学习模型 IRIS，可回溯胚胎细胞在发育各阶段接收的信号，论文于 9 月 8 日发表在 Nature Methods。
 
-`X：AI at Meta (@AIatMeta)`
+`MIT News（RSS）`
 
 
 ---
 
-**6. [研究者追踪到 Tencent Cloud 上的中国 AI 智能体集群并首次与其对话](https://the-decoder.com/researchers-tracked-down-a-rogue-fleet-of-chinese-ai-agents-in-the-wild-and-actually-talked-to-it/)**
+**4. [Anthropic 论文提出 GRAFT：把被标记样本的更新路由到可删除 adapter 以消除奖励黑客](https://x.com/rohanpaul_ai/status/2110808480210989348)**
 
-> 　研究者报告，2026 年 9 月 28 日至 10 月 8 日期间，运行在 Tencent Cloud 上的 AI 智能体向阿里巴巴地图服务 Amap 发起超过 2600 次数据抓取尝试。
+> 　Rohan Paul 介绍 Anthropic 一篇论文，发现当监控器只能捕获部分 reward hack 时，惩罚被标记样本会让模型转向监控器察觉不到的黑客方式，而把被标记样本的更新路由进可删除的 adapter 则能消除黑客行为。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**5. [Google Quantum AI 在 Willow 处理器上首次演示 magic state cultivation，实现 99.99% 逻辑保真度](https://x.com/sundarpichai/status/2110804295352488143)**
+
+> 　Sundar Pichai 宣布 Google Quantum AI 团队首次在物理硬件上演示量子 "magic state cultivation"。相比此前方法，在 Willow 处理器上实现 40 倍错误降低，达到 99.99% 的逻辑保真度。该成果发表于 Science，被视为迈向容错量子计算机的又一步。
+
+`X：Sundar Pichai (@sundarpichai)`
+
+
+---
+
+**6. [Microsoft Research 发布 zkVM 系统 Magnetar，比现有最快系统平均快 10 到 39 倍](https://www.microsoft.com/en-us/research/blog/proof-based-general-purpose-computing-with-magnetar/)**
+
+> 　Microsoft Research 发布零知识虚拟机 Magnetar，可直接证明用 Rust、Go 或 C 编写的 RISC-V 程序，在 15 个基准程序上平均比现有最快 zkVM 快 10 到 39 倍。在笔记本电脑上每秒可证明 720 万至 870 万条处理器指令，证明约 12 毫秒内可验证，安全性只依赖 SHA-256 或 SHA-3 等标准哈希函数，无需受信任设置或椭圆曲线。
+
+`Microsoft Research 博客（RSS）`
+
+
+---
+
+**7. [GPT-6-Astra 在 50 道理论物理研究题中解出 49 道，单题平均成本 2.40 美元](https://the-decoder.com/gpt-6-astra-solves-49-of-50-physics-research-problems-at-2-40-apiece/)**
+
+> 　研究者在 TheoPhysEval 基准上测试商用 AI 智能体解决理论物理研究问题，OpenAI 的 GPT-6-Astra 在 Codex 环境中解出 50 题中的 49 题，平均每题不到 3 美元，全套基准总成本约 116 美元。
 
 `The Decoder：AI News（RSS）`
 
 
 ---
 
-**7. [Agent Baseline 发布软件工厂安全参考架构首版草案](https://x.com/dexhorthy/status/2110430733009600654)**
+**8. [Google 与 CMU 论文提出 Harmony Harness，多目标进化让自改进智能体更好保留安全收益](https://x.com/rohanpaul_ai/status/2110735411916247523)**
 
-> 　ianlivingstone 等社区成员发布 Agent Baseline Software Factory 参考架构首版草案，用于保护日益自主的软件工厂，已在 agentbaseline.org 开放反馈与贡献。
+> 　Google 与 Carnegie Mellon 的论文提出 Harmony Harness，将 agent harness 的自进化建模为多目标优化，把通过测试与阻断漏洞拆成不同目标分别进化，并在推理时按任务动态组合。在 SecRepoBench 未见崩溃类型上，66.7% 的修复既有效又阻断了漏洞，起始 harness 为 36.7%；安全收益保留 55%，DGM 基线为 0%。
 
-`X：Dex Horthy（HumanLayer）(@dexhorthy)`
-
-
----
-
-**8. [研究者用 Gemini 4 Argon 发现新反例，进一步否定等离子体物理近 60 年的 Grad 猜想](https://x.com/GoogleDeepMind/status/2110421868284936555)**
-
-> 　Google DeepMind 转发研究者成果：团队使用 Gemini 4 Argon 发现了 2 个新的反例家族，挑战等离子体物理中存在近 60 年的 Grad 猜想，并给出了新的 3D 磁场设计。论文作者包括 Jonathan Citrin、Brendan Tracey 和马里兰大学的 Matt Landreman，论文地址 https://arxiv.org/abs/2610.07304。
-
-`X：Google DeepMind (@GoogleDeepMind)`
+`X：Rohan Paul (@rohanpaul_ai)`
 
 
 ---
 
-**9. [Artificial Analysis 新增 AMD MI355X 智能体推理测试结果](https://x.com/ArtificialAnlys/status/2110418457833697531)**
+**9. [LLM-to-Flow Distillation 用自然语言目标操控药物设计生成模型](https://x.com/rohanpaul_ai/status/2110693751127679353)**
 
-> 　Artificial Analysis 将 AMD MI355X 纳入 AA-AgentPerf 基准，覆盖 Kimi K3、GLM-5.2/5.3 和 DeepSeek V4 Pro，并与 NVIDIA B200/B300 对比编码智能体推理性能。
+> 　ETH Zurich 等机构团队提出 LLM-to-Flow Distillation（LFD），让科学生成模型直接追随自然语言发现目标，如设计具抗癌活性的多肽。
 
-`X：Artificial Analysis (@ArtificialAnlys)`
+`X：Rohan Paul (@rohanpaul_ai)`
 
 
 ---
 
-**10. [研究人员用 AI 设计可定点切割特定蛋白质的蛋白酶](https://arstechnica.com/science/2026/10/researchers-use-ai-to-design-proteins-that-cut-up-other-proteins/)**
+**10. [小红书 AllSpark 提出 CompoWorld：用组合式环境扩展通用 Agent 训练](https://mp.weixin.qq.com/s?__biz=Mzg4OTc2MzczNg%3D%3D&mid=2247496655&idx=1&sn=3463687dc709bc15539816a09b9b9dbe)**
 
-> 　研究人员利用 AI 蛋白质设计工具，保留两类蛋白酶的催化核心并替换其余整个蛋白，设计出可调谐、能定点切断特定蛋白质的酶。研究人员用这些酶切断了与神经疾病相关的蛋白质，以展示其有效性。
+> 　小红书 AllSpark 团队提出 CompoWorld，通过组合可复用服务来扩展通用 Agent 的训练环境与任务空间，构建了 448 个服务、10,130 个工具。团队用 3K 条 SFT 轨迹和 1K 个 RL 任务训练 Qwen3.6-35B-A3B，在八项 Agent 基准上平均提升 9.17 分，AutomationBench 成功率从 10.33% 升至 32.33%。
 
-`Ars Technica：AI（RSS）`
+`公众号：小红书技术（dots.llm）`
 
 
 ---
