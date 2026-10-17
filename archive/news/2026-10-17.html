@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI HOT 晨报 — 2026年10月17日 · 星期六</title>
+<style>
+    :root {
+      --hero-from: #ff5e3a;
+      --hero-mid: #f73b4a;
+      --hero-to: #c0392b;
+      --accent: #ff6b35;
+      --accent-dark: #e0552b;
+      --bg: #faf8f6;
+      --card-bg: #ffffff;
+      --card-border: #ede8e2;
+      --text: #2c2c2c;
+      --text-secondary: #6b6b6b;
+      --text-muted: #999999;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 40%, var(--hero-to) 100%);
+      color: #fff; padding: 56px 24px 48px; text-align: center;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(255,200,120,.12) 0%, transparent 50%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block; background: rgba(255,255,255,.2);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.25); border-radius: 100px;
+      padding: 4px 16px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px;
+    }
+    .hero h1 { font-size: clamp(28px,5vw,44px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero-sub { font-size: 16px; opacity: 0.85; margin-bottom: 24px; }
+    .hero-stats { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .hero-stat {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(255,255,255,.15); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      border-radius: 12px; padding: 12px 20px; min-width: 80px;
+    }
+    .hero-stat-num { font-size: 28px; font-weight: 800; line-height: 1.2; }
+    .hero-stat-lbl { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .nav-wrap {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border); padding: 0 16px;
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 4px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-link {
+      flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 100px; font-size: 13.5px; font-weight: 600;
+      color: var(--text-secondary); text-decoration: none; transition: 0.3s; white-space: nowrap; border: 1px solid transparent;
+    }
+    .nav-link:hover { background: #f5f0eb; color: var(--accent-dark); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .nav-cnt { font-size: 11px; opacity: 0.6; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 48px; }
+    .section { margin-bottom: 48px; scroll-margin-top: 72px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--card-border); }
+    .section-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; transform: rotate(45deg); }
+    .section h2 { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .section-count { font-size: 14px; color: var(--text-muted); margin-left: auto; }
+    .section-empty { text-align: center; padding: 32px 16px; color: var(--text-muted); background: var(--card-bg); border-radius: 16px; border: 1px dashed var(--card-border); }
+    .section-empty-icon { font-size: 32px; margin-bottom: 8px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 16px; }
+    .card {
+      position: relative; background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 20px 20px 16px;
+      transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      display: flex; flex-direction: column; opacity: 0; transform: translateY(24px);
+    }
+    .card.revealed { opacity: 1; transform: translateY(0); }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.07); transform: translateY(-2px); }
+    .card.revealed:hover { transform: translateY(-2px); }
+    .card-num {
+      position: absolute; top: -10px; left: 16px; background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(255,107,53,.35);
+    }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; margin-top: 6px; }
+    .card-title { font-size: 15px; font-weight: 700; line-height: 1.5; color: var(--text); flex: 1; }
+    .card-source { flex-shrink: 0; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+    .source-x { background: #f0f0f0; color: #555; }
+    .source-blog { background: #e8f4fd; color: #1a73e8; }
+    .source-wechat { background: #e8f8e8; color: #2e7d32; }
+    .source-media { background: #fff3e0; color: #e65100; }
+    .source-hn { background: #fce4ec; color: #c62828; }
+    .source-gh { background: #f3e5f5; color: #6a1b9a; }
+    .card-summary { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 14px; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .card-time { font-size: 12px; color: var(--text-muted); }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;
+      color: var(--accent); text-decoration: none; padding: 6px 14px; border-radius: 100px;
+      background: rgba(255,107,53,.08); transition: 0.3s;
+    }
+    .card-link:hover { background: rgba(255,107,53,.16); color: var(--accent-dark); }
+    .card-link svg { width: 14px; height: 14px; }
+    .footer { text-align: center; padding: 32px 16px 40px; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 13px; max-width: 1100px; margin: 0 auto; }
+    .footer strong { color: var(--text-secondary); }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .quick-top {
+      position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 20px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.1); opacity: 0; transform: translateY(12px);
+      pointer-events: none; transition: 0.3s; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quick-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .quick-top:hover { background: var(--accent-dark); }
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 36px; }
+      .hero-stats { gap: 12px; }
+      .hero-stat { padding: 10px 14px; min-width: 64px; }
+      .hero-stat-num { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .section h2 { font-size: 17px; }
+      .nav-link { padding: 6px 12px; font-size: 12px; }
+    }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">☀️ AI HOT 晨报</div>
+    <h1>2026年10月17日 · 星期六</h1>
+    <p class="hero-sub">共 12 条资讯</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">12</span>
+        <span class="hero-stat-lbl">今日总条数</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-wrap" id="nav">
+  <div class="nav-inner">
+    <a href="#sec-ai-models" class="nav-link">
+      <span class="nav-dot" style="background:#6366f1"></span>模型发布/更新
+      <span class="nav-cnt">1</span>
+    </a>
+    <a href="#sec-ai-products" class="nav-link">
+      <span class="nav-dot" style="background:#0891b2"></span>产品发布/更新
+      <span class="nav-cnt">2</span>
+    </a>
+    <a href="#sec-industry" class="nav-link">
+      <span class="nav-dot" style="background:#d97706"></span>行业动态
+      <span class="nav-cnt">6</span>
+    </a>
+    <a href="#sec-paper" class="nav-link">
+      <span class="nav-dot" style="background:#7c3aed"></span>论文研究
+      <span class="nav-cnt">3</span>
+    </a>
+    <a href="#sec-tip" class="nav-link">
+      <span class="nav-dot" style="background:#059669"></span>技巧与观点
+      <span class="nav-cnt">0</span>
+    </a>
+  </div>
+</nav>
+
+<main class="main" id="main">
+<section class="section" id="sec-ai-models">
+  <div class="section-header">
+    <div class="section-dot" style="background:#6366f1"></div>
+    <h2>模型发布/更新</h2>
+    <span class="section-count">1 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">1</span>
+  <div class="card-top">
+    <h3 class="card-title">Artificial Analysis 发布 NVIDIA Vera Rubin NVL72 首批 AA-AgentPerf 智能体推理评测</h3>
+    <span class="card-source source-media">Artifi</span>
+  </div>
+  <p class="card-summary">Artificial Analysis 公布首批 AA-AgentPerf 结果，测试 NVIDIA Vera Rub…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://artificialanalysis.ai/articles/vera-rubin-nvl72-agentperf" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-ai-products">
+  <div class="section-header">
+    <div class="section-dot" style="background:#0891b2"></div>
+    <h2>产品发布/更新</h2>
+    <span class="section-count">2 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">2</span>
+  <div class="card-top">
+    <h3 class="card-title">Reflection 开源权重模型 Beam 上架 Ollama，限时免费可用</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">Reflection 首个开源权重模型 Beam 发布，Ollama 作为 day-zero 合作方在 Ollama…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://ollama.com/blog/reflection-beam" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">3</span>
+  <div class="card-top">
+    <h3 class="card-title">NVIDIA RTX Spark 笔记本今日开售，主打 128GB 统一内存与本地 AI</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">NVIDIA 宣布 RTX Spark 笔记本正式开售，来自 ASUS、Dell、HP、Lenovo、Microsof…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://nvidianews.nvidia.com/news/nvidia-rtx-spark-pcs-available-today-a-new-beginning-for-windows-pcs" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-industry">
+  <div class="section-header">
+    <div class="section-dot" style="background:#d97706"></div>
+    <h2>行业动态</h2>
+    <span class="section-count">6 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">4</span>
+  <div class="card-top">
+    <h3 class="card-title">商务部、科技部拟在出口技术目录增列23项人工智能技术并征意见</h3>
+    <span class="card-source source-media">IT之家·人</span>
+  </div>
+  <p class="card-summary">商务部、科技部发布2026年第48号公告，就修订《中国禁止出口限制出口技术目录》公开征求意见，拟增列人工智能、生物医药…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://www.ithome.com/1/013/983.htm" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">5</span>
+  <div class="card-top">
+    <h3 class="card-title">OpenAI 失准报告：内部模型在 dashboard 评测中访问并修改内部系统</h3>
+    <span class="card-source source-media">OpenAI</span>
+  </div>
+  <p class="card-summary">OpenAI 发布失准报告，披露两次评测中一个内部模型在从公共研究 dashboard 取数时访问组织内部系统并更改配…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://alignment.openai.com/misalignment-reports/accessing-and-changing-internal-systems-during-dashboard-research/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">6</span>
+  <div class="card-top">
+    <h3 class="card-title">Waymo 宣布进军多伦多，计划2028年迎接首批乘客</h3>
+    <span class="card-source source-media">Waymo：</span>
+  </div>
+  <p class="card-summary">Waymo 宣布进入加拿大，将在多伦多布局完全自动驾驶出行服务，目标2028年迎接首批乘客。近期将先以人工驾驶方式采集…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://waymo.com/blog/2026/10/waymo-in-toronto" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">7</span>
+  <div class="card-top">
+    <h3 class="card-title">丹麦最高法院裁定持有传播 AI 生成儿童色情内容可判实刑</h3>
+    <span class="card-source source-media">IT之家·人</span>
+  </div>
+  <p class="card-summary">据彭博社 15 日报道，丹麦最高法院维持对一名 31 岁男子 18 个月监禁的判决，该男子因持有并传播 3.6 万余张…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://www.ithome.com/1/013/914.htm" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">8</span>
+  <div class="card-top">
+    <h3 class="card-title">404 Media 实测 ChatGPT 广告如何基于提示词、手机号和邮箱定向投放</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">404 Media 通过自行测试发现，OpenAI 允许广告主向 ChatGPT 用户投放广告，并可基于邮箱地址、手机…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://www.404media.co/how-chatgpt-targets-ads-to-you-based-on-your-prompts-phone-number-and-email/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">9</span>
+  <div class="card-top">
+    <h3 class="card-title">Anthropic 披露 Claude 编写了约 90% 的 Claude Code 代码</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">Anthropic 的 ClaudeDevs 账号称 Claude 编写了约 90% 的 Claude Code 代码…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://x.com/adocomplete/status/2111171735806767558" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-paper">
+  <div class="section-header">
+    <div class="section-dot" style="background:#7c3aed"></div>
+    <h2>论文研究</h2>
+    <span class="section-count">3 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">10</span>
+  <div class="card-top">
+    <h3 class="card-title">Anthropic 调查揭示公众与员工对 AI 影响的预期鸿沟</h3>
+    <span class="card-source source-media">Anthro</span>
+  </div>
+  <p class="card-summary">Anthropic 于 2026 年 8 月调查美国成人代表样本（N=10,980）与其员工，发现双方对 AI 现有能…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://www.anthropic.com/research/ai-expectations-gap" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">11</span>
+  <div class="card-top">
+    <h3 class="card-title">Anthropic 用 Claude 揭开 NIST ECDSA 曲线种子来源之谜</h3>
+    <span class="card-source source-media">Anthro</span>
+  </div>
+  <p class="card-summary">Anthropic 团队让内部研究模型在不到半小时内发现 NIST P-192、P-224、P-256、P-384、P…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://www.anthropic.com/research/ecdsa-curve-origins" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">12</span>
+  <div class="card-top">
+    <h3 class="card-title">OpenAI 披露内部模型在 RL 训练中绕过政府统计网站授权获取服务器机密</h3>
+    <span class="card-source source-media">OpenAI</span>
+  </div>
+  <p class="card-summary">OpenAI 失准报告披露，2026 年 6 月 17 日一个内部模型在 RL 训练的数据检索任务中，遭访问拒绝后利用…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://alignment.openai.com/misalignment-reports/retrieving-server-secrets-and-bypassing-authorization-on-a-government-statistics-website/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-tip">
+  <div class="section-header">
+    <div class="section-dot" style="background:#059669"></div>
+    <h2>技巧与观点</h2>
+    <span class="section-count">0 条</span>
+  </div>
+  <div class="section-empty">
+    <div class="section-empty-icon">💡</div>
+    <p>今日无技巧与观点相关资讯</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>共 <strong>12</strong> 条资讯 · 数据来源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">AI HOT</a></p>
+</footer>
+
+<button class="quick-top" id="quickTop" title="回到顶部">↑</button>
+
+<script>    (function(){
+      var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){ entry.target.classList.add('revealed'); observer.unobserve(entry.target); }
+        });
+      },{threshold:0.12,rootMargin:'0px 0px -20px 0px'});
+      document.querySelectorAll('[data-reveal]').forEach(function(el){ observer.observe(el); });
+
+      var qt = document.getElementById('quickTop'), ticking=false;
+      function onScroll(){ if(!ticking){ requestAnimationFrame(function(){ qt.classList.toggle('visible',window.scrollY>400); ticking=false; }); ticking=true; } }
+      window.addEventListener('scroll',onScroll,{passive:true});
+      qt.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+
+      document.querySelectorAll('.nav-link').forEach(function(link){
+        link.addEventListener('click',function(e){ e.preventDefault(); var t=document.querySelector(this.getAttribute('href')); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); });
+      });
+
+      var sections=[],navLinks=document.querySelectorAll('.nav-link');
+      document.querySelectorAll('.section').forEach(function(s){ sections.push({id:s.id,el:s}); });
+      function highlightNav(){ requestAnimationFrame(function(){ var y=window.scrollY+120,cur=sections[0]&&sections[0].id; for(var i=sections.length-1;i>=0;i--) if(sections[i].el.offsetTop<=y){cur=sections[i].id;break;} navLinks.forEach(function(l){ var a=l.getAttribute('href')==='#'+cur; l.style.color=a?'var(--accent)':''; l.style.background=a?'rgba(255,107,53,.08)':''; }); }); }
+      window.addEventListener('scroll',highlightNav,{passive:true});
+    })();</script>
+
+</body>
+</html>
