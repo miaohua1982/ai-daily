@@ -1,5 +1,7 @@
 # AI Daily
 
+<!-- 【文档同步标识｜2026-10-18】同步新接口迁移、来源异常隔离、译文 ID 对齐、自然周过滤和离线白盒测试；未修改运行代码或定时配置。 -->
+
 > Automatically aggregate AI news, academic papers, and trending topics daily into static HTML pages and WeChat Official Account drafts.
 
 English | [中文](./README.md)
@@ -15,9 +17,10 @@ AI Daily is a fully automated content aggregation pipeline that fetches from mul
 | Module | Entry Script | Data Sources | Output | Schedule (Beijing Time) |
 |---|---|---|---|---|
 | **AI News** | `generate_daily.py` | AI HOT + NewsNow (fallback) | `daily_news.html` | 07:15 |
-| **AI Papers** | `generate_papers.py` | AI HOT + arXiv + HuggingFace | `papers.html` | 07:15 |
+| **AI Papers** | `generate_papers.py` | AI HOT first; arXiv + HuggingFace fallback | `papers.html` | 07:15 |
 | **Trending Radar** | `generate_trending.py` | NewsNow multi-source (Weibo, Toutiao, Jin10, CLS, Wallstreetcn, Cankaoxiaoxi, Zaobao, Thepaper) | `trending.html` | 07:00 / 13:00 |
-| **WeChat Draft** | `generate_wechat.py` | Reuses news + papers deduped data | WeChat Official Account draft | 07:15 |
+| **WeChat Draft** | `generate_wechat.py` | Reuses fetching; deduplicates news and papers together | WeChat Official Account draft | 07:15 |
+| **Weekly Papers** | `generate_wechat_papers_weekly.py` | HuggingFace + arXiv; Beijing natural week | HTML / Markdown and optional WeChat draft | Sunday 17:00 |
 
 ### Live Preview
 
@@ -30,7 +33,9 @@ AI Daily is a fully automated content aggregation pipeline that fetches from mul
 - **Multi-source aggregation**: AI HOT API, arXiv, HuggingFace Daily Papers, NewsNow trending feeds
 - **Smart deduplication**: URL dedup + embedding-based semantic dedup (cosine similarity, configurable threshold)
 - **AI filtering**: LLM scoring on news headlines (DeepSeek), grouped by interest domains
-- **Auto translation**: arXiv / HuggingFace English papers automatically translated to Chinese (DeepSeek)
+- **Auto translation**: arXiv / HuggingFace English papers translated to Chinese (DeepSeek), matched by batch-local ID; missing translations preserve originals
+- **Independent fallback sources**: an arXiv failure does not prevent HuggingFace fetching, or discard its successful results
+- **Natural-week selection**: weekly papers are filtered from Monday midnight through the target day in Beijing time
 - **WeChat publishing**: Auto-generated cover image + draft creation, with ServerChan notifications
 - **Historical archive**: Daily archive files generated automatically; index page lists history
 - **Pipeline abstraction**: Three pipelines unified under `GeneratorPipeline` — consistent interface, easily extensible
@@ -43,7 +48,7 @@ AI Daily is a fully automated content aggregation pipeline that fetches from mul
 GeneratorPipeline (abstract base class, src/pipeline.py)
   ├── fetch_data()      # abstract — implemented by subclass
   ├── dedup_data()      # default — calls utils.dedup_data (URL + semantic)
-  ├── filter_data()     # default passthrough — overridden by trending
+  ├── filter_data()     # default passthrough — news/papers filter summaries; trending filters interests
   ├── generate_html()   # abstract — implemented by subclass
   ├── write_files()     # default — writes index + archive
   ├── git_commit()      # default — git add + commit + push
@@ -62,6 +67,8 @@ ai-daily/
 ├── generate_papers.py         # AI Papers entry point
 ├── generate_trending.py       # Trending Radar entry point
 ├── generate_wechat.py         # WeChat draft publish entry point
+├── generate_wechat_papers_weekly.py # Weekly papers entry point
+├── generate_wechat_video.py   # Upload existing video as permanent material
 ├── index.html                 # Landing page (navigation + archive list)
 ├── archive/                    # Runtime output: history archives (news / papers / trending / wechat_draft)
 │
@@ -83,7 +90,8 @@ ai-daily/
 │   │   ├── filter.py          #   Keyword / AI filtering + grouping
 │   │   └── renderer.py        #   HTML rendering
 │   └── wechat/                # WeChat publishing
-│       ├── fetcher.py         #   Reuses news/papers fetch + dedup
+│       ├── fetcher.py         #   Fetch/filter and cross-section dedup
+│       ├── weekly_fetcher.py  #   Beijing natural-week selection
 │       ├── renderer.py        #   WeChat draft HTML rendering
 │       ├── cover.py           #   Cover image generation (Pillow)
 │       └── api.py             #   WeChat API client
@@ -96,19 +104,29 @@ ai-daily/
 │   ├── news_config.yaml       # News config
 │   ├── papers_config.yaml     # Papers config
 │   ├── trending_config.yaml   # Trending radar config
-│   └── wechat_config.yaml     # WeChat publish config
+│   ├── wechat_config.yaml     # WeChat daily config
+│   └── weekly_config.yaml     # Independent weekly config
 │
 ├── .github/workflows/
 │   ├── daily.yml              # News — daily 07:15
 │   ├── papers.yml             # Papers — daily 07:15
 │   ├── trending.yml           # Trending — daily 07:00 / 13:00
-│   └── wechat.yml             # WeChat — daily 07:15
+│   ├── wechat.yml             # WeChat — daily 07:15
+│   └── wechat_papers_weekly.yml # Weekly — Sunday 17:00
 │
 ├── test/
-│   ├── test.py                # Integration tests for all pipelines (stub + --live mode)
-│   └── test_cover.py          # Cover image tests
+│   ├── test.py                # Unified offline pytest entry point
+│   ├── conftest.py            # Network/process/credential isolation
+│   ├── test_cover.py          # PNG and font fallback tests
+│   ├── test_translation_alignment.py # Translation ID regression
+│   ├── test_weekly_window.py  # Week and timezone boundaries
+│   ├── test_known_defects.py  # Known defects and fixed regressions
+│   └── README.md              # Full testing instructions
 │
-├── requirements.txt           # Python dependencies
+├── requirements.txt           # Runtime dependencies
+├── requirements-test.txt      # Separate testing dependencies
+├── pytest.ini                 # Test discovery rules
+├── .coveragerc                # Python line/branch coverage
 └── .env                       # Local environment variables (not tracked)
 ```
 
@@ -175,15 +193,25 @@ WECHAT_LOCAL_ONLY=1 python generate_wechat_papers_weekly.py
 
 ### 5. Run Tests
 
+<!-- 【测试说明更新｜2026-10-18】Document isolated pytest tests and actual coverage limits. -->
 ```bash
-# Stub mode (fast, no real API calls)
-python test/test.py
+python -m pip install -r requirements-test.txt
+python -B -m pytest -q
+# Compatible entry point; runs the same offline suite
+python -B test/test.py
 
-# Live mode (calls real APIs, may be slow)
-python test/test.py --live
+mkdir -p craft/coverage
+python -B -m coverage run -m pytest -q
+python -B -m coverage report
+python -B -m coverage html -d craft/coverage/html
+python -B -m coverage json -o craft/coverage/coverage.json
 ```
 
-Test output is written to the `craft/` directory (ignored by `.gitignore`).
+For the existing local environment, replace `python` with `../venv/bin/python`. Tests block unstubbed HTTP, sockets and subprocesses, isolate real API credentials, and write generated files only to pytest temporary directories. Coverage reports go to the ignored `craft/coverage/` directory. The old `--live` test mode has been removed.
+
+Snapshot on 2026-10-18: **310 tests; 307 passed, 3 strict xfailed; Python line coverage 99.77%, branch coverage 99.37%**. Expected failures identify unresolved defects and are not passes. Re-run to obtain current figures. Python coverage does not measure JavaScript inside HTML, GitHub Actions execution, or every possible input/loop path.
+
+Three remaining defect regressions concern empty list entries in the no-PyYAML fallback parser, a missing `archive/` prefix in pipeline Git paths, and unescaped `</script>` in embedded paper JSON. Translation alignment and natural-week filtering have been fixed and their regressions must pass. See [test/README.md](test/README.md) for details. To expose remaining defects as ordinary failures, run `python -B -m pytest test/test_known_defects.py --runxfail -q` (nonzero exit expected).
 
 ---
 
@@ -201,6 +229,21 @@ Each pipeline has its own YAML config file in the `config/` directory.
 | Keyword groups | `trending_config.yaml` → `keywords` | Grouped by domain (AI models / Smart vehicles / Robotics / Finance / International) |
 | Paper translation | `papers_config.yaml` → `translation` | `enabled` / `batch_size` / `model` |
 | WeChat publishing | `wechat_config.yaml` | Title template / digest template / content limits |
+
+### AIHOT v1 Migration
+
+<!-- 【接口迁移说明｜2026-10-18】Keep endpoint and field mapping documentation aligned with fetching code. -->
+All AIHOT base URLs, including the disabled weekly configuration, now use `https://aihot.news/api/v1`. The legacy `/api/public/*` shutdown date is 2026-10-31; see the [official migration guide](https://aihot.news/agent?tab=api#legacy-api-migration).
+
+| Call | v1 adaptation |
+|---|---|
+| Dated / latest daily | `/dailies/{date}` / `/dailies/latest`; read `report.sections` |
+| Paper list | `/items?mode=all&category=paper&window=7d&by=published&limit=...` |
+| Count and dates | Keep local config `take`, send API `limit`; narrow the 7-day window locally using `days_back` |
+| Pagination | Read `page.hasMore` / `page.nextCursor`; encode the cursor and start each run from page one |
+| Original URL / source | Adapt `links.original` / `source.name` to existing internal fields for rendering and deduplication |
+
+Daily `flashes` are not added to the existing summary-based article flow. The list API is a rolling 7-day source, not historical backfill. Existing workflow schedules are unchanged.
 
 ### Semantic Dedup Config Example
 
@@ -240,6 +283,7 @@ Add in **Settings → Secrets and variables → Actions**:
 | `papers.yml` | 07:15 | 23:15 (previous day) | Daily |
 | `trending.yml` | 07:00 / 13:00 | 23:00 / 05:00 | Twice daily |
 | `wechat.yml` | 07:15 | 23:15 (previous day) | Daily |
+| `wechat_papers_weekly.yml` | Sunday 17:00 | Sunday 09:00 | Weekly |
 
 All Actions support `workflow_dispatch` for manual triggering.
 
@@ -250,25 +294,25 @@ All Actions support `workflow_dispatch` for manual triggering.
 ### AI News (NewsPipeline)
 
 ```
-aihot API ──→ fetch_data ──→ dedup_data ──→ generate_html ──→ write_files ──→ git_commit
-newsnow API ─┘    (URL + semantic dedup)    (category render)  (index + archive)
+AIHOT dated daily -> latest daily -> NewsNow (existing fallback order)
+  -> field adaptation -> URL/semantic dedup -> summary filter -> HTML -> files/archive -> Git
 ```
 
-- Primary source: AI HOT; auto-fallback to NewsNow when unavailable
-- Each news item carries its own `publishTime` for independent time rendering
-- Grouped by category (AI / Products / Research, etc.)
+- Read daily articles from `report.sections`; adapt links, sources and categories to existing fields.
+- Preserve `publishTime`; minimum summary length is configured by `filter.min_summary_len`.
 
 ### AI Papers (PapersPipeline)
 
 ```
-aihot ──→ fetch_data ──→ translate ──→ dedup_data ──→ generate_html ──→ write_files ──→ git_commit
-arXiv ──┤    (merge)      (EN→ZH)      (URL + semantic)  (card render)
-HF ─────┘
+AIHOT has papers -> use them directly
+AIHOT has no papers -> arXiv + HuggingFace (independent exception handlers) -> merge -> translate
+  -> URL/semantic dedup -> summary filter -> HTML -> files/archive -> Git
 ```
 
-- Three-source merge: AI HOT papers + arXiv category search + HuggingFace Daily Papers
-- English titles / abstracts auto-translated to Chinese (DeepSeek, batch translation)
-- Cross-source dedup (same paper may appear on both arXiv and HuggingFace)
+- This is primary-first fetching, not a three-source merge on every run. One backup failing does not prevent the other from running or discard its successful result.
+- Translation results match papers by integer ID within each batch, never by `zip` position. Missing translations preserve originals; missing, invalid or out-of-range IDs are ignored. Duplicate IDs keep the first result with a warning.
+- Title/summary types are validated separately; invalid fields preserve originals, empty output does not count as success, and IDs restart for each batch.
+- Existing internal fields remain compatible with deduplication, web pages and WeChat rendering.
 
 ### Trending Radar (TrendingPipeline)
 
@@ -285,15 +329,22 @@ NewsNow ──→ fetch_data ──→ dedup_data ──→ filter_data ──�
 ### WeChat Draft (generate_wechat.py)
 
 ```
-gd.fetch_data ──→ gd.dedup_data ─┐
-gp.fetch_data ──→ gp.dedup_data ─┤→ render_wechat_html → generate_cover → upload_image → create_draft
-                                 │                       (Pillow draw)     (WeChat API)     (draft box)
+Fetch/filter news and papers -> unified URL/semantic dedup (news wins) -> per-section limits
+  -> local HTML/Markdown and archives
+  -> unless local-only: cover -> upload -> create draft
 ```
 
-- Reuses news + papers fetch + dedup steps, truncates to top N items
-- Pillow auto-generates cover image (date + item count)
-- Creates draft via WeChat Official Account API — does not auto-publish
-- Success / failure notifications via ServerChan
+- Defaults: at most 10 news items and 10 papers. Local-only mode still fetches/deduplicates but does not upload or create a draft.
+- Pillow generates the cover. The WeChat API creates a draft, not a public post. Workflow steps send success/failure notifications through ServerChan.
+
+### Weekly Papers (generate_wechat_papers_weekly.py)
+
+<!-- 【自然周修复说明｜2026-10-18】Separate fetch-day count from date offsets; retain ordinary rolling-window behavior. -->
+- Fetch HuggingFace and arXiv directly, skipping AIHOT, with independent exception handling.
+- HF queries Monday through the target day. After merging, filter `publishedAt` to **Monday 00:00 inclusive through midnight after the target day exclusive**, in Beijing time.
+- Convert UTC/Z and offset timestamps to Beijing time; treat naive timestamps as UTC and discard missing/unparseable timestamps.
+- On Sunday 2026-10-18, retain Beijing dates October 12–18. The previous Sunday is excluded; UTC October 11 at 16:00 equals Monday midnight in Beijing and is retained.
+- Then filter summaries, deduplicate, rank (HF votes first), take `top_n` (default 30), and translate selected papers. Generate HTML/Markdown and an optional WeChat draft. The ordinary papers pipeline's shared rolling-date filter is unchanged.
 
 ---
 
