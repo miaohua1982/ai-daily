@@ -16,7 +16,7 @@ wechat/weekly_fetcher - 「一周论文回顾」周报内容获取。
 """
 
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List
 
 from utils import get_now_date_str, dedup_data
@@ -44,6 +44,33 @@ def natural_week_days_back(target_date: str) -> int:
         return 7
 
 
+def _filter_natural_week(items: List[Dict], target_date: str) -> List[Dict]:
+    """按北京时间保留本周一 00:00 至运行日结束的论文，不影响普通论文页。"""
+    # 【修复标识｜2026-10-18｜自然周过滤】周日应减 6 天得到周一，而非减 7 天。
+    # 抓取天数（含当天）和日期差不是同一概念，不能直接复用 days_back 作起点。
+    bj_tz = timezone(timedelta(hours=8))
+    target_day = datetime.strptime(target_date, "%Y-%m-%d").replace(tzinfo=bj_tz)
+    week_start = target_day - timedelta(days=target_day.weekday())
+    end_exclusive = target_day + timedelta(days=1)
+    kept = []
+    for item in items:
+        published = item.get("publishedAt")
+        if not published:
+            continue
+        try:
+            # 上游通常返回 UTC/Z；保留并转换时区，避免周一凌晨被错算到上周日。
+            published_at = datetime.fromisoformat(published.replace("Z", "+00:00"))
+            if published_at.tzinfo is None:
+                # 无偏移时间按上游 UTC 约定解释，不依赖执行机器的本地时区。
+                published_at = published_at.replace(tzinfo=timezone.utc)
+            published_at = published_at.astimezone(bj_tz)
+        except (ValueError, TypeError, AttributeError):
+            continue
+        if week_start <= published_at < end_exclusive:
+            kept.append(item)
+    return kept
+
+
 def fetch_weekly_papers(config: Dict[str, Any]) -> List[Dict]:
     """获取一周论文精选（周报唯一内容入口）。
 
@@ -57,7 +84,9 @@ def fetch_weekly_papers(config: Dict[str, Any]) -> List[Dict]:
     """
     # ── 1. 确定自然周窗口 ──────────────────────────────────────
     # target_date 取运行日（北京时间）；days_back 按「本周第几天」动态覆盖
-    # config 中的兜底值，使底层 fetcher 的滚动窗口恰好等于自然周窗口。
+    # config 中的兜底值，供 HF 按天遍历周一至运行日；此数值包含当天。
+    # 【修复标识｜2026-10-18｜自然周边界】底层滚动过滤会多取上周日，
+    # 因此保留抓取天数，在双源合并后用本模块的北京时间边界精确收窄。
     target_date = get_now_date_str(config["fetch"]["target_date"])
     days_back = natural_week_days_back(target_date)
     config["fetch"]["days_back"] = days_back
@@ -83,8 +112,10 @@ def fetch_weekly_papers(config: Dict[str, Any]) -> List[Dict]:
     # merge_papers 按 id/url 精确合并、先到先得：HF 在前 ⇒ 同一篇论文
     # 两源都有时保留 HF 版（含 upvotes / ai_summary 等热度字段）。
     merged = merge_papers(hf_items, arxiv_items)
+    # 【修复标识｜2026-10-18】仅周报应用自然周边界，先过滤再去重、精选和翻译。
+    merged = _filter_natural_week(merged, target_date)
     print(
-        f"[INFO] Weekly merged: {len(merged)} papers (hf:{len(hf_items)} arxiv:{len(arxiv_items)})",
+        f"[INFO] Weekly merged (within natural week): {len(merged)} papers (hf:{len(hf_items)} arxiv:{len(arxiv_items)})",
         file=sys.stderr,
     )
     if not merged:

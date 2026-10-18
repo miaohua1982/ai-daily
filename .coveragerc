@@ -1,0 +1,13 @@
+# ======================================================================
+# 【白盒测试修改标识｜2026-10-18｜新增】
+# 文件：.coveragerc
+# 修改内容及原因：启用全部 Python 生产模块的分支覆盖统计，不手工排除业务代码刷覆盖率。
+# 范围：仅测试/测试配置；不修改生产逻辑，不执行真实外部发布。
+# ======================================================================
+[run]
+branch = True
+source = src, utils, generate_daily, generate_papers, generate_trending, generate_wechat, generate_wechat_papers_weekly, generate_wechat_video
+data_file = craft/coverage/.coverage
+[report]
+show_missing = True
+precision = 2

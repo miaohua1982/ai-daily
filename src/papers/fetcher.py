@@ -4,6 +4,9 @@ Papers data fetching layer.
 Multi-source: aihot + arXiv + HuggingFace Daily Papers.
 """
 
+# AIHOT v1 迁移依据：https://aihot.news/agent?tab=api#legacy-api-migration
+# 仅适配 AI HOT 抓取，保留现有备用源编排、翻译与渲染流程。
+
 import sys
 import os
 import re
@@ -61,11 +64,8 @@ def fetch_aihot_papers(config: Dict[str, Any], target_date: str) -> List[Dict[st
     if startup_jitter > 0.05:
         time.sleep(startup_jitter)
 
-    dt = datetime.strptime(target_date, "%Y-%m-%d")
-    since_dt = dt - timedelta(days=days_back)
-    since_iso = since_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
-
     all_items = []
+    # v1 cursor 与查询绑定，且不兼容旧版；每次运行从首屏开始。
     cursor = ""
     remaining = take
 
@@ -77,27 +77,46 @@ def fetch_aihot_papers(config: Dict[str, Any], target_date: str) -> List[Dict[st
             print(f"[INFO] aihot waiting {backoff:.1f}s before next page...", file=sys.stderr)
             time.sleep(backoff)
 
-        url = ("/items?mode=all&category=paper&since=" + since_iso +
-               "&take=" + str(min(remaining, page_size)))
+        # v1 不接受旧 since/take：改用 window/limit，并按 publishedAt 排序。
+        # 先取滚动 7 天，再按原 days_back 配置本地过滤；接口无法补取更早历史。
+        params = {
+            "mode": "all", "category": "paper", "window": "7d",
+            "by": "published", "limit": min(remaining, page_size, 100),
+        }
         if cursor:
-            url += "&cursor=" + cursor
+            params["cursor"] = cursor
+        # cursor 是不透明字符串，统一编码，避免特殊字符破坏查询参数。
+        url = "/items?" + urllib.parse.urlencode(params)
         data = api_get(url, base_url=api_base, max_retries=max_retries)
         if not data or "items" not in data:
             break
         items = data.get("items", [])
         all_items.extend(items)
         remaining -= len(items)
-        if not data.get("hasNext") or remaining <= 0:
+        # v1 分页元数据移到 page，旧顶层 hasNext 改名为 hasMore。
+        page = data.get("page", {})
+        if not page.get("hasMore") or remaining <= 0:
             break
-        cursor = data.get("nextCursor", "")
+        cursor = page.get("nextCursor", "")
         if not cursor:
             break
 
-    for item in all_items:
-        item.setdefault("source_api", "aihot")
+    # v1 的 links.original、source.name 恢复为内部 url、字符串 source。
+    # 保留原始其余字段及 source_api 标记，避免改动去重、翻译与渲染接口。
+    papers = []
+    for raw in all_items:
+        item = dict(raw)
+        links = raw.get("links") or {}
+        source = raw.get("source") or {}
+        item["url"] = links.get("original") or links.get("aihot") or ""
+        item["source"] = source.get("name", "")
+        item["source_api"] = "aihot"
+        papers.append(item)
 
-    print(f"[INFO] aihot fetched {len(all_items)} papers", file=sys.stderr)
-    return all_items
+    # 替代旧 since 参数，沿用共享日期过滤的现有边界规则，不在此次迁移中重构。
+    papers = filter_by_date(papers, target_date, days_back)
+    print(f"[INFO] aihot fetched {len(papers)} papers after date filter", file=sys.stderr)
+    return papers
 
 
 # ── 数据源 2: arXiv ──────────────────────────────────────────────
@@ -293,8 +312,17 @@ def fetch_data(
     else:
         # aihot 失败或无数据，回退到 arXiv + HuggingFace 双源合并
         print("[INFO] aihot 无数据，回退到 arXiv + HuggingFace", file=sys.stderr)
-        arxiv_items = fetch_arxiv_papers(config, target_date)
-        hf_items = fetch_hf_daily_papers(config, target_date)
+        # 分别捕获来源异常：一个源失败时仍尝试另一个，并保留已成功获取的数据。
+        try:
+            arxiv_items = fetch_arxiv_papers(config, target_date)
+        except Exception as e:
+            print(f"[WARN] arXiv fetch failed: {e}", file=sys.stderr)
+            arxiv_items = []
+        try:
+            hf_items = fetch_hf_daily_papers(config, target_date)
+        except Exception as e:
+            print(f"[WARN] HuggingFace fetch failed: {e}", file=sys.stderr)
+            hf_items = []
         all_items = merge_papers(arxiv_items, hf_items)
         print(f"[INFO] Fetched {len(all_items)} papers total "
               f"(arxiv:{len(arxiv_items)} hf:{len(hf_items)})", file=sys.stderr)
@@ -346,14 +374,24 @@ def translate_papers(
         batch = need[i:i + batch_size]
         try:
             translations = _translate_batch(batch, api_key, base_url, model, timeout)
-            for paper, trans in zip(batch, translations):
+            # 【修复标识｜2026-10-18｜译文 ID 对齐】不能按位置 zip：漏译会使后续译文错配。
+            # ID 是本批次从 0 开始的编号，不是论文自身 ID；每批重新建立映射。
+            translations_by_id = {trans["id"]: trans for trans in translations}
+            for idx, paper in enumerate(batch):
+                trans = translations_by_id.get(idx)
+                if trans is None:
+                    # 缺少对应 ID 时保留论文原文，不借用其他论文的译文。
+                    print(f"[WARN] Translation batch {i // batch_size + 1}: missing id {idx}, keeping original", file=sys.stderr)
+                    continue
                 t_zh = trans.get("title_zh", "").strip()
                 s_zh = trans.get("summary_zh", "").strip()
                 if t_zh:
                     paper["title_zh"] = t_zh
                 if s_zh:
                     paper["summary_zh"] = s_zh
-                success_count += 1
+                # 只有实际写入非空译文才计为成功，避免空结果虚增成功数。
+                if t_zh or s_zh:
+                    success_count += 1
         except Exception as e:
             print(f"[WARN] Translation batch {i // batch_size + 1} failed: {e}", file=sys.stderr)
 
@@ -387,6 +425,7 @@ def _translate_batch(
     prompt = (
         "请将以下论文的标题和摘要翻译为中文。\n"
         "要求：保持学术术语准确，翻译简洁流畅，不要添加额外解释。\n"
+        "每条结果必须保留输入的整数 id，不要重新编号；无法翻译时保留 id 并将译文字段留空。\n"
         "以JSON格式返回，格式为：\n"
         '{"translations": [{"id": 0, "title_zh": "中文标题", "summary_zh": "中文摘要"}, ...]}\n\n'
         f"论文列表：\n{json.dumps(items, ensure_ascii=False, indent=2)}"
@@ -440,6 +479,31 @@ def _parse_translation_response(content: str, expected_count: int) -> List[Dict[
     if not isinstance(result, list):
         raise ValueError(f"Unexpected translation response: {type(result)}")
 
-    # 按 id 排序，确保与输入顺序一致
-    result.sort(key=lambda x: x.get("id", 0))
-    return result
+    # 【修复标识｜2026-10-18｜模型响应校验】逐条校验，坏记录不能中断同批其他论文。
+    # 不接受无 ID、字符串/浮点/布尔 ID 或越界 ID；不能用列表位置猜测所属论文。
+    validated = []
+    seen_ids = set()
+    for trans in result:
+        if not isinstance(trans, dict):
+            print("[WARN] Translation entry is not an object, skipped", file=sys.stderr)
+            continue
+        idx = trans.get("id")
+        if type(idx) is not int or not 0 <= idx < expected_count:
+            print(f"[WARN] Invalid translation id {idx!r}, skipped", file=sys.stderr)
+            continue
+        if idx in seen_ids:
+            # 同一 ID 只保留首次结果，并记录告警，避免后续重复结果悄悄覆盖。
+            print(f"[WARN] Duplicate translation id {idx}, keeping first", file=sys.stderr)
+            continue
+        seen_ids.add(idx)
+        cleaned = dict(trans)
+        for field in ("title_zh", "summary_zh"):
+            if field in cleaned and not isinstance(cleaned[field], str):
+                # 非字符串译文视为缺失；仍允许同条记录的另一个有效字段使用。
+                print(f"[WARN] Translation id {idx}: invalid {field}, keeping original field", file=sys.stderr)
+                cleaned.pop(field)
+        validated.append(cleaned)
+
+    # 排序仅用于稳定输出；真正关联由 translate_papers 按 ID 完成，而非按顺序。
+    validated.sort(key=lambda x: x["id"])
+    return validated
