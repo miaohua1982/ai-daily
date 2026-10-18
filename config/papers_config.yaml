@@ -18,8 +18,9 @@ fetch:
 # 数据源 1: AI HOT（原有，category=paper 过滤论文）
 aihot:
   enabled: true
-  api_base: "https://aihot.virxact.com/api/public"
-  # 总抓取上限
+  # 接口迁移：旧 /api/public/* 于 2026-10-31 停用，论文主源改用 /api/v1。
+  api_base: "https://aihot.news/api/v1"
+  # 总抓取上限（保留本地配置名 take；抓取层请求 v1 时转换为 limit）
   take: 30
   # 每页条数
   page_size: 10

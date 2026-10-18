@@ -65,7 +65,8 @@ fetch:
 # 数据源 1: AI HOT —— 周报明确跳过（直接走 arXiv + HF）
 aihot:
   enabled: false
-  api_base: "https://aihot.virxact.com/api/public"
+  # 周报仍关闭 AI HOT；同步更新地址，避免日后启用时调用已停用的旧接口。
+  api_base: "https://aihot.news/api/v1"
   take: 30
   page_size: 10
 

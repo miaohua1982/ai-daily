@@ -3,7 +3,8 @@
 # 数据获取配置
 fetch:
   # AI HOT 公共 API 地址（主源）
-  api_base: "https://aihot.virxact.com/api/public"
+  # 接口迁移：旧 /api/public/* 于 2026-10-31 停用，改为新域名的 /api/v1。
+  api_base: "https://aihot.news/api/v1"
   # 备用数据源（当主源不可用时自动切换）
   fallback_base: "https://newsnow.busiyi.world"
   fallback_path: "/api/s?id=aihot&latest"
