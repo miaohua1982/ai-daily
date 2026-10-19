@@ -105,5 +105,9 @@ class GeneratorPipeline(ABC):
         self.write_files(html, config, index_file, archive_dir)
 
         # Step 6: git
-        files = [index_file.name, f"{archive_dir.name}/{self.date_str(config)}.html"]
+        # 【修复标识｜2026-10-19｜归档 Git 路径】.name 只保留最后一级目录，
+        # 会丢失 archive/；Git 在 output_dir 下执行，因此归档需使用相对根目录的路径。
+        # index_file.name 与自动提交调用保持原样，本次仅修正归档路径。
+        archive_file = archive_dir / f"{self.date_str(config)}.html"
+        files = [index_file.name, str(archive_file.relative_to(output_dir))]
         self.git_commit(config, files, label, output_dir)

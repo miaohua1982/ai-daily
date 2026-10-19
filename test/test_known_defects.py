@@ -1,7 +1,7 @@
 # ======================================================================
 # 【白盒测试修改标识｜2026-10-18｜新增】
 # 文件：test/test_known_defects.py
-# 修改内容及原因：用 strict xfail 明确保留三项未修复缺陷及两项已修复回归；不把预期失败当成测试通过。
+# 修改内容及原因：用 strict xfail 明确保留两项未修复缺陷及三项已修复回归；不把预期失败当成测试通过。
 # 范围：仅测试/测试配置；不修改生产逻辑，不执行真实外部发布。
 # ======================================================================
 """已确认的缺陷回归：strict xfail 明确保留失败证据，修复后必须移除 xfail。
@@ -31,17 +31,24 @@ def test_translation_missing_id_preserves_alignment(monkeypatch,config,item):
     result=p.translate_papers([dict(item),dict(item,id='second')],config)
     assert 'title_zh' not in result[0] and result[1]['title_zh']=='第二篇'
 
-@pytest.mark.xfail(strict=True,reason='Pipeline git paths omit archive/ prefix')
-def test_pipeline_stages_real_archive_path(monkeypatch,tmp_path):
+# 【修复回归标识｜2026-10-19】归档 Git 路径已修复，移除 xfail。
+# 三条管线均断言：主页面名称保持不变，归档保留 archive/，自动提交仍会调用。
+@pytest.mark.parametrize('index_name,section,date_str', [
+    ('daily_news.html', 'news', '2026-10-19'),
+    ('papers.html', 'papers', '2026-10-19'),
+    ('trending.html', 'trending', '2026-10-19-13'),
+])
+def test_pipeline_stages_real_archive_path(monkeypatch,tmp_path,index_name,section,date_str):
     import utils
     from src.pipeline import GeneratorPipeline
     class Pipeline(GeneratorPipeline):
         def fetch_data(self,config):return []
         def generate_html(self,items):return 'html'
     staged=Mock();monkeypatch.setattr(utils,'git_commit',staged)
-    root=tmp_path;archive=root/'archive/news'
-    Pipeline().run({'fetch':{'target_date':'2026-10-18'}},root/'daily_news.html',archive,'news',root)
-    assert 'archive/news/2026-10-18.html' in staged.call_args.args[1]
+    root=tmp_path;archive=root/'archive'/section
+    Pipeline().run({'fetch':{'target_date':date_str}},root/index_name,archive,section,root)
+    staged.assert_called_once_with(date_str,[index_name,f'archive/{section}/{date_str}.html'],section,root)
+    assert (archive/f'{date_str}.html').read_text()=='html'
 
 @pytest.mark.xfail(strict=True,reason='Embedded JSON does not escape closing script tags in external text')
 def test_paper_json_cannot_break_script_context(item):
