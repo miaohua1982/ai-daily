@@ -14,6 +14,23 @@ from typing import Optional, Union
 from utils import UA
 
 
+# 【安全修复标识｜2026-10-19｜微信日志脱敏】错误只记录接口路径、异常类型及数字错误码。
+# 禁止打印查询参数、str(error)、errmsg 或完整响应：其中可能回显 AppSecret/token。
+def _log_api_failure(operation: str, *, error=None, response=None, level: str = "WARN") -> None:
+    details = []
+    if error is not None:
+        details.append(f"error={type(error).__name__}")
+        if isinstance(error, urllib.error.HTTPError) and type(error.code) is int:
+            details.append(f"http_status={error.code}")
+    if isinstance(response, dict):
+        code = response.get("errcode")
+        # 仅允许整数，避免服务端将凭证放入错误码字段后再次写入日志。
+        if type(code) is int:
+            details.append(f"errcode={code}")
+    suffix = " " + " ".join(details) if details else ""
+    print(f"[{level}] WeChat {operation} failed{suffix}", file=sys.stderr)
+
+
 def wechat_get(base_url: str, path: str) -> Optional[dict]:
     """微信 API GET 请求。"""
     url = f"{base_url}{path}"
@@ -22,7 +39,9 @@ def wechat_get(base_url: str, path: str) -> Optional[dict]:
         with urllib.request.urlopen(req, timeout=15) as resp:
             return json.loads(resp.read().decode())
     except Exception as e:
-        print(f"[WARN] WeChat API GET failed: {path} - {e}", file=sys.stderr)
+        # 【安全修复】token 请求的查询参数含 AppSecret，异常文本也可能带完整 URL。
+        endpoint = path.split("?", 1)[0].split("#", 1)[0]
+        _log_api_failure(f"GET {endpoint}", error=e)
         return None
 
 
@@ -42,11 +61,13 @@ def wechat_post(base_url: str, path: str, payload, content_type: str = "applicat
         with urllib.request.urlopen(req, timeout=30) as resp:
             return json.loads(resp.read().decode())
     except urllib.error.HTTPError as e:
-        body = e.read().decode(errors="replace")
-        print(f"[WARN] WeChat POST {e.code}: {body}", file=sys.stderr)
+        # 【安全修复】HTTP 错误响应体可能回显 access_token，不打印原始内容。
+        endpoint = path.split("?", 1)[0].split("#", 1)[0]
+        _log_api_failure(f"POST {endpoint}", error=e)
         return None
     except Exception as e:
-        print(f"[WARN] WeChat POST failed: {e}", file=sys.stderr)
+        endpoint = path.split("?", 1)[0].split("#", 1)[0]
+        _log_api_failure(f"POST {endpoint}", error=e)
         return None
 
 
@@ -57,13 +78,14 @@ def get_access_token(base_url: str, appid: str, appsecret: str) -> Optional[str]
         f"/cgi-bin/token?grant_type=client_credential&appid={appid}&secret={appsecret}"
     )
     if not resp or "access_token" not in resp:
-        if resp and "errmsg" in resp:
-            print(f"[ERROR] Failed to get WeChat access_token, errmsg: {resp['errmsg']}", file=sys.stderr)
-        else:
-            print(f"[ERROR] Failed to get WeChat access_token, response: {resp}", file=sys.stderr)
+        # 【安全修复】业务错误也只记录数字 errcode，不输出 errmsg/完整响应。
+        _log_api_failure("GET /cgi-bin/token", response=resp, level="ERROR")
         return None
     token = resp["access_token"]
-    print(f"[INFO] Got access_token (expires in {resp.get('expires_in', '?')}s)")
+    # 【安全修复】成功日志仅允许数字有效期，不回显服务端的任意字符串字段。
+    expires_in = resp.get("expires_in")
+    safe_expiry = expires_in if type(expires_in) is int else "?"
+    print(f"[INFO] Got access_token (expires in {safe_expiry}s)")
     return token
 
 
@@ -91,10 +113,10 @@ def upload_image(base_url: str, token: str, image_bytes: bytes) -> Optional[str]
         if "media_id" in data:
             print(f"[INFO] Cover image uploaded - media_id: {data['media_id']}")
             return data["media_id"]
-        print(f"[WARN] Image upload failed: {data}", file=sys.stderr)
+        _log_api_failure("POST /cgi-bin/material/add_material", response=data)
         return None
     except Exception as e:
-        print(f"[WARN] Image upload error: {e}", file=sys.stderr)
+        _log_api_failure("POST /cgi-bin/material/add_material", error=e)
         return None
 
 
@@ -132,5 +154,5 @@ def create_draft(
     if resp and "media_id" in resp:
         print(f"[INFO] Draft created - media_id: {resp['media_id']}")
         return True
-    print(f"[ERROR] Draft creation failed: {resp}", file=sys.stderr)
+    _log_api_failure("POST /cgi-bin/draft/add", response=resp, level="ERROR")
     return False
