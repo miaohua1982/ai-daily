@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI HOT 晨报 — 2026年10月21日 · 星期三</title>
+<style>
+    :root {
+      --hero-from: #ff5e3a;
+      --hero-mid: #f73b4a;
+      --hero-to: #c0392b;
+      --accent: #ff6b35;
+      --accent-dark: #e0552b;
+      --bg: #faf8f6;
+      --card-bg: #ffffff;
+      --card-border: #ede8e2;
+      --text: #2c2c2c;
+      --text-secondary: #6b6b6b;
+      --text-muted: #999999;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 40%, var(--hero-to) 100%);
+      color: #fff; padding: 56px 24px 48px; text-align: center;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(255,200,120,.12) 0%, transparent 50%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block; background: rgba(255,255,255,.2);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.25); border-radius: 100px;
+      padding: 4px 16px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px;
+    }
+    .hero h1 { font-size: clamp(28px,5vw,44px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero-sub { font-size: 16px; opacity: 0.85; margin-bottom: 24px; }
+    .hero-stats { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .hero-stat {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(255,255,255,.15); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      border-radius: 12px; padding: 12px 20px; min-width: 80px;
+    }
+    .hero-stat-num { font-size: 28px; font-weight: 800; line-height: 1.2; }
+    .hero-stat-lbl { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .nav-wrap {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border); padding: 0 16px;
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 4px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-link {
+      flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 100px; font-size: 13.5px; font-weight: 600;
+      color: var(--text-secondary); text-decoration: none; transition: 0.3s; white-space: nowrap; border: 1px solid transparent;
+    }
+    .nav-link:hover { background: #f5f0eb; color: var(--accent-dark); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .nav-cnt { font-size: 11px; opacity: 0.6; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 48px; }
+    .section { margin-bottom: 48px; scroll-margin-top: 72px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--card-border); }
+    .section-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; transform: rotate(45deg); }
+    .section h2 { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .section-count { font-size: 14px; color: var(--text-muted); margin-left: auto; }
+    .section-empty { text-align: center; padding: 32px 16px; color: var(--text-muted); background: var(--card-bg); border-radius: 16px; border: 1px dashed var(--card-border); }
+    .section-empty-icon { font-size: 32px; margin-bottom: 8px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 16px; }
+    .card {
+      position: relative; background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 20px 20px 16px;
+      transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      display: flex; flex-direction: column; opacity: 0; transform: translateY(24px);
+    }
+    .card.revealed { opacity: 1; transform: translateY(0); }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.07); transform: translateY(-2px); }
+    .card.revealed:hover { transform: translateY(-2px); }
+    .card-num {
+      position: absolute; top: -10px; left: 16px; background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(255,107,53,.35);
+    }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; margin-top: 6px; }
+    .card-title { font-size: 15px; font-weight: 700; line-height: 1.5; color: var(--text); flex: 1; }
+    .card-source { flex-shrink: 0; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+    .source-x { background: #f0f0f0; color: #555; }
+    .source-blog { background: #e8f4fd; color: #1a73e8; }
+    .source-wechat { background: #e8f8e8; color: #2e7d32; }
+    .source-media { background: #fff3e0; color: #e65100; }
+    .source-hn { background: #fce4ec; color: #c62828; }
+    .source-gh { background: #f3e5f5; color: #6a1b9a; }
+    .card-summary { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 14px; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .card-time { font-size: 12px; color: var(--text-muted); }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;
+      color: var(--accent); text-decoration: none; padding: 6px 14px; border-radius: 100px;
+      background: rgba(255,107,53,.08); transition: 0.3s;
+    }
+    .card-link:hover { background: rgba(255,107,53,.16); color: var(--accent-dark); }
+    .card-link svg { width: 14px; height: 14px; }
+    .footer { text-align: center; padding: 32px 16px 40px; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 13px; max-width: 1100px; margin: 0 auto; }
+    .footer strong { color: var(--text-secondary); }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .quick-top {
+      position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 20px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.1); opacity: 0; transform: translateY(12px);
+      pointer-events: none; transition: 0.3s; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quick-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .quick-top:hover { background: var(--accent-dark); }
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 36px; }
+      .hero-stats { gap: 12px; }
+      .hero-stat { padding: 10px 14px; min-width: 64px; }
+      .hero-stat-num { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .section h2 { font-size: 17px; }
+      .nav-link { padding: 6px 12px; font-size: 12px; }
+    }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">☀️ AI HOT 晨报</div>
+    <h1>2026年10月21日 · 星期三</h1>
+    <p class="hero-sub">共 12 条资讯</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">12</span>
+        <span class="hero-stat-lbl">今日总条数</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-wrap" id="nav">
+  <div class="nav-inner">
+    <a href="#sec-ai-models" class="nav-link">
+      <span class="nav-dot" style="background:#6366f1"></span>模型发布/更新
+      <span class="nav-cnt">1</span>
+    </a>
+    <a href="#sec-ai-products" class="nav-link">
+      <span class="nav-dot" style="background:#0891b2"></span>产品发布/更新
+      <span class="nav-cnt">4</span>
+    </a>
+    <a href="#sec-industry" class="nav-link">
+      <span class="nav-dot" style="background:#d97706"></span>行业动态
+      <span class="nav-cnt">6</span>
+    </a>
+    <a href="#sec-paper" class="nav-link">
+      <span class="nav-dot" style="background:#7c3aed"></span>论文研究
+      <span class="nav-cnt">1</span>
+    </a>
+    <a href="#sec-tip" class="nav-link">
+      <span class="nav-dot" style="background:#059669"></span>技巧与观点
+      <span class="nav-cnt">0</span>
+    </a>
+  </div>
+</nav>
+
+<main class="main" id="main">
+<section class="section" id="sec-ai-models">
+  <div class="section-header">
+    <div class="section-dot" style="background:#6366f1"></div>
+    <h2>模型发布/更新</h2>
+    <span class="section-count">1 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">1</span>
+  <div class="card-top">
+    <h3 class="card-title">Inception Labs 发布扩散大语言模型 Mercury 3，速度达 1068 tokens/秒</h3>
+    <span class="card-source source-media">Incept</span>
+  </div>
+  <p class="card-summary">Inception Labs 发布扩散式大语言模型 Mercury 3，称其在多项基准上超过 GPT-6 Luna 和…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://www.inceptionlabs.ai/blog/introducing-mercury-3" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-ai-products">
+  <div class="section-header">
+    <div class="section-dot" style="background:#0891b2"></div>
+    <h2>产品发布/更新</h2>
+    <span class="section-count">4 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">2</span>
+  <div class="card-top">
+    <h3 class="card-title">DeepSeek 全面开源内部推理框架 DeepInfer</h3>
+    <span class="card-source source-wechat">公众号</span>
+  </div>
+  <p class="card-summary">DeepSeek 宣布将内部推理框架 DeepInfer 全面开源，并同步开源生产级 Token 编解码组件 deep…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://mp.weixin.qq.com/s?__biz=Mzk0OTYwNzc3NQ%3D%3D&amp;mid=2247485884&amp;idx=1&amp;sn=d457981abe7db1f1b5d600fc109dc836" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">3</span>
+  <div class="card-top">
+    <h3 class="card-title">Google 与 Meta 发布 TorchTPU：PyTorch 原生 TPU 后端</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">Google 与 Meta 发布开源项目 TorchTPU，为 Google TPU 提供原生 PyTorch 后端，…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://pytorch.org/blog/introducing-torchtpu/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">4</span>
+  <div class="card-top">
+    <h3 class="card-title">ChatGPT 推出 Locked Chats，可用 PIN 或生物识别锁定敏感对话</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">ChatGPT 推出 Locked Chats 功能，把敏感对话从常规历史记录和搜索中移入受保护空间。用户在网页端和桌…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://x.com/ChatGPT/status/2112597766333673624" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">5</span>
+  <div class="card-top">
+    <h3 class="card-title">Google 发布 vLLM 与 SGLang 的 TorchTPU 原生推理引擎</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">Google 在 PyTorch 相关公告中推出基于 TorchTPU 的 vLLM 和 SGLang 原生 PyTo…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://developers.googleblog.com/announcing-new-vllm-and-sglang-inference-engines-on-tpu/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-industry">
+  <div class="section-header">
+    <div class="section-dot" style="background:#d97706"></div>
+    <h2>行业动态</h2>
+    <span class="section-count">6 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">6</span>
+  <div class="card-top">
+    <h3 class="card-title">路透：OpenAI 拟在 Anthropic 上市前加速融资约 300 亿美元，估值超 1.4 万亿美元</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">据 Reuters 报道，OpenAI 正赶在 Anthropic 上市前洽谈融资约 300 亿美元，估值超 1.4…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://x.com/rohanpaul_ai/status/2112455383356989598" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">7</span>
+  <div class="card-top">
+    <h3 class="card-title">SpaceX 财报显示 AI 业务超预期，占收入 52%</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">SpaceX 发布第三季度监管文件，披露营收 146 亿美元、净利润 44 亿美元，扭转去年同期 10 亿美元亏损。其…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://techcrunch.com/2026/10/20/spacexs-ai-business-is-beating-expectations/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">8</span>
+  <div class="card-top">
+    <h3 class="card-title">美国陆军网络司令部 ECHOTRIBBLE 项目拟将 AI 智能体变成自主扩散的网络武器</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">据 The Intercept 获取的文件，美国陆军网络司令部（ARCYBER）正在开发代号 ECHOTRIBBLE…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://the-decoder.com/army-cyber-commands-echotribble-would-turn-ai-agents-into-self-spreading-cyberweapons/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">9</span>
+  <div class="card-top">
+    <h3 class="card-title">Redact 调查：WhatsApp 帮助页面隐藏 LLM 指令，让 AI 不推荐监管机构、不提 GDPR</h3>
+    <span class="card-source source-hn">HN</span>
+  </div>
+  <p class="card-summary">Redact 发现 WhatsApp 帮助中心页面向 LLM 发送用户看不到的隐藏指令，指示其支持聊天机器人不推荐数据…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://redact.dev/blog/whatsapp-help-pages-hidden-ai-instructions" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">10</span>
+  <div class="card-top">
+    <h3 class="card-title">OpenAI 收购药物研发平台 Orchestra Bio 并入 Rosalind 生命科学体系</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">OpenAI 宣布收购 Orchestra Bio，一个帮助生物制药团队协调药物研发复杂流程的平台，其团队和技术将与…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://openai.com/index/openai-to-acquire-orchestra-bio" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">11</span>
+  <div class="card-top">
+    <h3 class="card-title">Anthropic 云合作生变：AWS、Google、微软视其为竞争者</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">据泄露给华尔街日报的 S-1 文件，Anthropic 难以从 AWS、Google 和 Microsoft 获得足够…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://techcrunch.com/2026/10/20/anthropics-cloud-partnerships-are-getting-messy/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-paper">
+  <div class="section-header">
+    <div class="section-dot" style="background:#7c3aed"></div>
+    <h2>论文研究</h2>
+    <span class="section-count">1 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">12</span>
+  <div class="card-top">
+    <h3 class="card-title">Anthropic 用 Claude 设计出针对蝎子神经毒素的蛋白质迷你结合剂</h3>
+    <span class="card-source source-media">Anthro</span>
+  </div>
+  <p class="card-summary">Anthropic 让内部研究模型在 Claude Science 中主要自主运行 64 小时，设计针对五种蝎子神经毒…</p>
+  <div class="card-footer">
+    <span class="card-time">1 小时前</span>
+    <a class="card-link" href="https://www.anthropic.com/research/claude-scorpion-toxin-binder-design" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-tip">
+  <div class="section-header">
+    <div class="section-dot" style="background:#059669"></div>
+    <h2>技巧与观点</h2>
+    <span class="section-count">0 条</span>
+  </div>
+  <div class="section-empty">
+    <div class="section-empty-icon">💡</div>
+    <p>今日无技巧与观点相关资讯</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>共 <strong>12</strong> 条资讯 · 数据来源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">AI HOT</a></p>
+</footer>
+
+<button class="quick-top" id="quickTop" title="回到顶部">↑</button>
+
+<script>    (function(){
+      var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){ entry.target.classList.add('revealed'); observer.unobserve(entry.target); }
+        });
+      },{threshold:0.12,rootMargin:'0px 0px -20px 0px'});
+      document.querySelectorAll('[data-reveal]').forEach(function(el){ observer.observe(el); });
+
+      var qt = document.getElementById('quickTop'), ticking=false;
+      function onScroll(){ if(!ticking){ requestAnimationFrame(function(){ qt.classList.toggle('visible',window.scrollY>400); ticking=false; }); ticking=true; } }
+      window.addEventListener('scroll',onScroll,{passive:true});
+      qt.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+
+      document.querySelectorAll('.nav-link').forEach(function(link){
+        link.addEventListener('click',function(e){ e.preventDefault(); var t=document.querySelector(this.getAttribute('href')); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); });
+      });
+
+      var sections=[],navLinks=document.querySelectorAll('.nav-link');
+      document.querySelectorAll('.section').forEach(function(s){ sections.push({id:s.id,el:s}); });
+      function highlightNav(){ requestAnimationFrame(function(){ var y=window.scrollY+120,cur=sections[0]&&sections[0].id; for(var i=sections.length-1;i>=0;i--) if(sections[i].el.offsetTop<=y){cur=sections[i].id;break;} navLinks.forEach(function(l){ var a=l.getAttribute('href')==='#'+cur; l.style.color=a?'var(--accent)':''; l.style.background=a?'rgba(255,107,53,.08)':''; }); }); }
+      window.addEventListener('scroll',highlightNav,{passive:true});
+    })();</script>
+
+</body>
+</html>
