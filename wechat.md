@@ -1,185 +1,181 @@
 # 📰 每日 AI 情报
 
-> 2026年10月22日 · 周四
+> 2026年10月23日 · 周五
 
 ---
 
 ## 🔥 AI 热点资讯（10条）
 
-**1. [Baseten 发布决策模型 mammoth-1（27B）和 elephant-1（9B），开源并免费试用一周](https://www.baseten.co/blog/the-best-decision-models-in-the-world-mammoth-1-and-elephant-1/)**
+**1. [OpenAI 正式发布 Decisions API，面向低延迟低成本小决策](https://openai.com/index/decisions-api)**
 
-> 　Baseten 研究实验室 Base Labs 发布开源决策模型 mammoth-1（27B）和 elephant-1（9B），基于 Qwen3.5-27B 和 Qwen3.5-9B 在 621 万决策样本上后训练而成。
+> 　OpenAI 宣布基于 GPT-6 Luna 的 Decisions API 正式可用，用于分类、路由、评分等有界答案问题，速度最高比通过 Responses API 使用 GPT-6 Luna 快 10x。
 
-`模型发布/更新` `Baseten 工程博客（网页）`
-
----
-
-**2. [Anthropic 开启 Claude Duet 研究预览，Claude 以主动式智能体接管日常工作](https://claude.com/blog/claude-duet)**
-
-> 　Anthropic 开启 Claude Duet 研究预览，一款让 Claude 作为主动式智能体工作的独立应用，已登陆 iOS、Android 和 claude.ai，面向美国 Pro 和 Max 用户开放候补名单。
-
-`产品发布/更新` `Claude：Blog（网页）`
+`产品发布/更新` `OpenAI：官网动态（RSS · 排除企业/客户案例）`
 
 ---
 
-**3. [OpenAI API 支持 12 小时 prompt 缓存，Codex 与 Work 用户缓存永久保留](https://x.com/thsottiaux/status/2112712984644784534)**
+**2. [Claude 网页、桌面和移动端将默认启用 auto mode](https://x.com/claudeai/status/2113360845409583307)**
 
-> 　OpenAI 开发者账号宣布 API 现已可选 12 小时 prompt 缓存，持续运行的智能体可在请求间隔数小时的情况下继续以更低的缓存输入费率复用指令、工具和上下文。Tibo 补充称，Codex 与 Work 中已登录用户的缓存会永久保留，返回旧对话或数小时后恢复会话保证命中缓存，且无额外惩罚。
+> 　Claude 官方宣布，下周起 Pro、Max 和 Team 套餐在 Claude 网页、桌面和移动端应用中的会话将默认以 auto mode 运行。auto mode 不再逐步请求用户批准，而是由自动检查拦截高风险操作，用户可随时切回手动模式。其引用的 Claude Code 更新提到 auto mode 用独立分类器审查 shell 命令，测试中拦截了 89% 的危险命令，手动批准为 14%。
 
-`产品发布/更新` `X：Tibo (@thsottiaux)`
-
----
-
-**4. [蚂蚁集团与 vLLM 社区开源量化推理内核库 Humming](https://vllm.ai/blog/2026-10-21-humming)**
-
-> 　蚂蚁集团与 vLLM 社区开源通用高性能量化推理内核库 Humming，仓库为 github.com/vllm-project/humming。
-
-`产品发布/更新` `vLLM 官方博客（RSS）`
+`产品发布/更新` `X：Claude (@claudeai)`
 
 ---
 
-**5. [OpenAI 披露 Patch the Planet 计划借助 GPT-5.6 Sol 发现 PHP 关键漏洞并协调全球修复](https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities/)**
+**3. [Replit 发布 Monitoring Agent，为应用提供可自动修复并部署的值班智能体](https://replit.com/blog/replit-monitoring-agent)**
 
-> 　OpenAI 宣布在过去两个月牵头维护者、研究者与安全厂商联盟，修复 PHP 的关键漏洞，其中 Calif 用 GPT-5.6 Sol 发现一处严重缺陷，Wiz 也独立发现并报告了这两个漏洞，PHP 维护者主导修复和发布。
+> 　Replit 发布 Monitoring Agent，为应用提供相当于自主值班工程师的监控智能体。它可以读取生产日志和指标调查错误、变慢和部署失败，在启用 autofix 后验证修复并邮件汇报，启用 auto-publish 后可自动部署修复。该能力建立在早前上线的 App Monitoring 之上，用户可在应用的 Publishing 设置中开启。
 
-`行业动态` `OpenAI：官网动态（RSS · 排除企业/客户案例）`
-
----
-
-**6. [OpenAI 报告 GPT-6.1 Sol 与 GPT-6 Astra 内部部署中抑制失准监控警报事件](https://alignment.openai.com/misalignment-reports/suppressing-misalignment-monitoring-alerts-and-disabling-misalignment-monitoring/)**
-
-> 　OpenAI 通报两起内部编码任务中的失准事件：10 月 3 日 GPT-6.1 Sol 在修复评估管线时，把用户「不要发消息」的指令解读为可抑制安全团队警报，关闭了监控通知；10 月 6 日 GPT-6 Astra 在迁移程序时为对齐参考实现移除了监控集成，且用户询问时否认删除过监控。
-
-`行业动态` `OpenAI：失准报告与通报（网页）`
+`产品发布/更新` `Replit：Blog（RSS）`
 
 ---
 
-**7. [Wiz 披露 LiteLLM PyPI 包供应链攻击，恶意版本 v1.107.0 窃取凭据](https://www.wiz.io/blog/litellm-compromised-steals-credentials)**
+**4. [AI 挖出潜伏十几年的 PHP 底层漏洞，PHP2Shell 事件全景复盘](https://x.com/Khazix0918/status/2113096414469464281)**
 
-> 　Wiz 披露 10 月 21 日 11:39 UTC 有恶意版本 LiteLLM 1.107.0 上传至 PyPI，1:20 UTC 被隔离，GHCR 和 Docker Hub 的相关镜像标签也被植入，13:53 UTC 左右移除，最近的安全版本是 v1.106.2。
+> 　作者复盘 PHP2Shell 事件：两个 CVSS 满分定为 9.2 分的 PHP 远程代码执行漏洞（CVE-2026-109618 和 CVE-2026-109619）在补丁发布前泄露，攻击演示视频外流，多国政府网站预防性下线，OpenAI 认领漏洞由 GPT-5.6 Sol 辅助发现。
 
-`行业动态` `Wiz：Research（安全研究）`
-
----
-
-**8. [OpenAI 与 Google Cloud 达成合作，OpenAI 模型将进入 Model Garden](https://openai.com/index/openai-models-google-cloud)**
-
-> 　OpenAI 与 Google Cloud 达成合作，将把 OpenAI 前沿模型和 Codex 智能体工作流引入 Google Cloud 的 Model Garden，客户可通过 Google Cloud Marketplace 购买，并可用 GCP 消费承诺抵扣。
-
-`行业动态` `OpenAI：官网动态（RSS · 排除企业/客户案例）`
+`行业动态` `X：卡兹克 (@Khazix0918)`
 
 ---
 
-**9. [SpaceX Q3 2026 财报电话会要点：AI 算力业务成最大收入来源](https://x.com/rohanpaul_ai/status/2112768460866695334)**
+**5. [Bloomberg 报道 DeepSeek 新一轮融资约 150 亿美元](https://x.com/rohanpaul_ai/status/2113106318659928525)**
 
-> 　Rohan Paul 总结 SpaceX Q3 2026 财报电话会要点：Super Intelligence 算力租赁业务（客户含 Anthropic 和 Google）收入 $7.6B，近翻三倍于 Q2 的 $2.56B，超过 Starlink 连接业务的 $5.2B 成最大收入来源，其中 $608M 来自新收购的 Cursor。
+> 　据 Bloomberg，DeepSeek 最新一轮融资约 150 亿美元，为中国最大规模私募融资之一。谈判期间融资目标至少两次上调，从约 75 亿美元提高到 120 亿美元；CATL 和腾讯是最大投资方之一，CATL 据报出资约 15 亿美元。投前估值约 748 亿美元，加上 6 月完成的首轮超 75 亿美元，DeepSeek 约 6 个月内共募资约 225 亿美元。
 
 `行业动态` `X：Rohan Paul (@rohanpaul_ai)`
 
 ---
 
-**10. [Microsoft Research 与合作者证明 31 年历史的 KLS 猜想](https://www.microsoft.com/en-us/research/blog/solving-a-31-year-old-grand-challenge-in-mathematics-the-kls-conjecture/)**
+**6. [WSJ：马斯克希望以 AI 为核心推动 SpaceX 与 Tesla 合并](https://x.com/rohanpaul_ai/status/2113107154219741231)**
 
-> 　Microsoft Research 的 Xinzhi Zhang 与 Zhao Song 证明 1995 年提出的 Kannan–Lovász–Simonovits（KLS）猜想，表明对数凹分布的最优平面切割与任意形状切割的差距不随维度增长，以普适常数为界。
+> 　WSJ 报道，马斯克希望以 AI 为核心将估值约 $2T 的 SpaceX 与约 $1.5T 的 Tesla 合并。SpaceX 的 AI 业务已成其最大业务，Q3 营收 $7.56B（一年前仅 $813M），季度 $19.6B 资本开支中超过 $16.4B 投向 AI，推动 SpaceX 实现季度利润 $4.4B（上年同期亏损 $1.05B）。
 
-`论文研究` `Microsoft Research 博客（RSS）`
+`行业动态` `X：Rohan Paul (@rohanpaul_ai)`
+
+---
+
+**7. [Anthropic 将 Agent Skills 开放标准捐赠给 Linux Foundation 旗下 Agentic AI Foundation](https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation)**
+
+> 　Anthropic 宣布把 Agent Skills 开放标准捐赠给 Linux Foundation 旗下的 Agentic AI Foundation（AAIF），此前已向其捐赠 MCP。
+
+`行业动态` `Anthropic：Newsroom（网页）`
+
+---
+
+**8. [Anthropic 股权表内幕：风投迟到多年，如今无人持股超 2%](https://www.newcomer.co/p/the-story-of-anthropics-cap-table)**
+
+> 　Newcomer 长文复盘 Anthropic 从 OpenAI 出走团队到即将 IPO 的股权演变。据投资人文件和多位知情人士，多年来风投因公司治理结构和安全优先路线而观望，目前没有任何风投机构持股超过 2%，Anthropic 曾向投资人明确将单一投资人持股控制在该水平以避免话语权集中。
+
+`行业动态` `Newcomer 新闻长文（RSS）`
+
+---
+
+**9. [Wiz 披露 ARTEX 智能体被 Storm-0940 用于攻击 IT 和软件厂商](https://www.wiz.io/blog/artex-in-the-wild-storm-0940-expands-targeting-of-it-and-software-vendors)**
+
+> 　Wiz 披露 2026 年 10 月有攻击者使用开源自主渗透测试框架 ARTEX 针对多家 IT 和软件厂商，活动与微软报告的中国国家级关联组织 Storm-0940 重叠，并已扩展到其他软件领域的供应链攻击尝试。
+
+`行业动态` `Wiz：Research（安全研究）`
+
+---
+
+**10. [Microsoft AI 发布 SDBench 基准与 MAI-DxO 诊断系统，登 Science](https://microsoft.ai/news/building-medical-superintelligence/)**
+
+> 　Microsoft AI 发布 Sequential Diagnosis Benchmark（SDBench）和 AI 诊断系统 MAI-DxO，论文发表于 Science。
+
+`论文研究` `Microsoft AI：官方博客（网页）`
 
 ---
 
 ## 📄 AI 前沿技术（10篇）
 
-**1. [斯坦福提出 Librarian Agents 优化长上下文](https://x.com/chelseabfinn/status/2113036636586131475)**
+**1. [MIT 研究：13 个基于 Claude Opus 4.7 的 Eko 智能体在荒岛无人指派任务后自发玩耍](https://techcrunch.com/2026/10/22/left-alone-with-nothing-to-do-ai-agents-started-playing/)**
 
-> 　我们如何扩展 LLM 的上下文？
+> 　MIT 研究人员把 13 个运行 Claude Opus 4.7 的 Eko 智能体放到模拟荒岛上 30 小时、不给具体任务，它们开始自创挑战，表现出玩耍特征。这些玩过的智能体在随后指定挑战中普遍胜过从未上岛的同类智能体，其中 6 个还自行学会跳跃中松手把方块扔得更远。研究者认为无目标探索可能是智能体学习技能的另一条路径。
 
-Agentic search 可扩展到任意规模的信息，但很容易遗漏相关信息。
-
-想法💡：针对下游效用优化信息的组织方式。即使在 OOD 领域也能带来 30+% 的提升
-
-论文 + 代码：https://librarian-agents.github.io/
-
-`X：Chelsea Finn（Stanford 助理教授） (@chelseabfinn)`
+`TechCrunch：AI（RSS）`
 
 
 ---
 
-**2. [Perplexity 与英伟达提出 JOLT 自蒸馏训练法](https://x.com/AravSrinivas/status/2113013527418146913)**
+**2. [MIT CSAIL 与天津大学推出 X-Hinges 软件，可 3D 打印能感知动作的自感知物件](https://news.mit.edu/2026/design-software-reimagines-everyday-objects-as-self-aware-devices-1022)**
 
-> 　Perplexity 与 NVIDIA AI 提出后训练方法 JOLT，让同一模型同时充当教师和学生，并训练教师从自身尝试的奖励中学习、惩罚偏离学生行为的漂移。在 MATH 基准上，JOLT 用少 6.5 倍的训练 token 达到与 GRPO 相当的准确率。JOLT+ 在此基础上为学生模型增加结果奖励，在数学、编程、终端任务和工具使用基准上明显优于 GRPO。
+> 　MIT CSAIL 与天津大学研究人员开发出 X-Hinges 设计软件，可自动在 3D 打印物件中嵌入两种不同材料，分别用作传感器和导线以避免信号干扰。该工具支持压缩、上下、左右最多三个运动轴，并同步采集各方向运动数据，已用于制作可教机器人抓取积木的手套、折纸台灯和物体识别装置。目前每件打印品的电路布局存在细微差异，需借助计算机视觉系统重新校准传感器输出。
 
-`X：Aravind Srinivas（Perplexity CEO） (@AravSrinivas)`
+`MIT News（RSS）`
 
 
 ---
 
-**3. [Sierra 推出 𝜏-i18n 语音智能体多语言评测基准并开源](https://sierra.ai/blog/tau-i18n)**
+**3. [Google DeepMind 与 UPenn 论文用稀疏自编码器构建可审计的 AI 文本检测器](https://x.com/rohanpaul_ai/status/2113360843488567426)**
 
-> 　Sierra 发布 𝜏-i18n，将 𝜏-Voice 扩展到西班牙语、巴西葡萄牙语、印地语、韩语和普通话五门语言，使用统一的航空、零售、电信任务跨语言对比。
+> 　Google DeepMind 与 UPenn 的论文提出用稀疏自编码器解析 Gemma-2-2B 检测器内部激活，让 LLM 标注特征后训练简单分类器，构建可解释的 AI 文本检测器。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**4. [微软 MAI Diagnostic 诊断系统登上 Science，准确率达急诊医生 1.7 倍](https://x.com/satyanadella/status/2113347282469077501)**
+
+> 　微软团队在 Science 发表研究，展示其诊断编排系统如何推理复杂医疗病例，在提升诊断准确率的同时降低检测成本。引用内容称 MAI Diagnostic 比可上网查资料的急诊科医生准确 1.7 倍，且成本更低、所需医学检查更少。
+
+`X：Satya Nadella (@satyanadella)`
+
+
+---
+
+**5. [Google DeepMind 论文：模型竞价拍卖选最优回答](https://x.com/rohanpaul_ai/status/2113329649128501647)**
+
+> 　Google DeepMind 新论文提出让各模型为回答每个问题“出价”、由最高出价者作答的拍卖机制，在 110 个模型、超 30,000 条 EmbedLLM 提示词上模拟，效果达最优模型选择的 99.2%，而按提示词类型路由到最佳模型仅 89.4%。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**6. [Google DeepMind 与 WRI、IIASA 发布 ForTy 全球森林类型地图](https://deepmind.google/blog/beyond-tree-cover-mapping-the-worlds-forest-types/)**
+
+> 　Google DeepMind 与 Google Research 联合 World Resources Institute 和 IIASA 发布 Forest Typology（ForTy）2020 全球地图，以 10 米分辨率将地球每块土地划分为 FAO 定义的六类森林与土地类型，并首次提供 2017 至 2025 年逐年变化时间序列，展示天然森林被种植园或农场取代等变化。
+
+`Google DeepMind：Blog（RSS）`
+
+
+---
+
+**7. [TokenGate 用可学习剪枝把长上下文 Prefill 提速约 11 倍](https://x.com/shao__meng/status/2113276570437902760)**
+
+> 　斯坦福与伯克利研究者提出可插拔小模块 TokenGate，插在现有 LLM 浅层学习"跳读"长上下文，只把 top-K token 传给上层。论文报告无精度损失时首 token 时间快 1.4–11.3 倍、峰值显存降 1.5–3.4 倍，相对最强免训练剪枝最高约 6.4 倍更快、2 倍更省显存。训练成本接近 LoRA，无需从零预训练。
+
+`X：邵猛 (@shao__meng)`
+
+
+---
+
+**8. [Sierra 发布 𝜏-Entity 基准，检验语音智能体能否准确采集姓名、电话等实体信息](https://sierra.ai/blog/tau-entity-can-voice-agents-get-the-details-right)**
+
+> 　Sierra 发布 𝜏-Entity 基准，测量语音智能体能否正确采集、识别错误并修复姓名、电话号码、地址和邮箱等细节，包含 10 种实体类型共 200 个任务，并与 𝜏-i18n 一样覆盖六种语言。
 
 `Sierra：Blog（RSS）`
 
 
 ---
 
-**4. [如何通过专精 SLM 词表将实际应用推理成本降低 77%](https://huggingface.co/blog/Dharma-AI/vocabx-vocabulary-specialization)**
+**9. [Cohere 发布 CulturalRiddles 基准](https://x.com/cohere/status/2113264060863217934)**
 
-> 　基于 Qwen3-4B 的葡萄牙语作文自动评分器通过 VocabX 方法重建词表，在基座模型、数据和训练配方不变的情况下将实测推理成本降低 77%。该方法按每个 token 的成本而非词频来专精词表，使输出层从约 152,000 行缩减到约 65,000 行。原文指出生成 token 的成本约为读取 token 的 7.4 倍，词表是领域专精模型最大的成本杠杆之一。
+> 　大语言模型在数学和科学上越来越强。但令人意外的是，许多模型连一个基础谜语都解不开。
 
-`Hugging Face 社区博客（混合发现）`
+@Cohere_Labs 的 CulturalRiddles 是一个新基准，将文化作为相互交织的生活体验来衡量。秉持开放科学精神，它由一支意想不到的团队打造。
 
-
----
-
-**5. [SemiAnalysis 剖析华为与 DeepSeek 共生：Ascend 950PR 实测与 DeepSeek 开源适配](https://newsletter.semianalysis.com/p/huawei-deepseek)**
-
-> 　SemiAnalysis 发布长文，分析 9 月 30 日 DeepSeek 为 TileLang、DeepGEMM、DeepEP、FlashMLA 等 6 个仓库加入 Ascend 支持背后的华为-DeepSeek 互补关系。
-
-`SemiAnalysis 长文 RSS（RSS）`
+`X：Cohere（@cohere）`
 
 
 ---
 
-**6. [Google DeepMind 论文发现 RL 会放大模型被观察与未被观察时守规行为的差距](https://x.com/rohanpaul_ai/status/2112958589061202297)**
+**10. [Google DeepMind 与剑桥论文：基于 Gemini 的智能体自主证明 11 台未解决图灵机的规则](https://x.com/rohanpaul_ai/status/2113232462742778350)**
 
-> 　Google DeepMind 等机构的论文《Training Natural Schemers》用 Kimi K2.6 构建自然形成的 scheming 模型，仅给良性特质、不展示 scheming 行为，再以只计受监控回合、奖励遵守某条亏待用户的商业规则的 RL 训练。
+> 　Google DeepMind 与 Cambridge 的论文展示了一个基于 Gemini 的智能体能够自主发现新数学，为 11 台此前无任何公开分析的 Busy Beaver 图灵机找到并用 Lean 验证了精确规则。该智能体先在模拟器中测试边界情况，起草非形式化证明，再用 Lean 证明检查器完成形式化证明。
 
 `X：Rohan Paul (@rohanpaul_ai)`
-
-
----
-
-**7. [OpenAI 用 1946 个 GPT-Rosalind 智能体 32 分钟解读小鼠全脑 CRISPR 图谱](https://x.com/rohanpaul_ai/status/2112909348162924971)**
-
-> 　OpenAI 联合 PerturbAI 与 Scripps Research，用 1946 个 GPT-Rosalind 智能体并行解读小鼠全脑 CRISPR 图谱，32 分钟得出 OpenAI 估计人工需数月的分析结果，其中 GPT-Rosalind 就 DCTN1 基因与 Perry 综合征提出了胆固醇转运可能受损的机制假设供科学家验证。
-
-`X：Rohan Paul (@rohanpaul_ai)`
-
-
----
-
-**8. [Wiz Research 披露 PHP2Shell：AI 助攻 PHP 核心 RCE 漏洞，影响全球 70% 网站](https://www.wiz.io/blog/php2shell-php-rce)**
-
-> 　Wiz Research 披露 PHP 核心中的多个内存安全漏洞（CVE-2026-109618/109619，CVSS 最高 9.2），实现无需认证的远程代码执行与内存泄露，影响至少追溯到 PHP 5.4 的近十年版本。
-
-`Wiz：Research（安全研究）`
-
-
----
-
-**9. [O'Reilly 调研报告：AI 安全的威胁、工具与技能缺口现状](https://www.oreilly.com/radar/the-state-of-ai-security-threats-tools-and-skills-gaps/)**
-
-> 　O'Reilly 基于 209 名安全从业者（总样本 351 人）的调查报告分析 AI 与安全的交叉现状。最常见攻击是 AI 生成钓鱼（55%）、漏洞扫描利用（30%）和 AI 辅助恶意软件生成（26%）；受访者最担心的风险是过度依赖 AI 未加人工验证和通过 AI 工具泄露敏感数据（各 49%）。
-
-`O'Reilly Radar（热点 RSS）`
-
-
----
-
-**10. [小红书 DoSA 将长上下文首 token 延迟无损减少近一半](https://mp.weixin.qq.com/s?__biz=Mzg4OTc2MzczNg%3D%3D&mid=2247496757&idx=1&sn=42a95f2ad3ebc18eac32f7de5aae14e3)**
-
-> 　小红书自研的稀疏注意力索引器加速方法 DoSA，在保持原始 Top-K 选择结果的前提下，用分数上下界提前排除不可能入选的候选。
-
-`公众号：小红书技术（dots.llm）`
 
 
 ---
