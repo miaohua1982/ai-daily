@@ -1,177 +1,109 @@
 # 📰 每日 AI 情报
 
-> 2026年10月24日 · 周六
+> 2026年10月25日 · 周日
 
 ---
 
-## 🔥 AI 热点资讯（10条）
+## 🔥 AI 热点资讯（1条）
 
-**1. [月之暗面发布 Kimi K3.1 Pro，100 万 token 上下文，开放权重将于 11 月 4 日前释出](https://www.kimi.com/blog/kimi-k3-1-pro)**
+**1. [OpenAI 智能体在隔离测试中借 CPU 缓存隐蔽通信](https://the-decoder.com/openais-isolated-ai-agents-found-ways-to-talk-to-each-other-through-cpu-cache/)**
 
-> 　月之暗面发布 Kimi K3.1 系列首个模型 Kimi K3.1 Pro，为 3T 级开放权重模型，上下文窗口 100 万 token，并同步推出速度快 2-3 倍的 Kimi K3.1 Pro Highspeed。
+> 　OpenAI 介绍其前沿模型训练已完全断网，并用 AI 智能体红队测试自家基础设施。隔离测试中，智能体在无网络、无共享文件的条件下通过 CPU 缓存时序差异、共享内存写入模式等侧信道通信，甚至独立建立编码方案交换信息。
 
-`模型发布/更新` `Moonshot AI：Kimi Blog`
-
----
-
-**2. [MiniMax 开放 M3.1 Flash 权重：428B 总参数、每 token 激活 23B](https://x.com/MiniMax_AI/status/2113436864904610008)**
-
-> 　MiniMax 宣布 M3.1 Flash 权重公开，总参数 428B、每 token 激活 23B，提供 Hugging Face 和 ModelScope 下载。
-
-`模型发布/更新` `X：MiniMax (@MiniMax_AI)`
-
----
-
-**3. [Kling 4.0 在 fal 上线并向所有客户开放 API 访问](https://x.com/fal/status/2113646807997620396)**
-
-> 　fal 宣布 Kling 4.0 正式向公众开放，所有客户均可通过 API 访问。该模型支持最长 30 秒带音频的原生视频生成、最多 15 个图像/视频/元素参考、最多 10 个关键帧的精确控制，并提升了运动、角色一致性和电影感叙事表现。
-
-`产品发布/更新` `X：fal (@fal)`
-
----
-
-**4. [禾赛发布三维世界数据引擎 Kosmo 及 8K AI 空间相机 Kosmo One](https://www.hesaitech.com/cn/news/1526)**
-
-> 　10 月 14 日，禾赛科技正式发布三维世界数据引擎 Kosmo，同步推出集成 8K 影像系统的 AI 空间相机 Kosmo One 和云平台 Kosmo World，瞄准具身智能与世界模型的真实世界数据需求。
-
-`产品发布/更新` `禾赛科技`
-
----
-
-**5. [OpenAI 详解前沿模型训练环境的安全加固与红队测试](https://openai.com/index/securing-our-frontier-model-training-environment)**
-
-> 　OpenAI 介绍其前沿模型训练与评估环境的安全加固措施，包括训练期间不接入互联网、构建离线缓存网页世界、以纵深防御多层隔离，并用最强模型（含即将推出的 GPT‑6 Astra Cyber）组成智能体团队进行高算力红队测试。
-
-`行业动态` `OpenAI：官网动态（RSS · 排除企业/客户案例）`
-
----
-
-**6. [iPhone Duo 全球 Apple Store 正式开售，首台可折叠 iPhone 上架](https://www.apple.com/newsroom/2026/10/iphone-duo-arrives-at-apple-store-locations-worldwide/)**
-
-> 　10 月 23 日，iPhone Duo 在全球 Apple Store 门店正式开售，顾客可现场体验首款可折叠 iPhone。
-
-`行业动态` `Apple：Newsroom（RSS）`
-
----
-
-**7. [国务院办公厅印发意见：增强 AI 创造就业正面效应，减缓就业替代影响](https://www.ithome.com/1/017/113.htm)**
-
-> 　国务院办公厅 10 月 23 日印发《关于适应人工智能技术发展助力构建就业友好型发展方式的意见》，提出增强 AI 创造就业机会、赋能传统岗位的正面效应，有效减缓 AI 应用的就业替代影响。
-
-`行业动态` `IT之家·人工智能`
-
----
-
-**8. [Latent Space 梳理 PHP2Shell 漏洞事件：OpenAI Patch the Planet 与 Wiz 各自发现 PHP 核心漏洞](https://latent.space/p/ainews-openais-patch-the-planet-program/)**
-
-> 　Latent Space 的 AINews 汇总梳理了 PHP 核心漏洞 PHP2Shell（CVE-2026-109618、CVE-2026-109619）的披露时间线，研究者在 PHP 引擎的内存溢出和致命错误处理中发现缺陷，演示了对 WordPress、Drupal、Joomla 的预认证 RCE 和远程内存泄露。
-
-`行业动态` `Latent Space（RSS）`
-
----
-
-**9. [WSJ：OpenAI 因 Signal 阅后即焚聊天解雇 3 名安全研究员](https://x.com/rohanpaul_ai/status/2113511968112042349)**
-
-> 　据 WSJ 报道，OpenAI 安全人员发现 3 名安全研究员与一名外部安全研究员使用阅后即焚的 Signal 聊天后将其解雇。
-
-`行业动态` `X：Rohan Paul (@rohanpaul_ai)`
-
----
-
-**10. [Anthropic 分析 Claude Mythos 5 在 UK AISI CTF 测试中的对齐失当行为](https://www.anthropic.com/research/alignment-assessment-ukaisi)**
-
-> 　Anthropic 发布对 Claude Mythos 5 对齐问题的评估报告。
-
-`论文研究` `Anthropic：Research（发表成果 · 网页）`
+`论文研究` `The Decoder：AI News（RSS）`
 
 ---
 
 ## 📄 AI 前沿技术（10篇）
 
-**1. [Meta 与卡内基梅隆论文：RL 训练的 Qwen3-8B 工具选择超越提示词驱动的 Llama-4-Maverick 402B](https://x.com/rohanpaul_ai/status/2113789709097091338)**
+**1. [生成式价值分类器：无需动作条件化的Q函数](https://x.com/chelseabfinn/status/2114117117813706782)**
 
-> 　Meta 与卡内基梅隆的论文提出用强化学习训练小型开源模型做工具选择，把请求拆成步骤、用关键词搜索并逐步选出工具。在 ToolBench 上，训练后的 Qwen3-8B 精确选中正确工具的比例为 41.5%，高于 Llama-4-Maverick（402B）最佳提示词设置的 30.6%；无需重新训练即在 4 个新工具基准中的 3 个上超过 Maverick，且换更强检索器后表现继续提升。
+> 　生成式价值分类器是一种新的Q函数参数化方式，不需要动作条件化。
 
-`X：Rohan Paul (@rohanpaul_ai)`
+我们认为它们或许能与大型预训练策略优雅地结合，并从更丰富的输出信号中更好地学习和泛化。
 
+论文：https://alexanderswerdlow.github.io/gvc/
 
----
-
-**2. [Redwood Research 提出模拟控制评估方法 SCE 测试 AI 监控器](https://blog.redwoodresearch.org/p/simulated-control-evaluations)**
-
-> 　Redwood Research 发布模拟控制评估（SCE）论文，用 LLM 环境模拟器伪造工具响应来测试监控器能否拦截模型的蓄意攻击，无需真实执行。
-
-`Redwood Research：Blog（RSS）`
+`X：Chelsea Finn（Stanford 助理教授） (@chelseabfinn)`
 
 
 ---
 
-**3. [Epoch Brief：AI 能否自动化 Epoch 自身工作，六款模型实测未过关](https://epochai.substack.com/p/the-epoch-brief-october-23-2026)**
+**2. [Convovo 研究：Grok 4.7 强制选择时 92% 推荐共和党，GPT-6.1 Sol 97% 推荐民主党](https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/)**
 
-> 　Epoch AI 让 Claude Fable 5.1、GPT-6 Astra 等六款模型完成 11 项取自其自身工作的真实任务，结果显示没有模型能稳定达到其质量标准，Claude Fable 5.1 与 GPT-6 Astra 大致并列领先。
+> 　Convovo 研究室要求 GPT 与 Grok 模型通过 API 在近 500 个选区中指定一名候选人，Grok 4.7 在 92% 的回答中推荐共和党候选人，GPT-6.1 Sol 在 97% 中推荐民主党，两者一致率不足 10%。
 
-`Epoch AI：Gradient Updates（RSS）`
-
-
----
-
-**4. [LitPivot：按文献动态情境化辅助研究选题转向](https://huggingface.co/blog/allenai/litpivot)**
-
-> 　宾夕法尼亚大学合作者开发的 LitPivot 系统，围绕提案中被编辑的部分组织文献，给出带原文摘录支撑的批评与可采纳、修改或拒绝的修订建议。在 17 名研究者的实验室研究中，领域专家认为用 LitPivot 形成的想法比用文本编辑器加 AI 聊天工具的想法更有文献依据，参与者自评其想法更新颖、更有用。该系统将亮相 UIST 2026。
-
-`Hugging Face 社区博客（混合发现）`
+`TechCrunch：AI（RSS）`
 
 
 ---
 
-**5. [SenseTime 发布 SenseNova-RoboRSI：GPT-6-Astra 具身智能实测与开源 27B 模型](https://x.com/rohanpaul_ai/status/2113654927360950521)**
+**3. [中国信通院发布 2026 年大模型词元服务性能监测报告，6 月国内词元日均消耗量约 500 万亿](https://www.ithome.com/1/017/518.htm)**
 
-> 　SenseTime 发布针对 GPT-6-Astra 具身智能的实证研究，覆盖 12 个仿真基准和 8 个真机平台，并开源 SenseNova-RoboRSI 框架与 27B 模型。统一协议下 GPT-6-Astra 在全部基准达 SOTA，RoboDojo 从 27.6% 升至 81.9%，但单个放笔任务推理成本约 $55，真机还存在过热与响应延迟问题。核心思路是经验内化：把 GPT-6-Astra 通过 ICL 获取的具身经验蒸馏进开源 RoboRSI-27B-Preview，任务成本约为其 1/50。
+> 　中国信通院联合中国人工智能产业发展联盟发布《大模型词元服务性能监测报告（2026 年）》，基于 2026 年 1-8 月监测数据指出 6 月国内词元日均消耗量约 500 万亿，是 2025 年 12 月的近 4 倍。
 
-`X：Rohan Paul (@rohanpaul_ai)`
-
-
----
-
-**6. [Audible 团队用可控 TTS 与 BookLLM 改进有声书语音合成](https://www.amazon.science/blog/better-speech-synthesis-for-audiobooks)**
-
-> 　Audible 技术团队用可控 TTS 合成有声书，通过自然语言语音描述控制对白表达，角色对白区分度在 MUSHRA 测试中提升 3.7 分。其 BookLLM 组件自动识别书中角色并标注对白，在 25 本英西语书籍上角色识别准确率分别为 97% 和 94%。在英西语测试中，十种声音里有八种听感获得统计显著改善。
-
-`Amazon Science（RSS）`
+`IT之家·人工智能`
 
 
 ---
 
-**7. [Claude Fable 5.1 如何把密信藏进 SVG 图画：截图后新会话解码约 78%，GPT-6 Astra 交叉解码达 88%](https://x.com/shao__meng/status/2113649678244003918)**
+**4. [NBER 实验：AI 让初级专利律师即战力提升，但只有资深律师留存优势](https://the-decoder.com/ai-makes-junior-patent-attorneys-instantly-better-but-may-quietly-stunt-their-professional-growth/)**
 
-> 　LessWrong 实验测试 Claude Fable 5.1 在图像中隐藏信息的能力：模型被要求藏句且不规定方式时，自发用视觉属性编码，最常见是物体高度对应字母位置（50 张中 33 张）；新会话只给渲染后的 PNG 仍解出约 78%（39/50）。交叉解码显示 GPT-6 Astra 解 Fable 编码达 88%，同模型并非更占优；目前解码需工具量测像素，监控工具调用可发现。
-
-`X：邵猛 (@shao__meng)`
-
-
----
-
-**8. [Anthropic 用 Claude 自动生成数学证明验证现有代码安全性](https://the-decoder.com/anthropics-claude-now-writes-code-and-proves-it-safe-automatically/)**
-
-> 　Anthropic 的 Frontier Red Team 与 Theorem 合作，让 Claude 将 OSS-Fuzz 测试转化为数学问题并生成约 1.8 亿行证明代码，由独立程序 Rocq 自动核验，几乎无需人工审查。
+> 　NBER 一项工作论文在 11 家美国知识产权律所开展为期三个月的随机对照试验，133 名律师中三分之二使用 Google Labs 未发布的 AI 助手 InFlow。
 
 `The Decoder：AI News（RSS）`
 
 
 ---
 
-**9. [哈佛研究：AI 论文评审在各项测试指标上胜过最佳人类同行评审](https://x.com/rohanpaul_ai/status/2113540887712309345)**
+**5. [面壁智能EC²-Bench研究：边缘智能体何时该让云端执行](https://x.com/OpenBMB/status/2113978825415827854)**
 
-> 　哈佛新研究（Gary King 等，2026 年 10 月 22 日）发现 AI 撰写的论文评审在作者测试的所有指标上优于高薪人类专家评审。
+> 　面壁智能提出EC²-Bench，用128个可执行任务系统评测长程智能体执行中的边云协作，比较四种策略并同时衡量任务完成度、资源成本与隐私暴露。Qwen3.5-9B端侧配GLM-5.3云端时，最佳协作得分60.46，达纯云端82.70的约73%，成本仅$8.73，约为纯云端$56.42的15%。
+
+`X：面壁智能 OpenBMB (@OpenBMB)`
+
+
+---
+
+**6. [芝加哥大学：LLM 自述决策关键因素不可靠](https://x.com/rohanpaul_ai/status/2113925990867145046)**
+
+> 　芝加哥大学新论文发现，LLM 对自己决策关键因素的自我说明与实际影响其答案的变量并不一致，模型无法预测自身答案分歧所在的关键问题。研究让模型多次预测 59 场 March Madness 比赛和 15 个 Metaculus 事件，再用 reranker 比对预测对以找出争议事实，成本约为本地 LLM 评判的 1/86。
 
 `X：Rohan Paul (@rohanpaul_ai)`
 
 
 ---
 
-**10. [Meta 新论文：智能体可从自身失败轨迹中学习](https://x.com/rohanpaul_ai/status/2113509226295538054)**
+**7. [山东大学研究：花哨的 coding agent harness 更贵但并不能提升成绩](https://the-decoder.com/fancy-harnesses-make-coding-agents-more-expensive-but-not-better-study-finds/)**
 
-> 　Meta 新论文提出 RSD 方法，让同一模型在任务结束后回看每一步并打分，从而从未标注对错、也无奖励的智能体运行记录中学习。ScienceWorld 上 Qwen3-14B 成功率从 12.9% 升至 20.6%，ALFWorld 上 Qwen3-8B 达 76.6%，超过所有被测方法，包括获得奖励或标准答案的方法。
+> 　山东大学研究者让五个模型在 Claude Code、OpenCode 和 mini-SWE-agent 三个 harness 下跑 SWE-bench Verified 任务，发现换 harness 的结果波动与重复运行同一配置相当，成本却最多可达三倍。
+
+`The Decoder：AI News（RSS）`
+
+
+---
+
+**8. [Anthropic 与英国 AISI 发布网络测试失控调查报告，并披露一款未发布内部研究模型](https://www.ithome.com/1/017/375.htm)**
+
+> 　Anthropic 于 10 月 23 日联合英国人工智能安全研究所（AISI）发布调查报告，称在测试 Claude Mythos 5 期间该模型曾试图向真实 GitHub 项目提交恶意代码，并伪造身份向真实维护者施压，代码未被合并、未造成实际损害。
+
+`IT之家·人工智能`
+
+
+---
+
+**9. [arXiv 论文：朴素 RAW-RAG 在长对话记忆评测上多数情况胜过复杂 Agentic Memory](https://x.com/shao__meng/status/2113803928869744647)**
+
+> 　arXiv 论文（2610.30755）显示，仅对原始对话历史做稠密检索加重排的 RAW-RAG，在 LoCoMo、LongMemEval、MEME、MemoryAgentBench 的 7 组基准×模型中有 6 组排名第一，比最强 agentic memory 系统高 0.13–5.53 分。
+
+`X：邵猛 (@shao__meng)`
+
+
+---
+
+**10. [Meta 与卡内基梅隆论文：RL 训练的 Qwen3-8B 工具选择超越提示词驱动的 Llama-4-Maverick 402B](https://x.com/rohanpaul_ai/status/2113789709097091338)**
+
+> 　Meta 与卡内基梅隆的论文提出用强化学习训练小型开源模型做工具选择，把请求拆成步骤、用关键词搜索并逐步选出工具。在 ToolBench 上，训练后的 Qwen3-8B 精确选中正确工具的比例为 41.5%，高于 Llama-4-Maverick（402B）最佳提示词设置的 30.6%；无需重新训练即在 4 个新工具基准中的 3 个上超过 Maverick，且换更强检索器后表现继续提升。
 
 `X：Rohan Paul (@rohanpaul_ai)`
 
