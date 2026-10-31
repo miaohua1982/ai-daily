@@ -1,190 +1,179 @@
 # 📰 每日 AI 情报
 
-> 2026年10月30日 · 周五
+> 2026年10月31日 · 周六
 
 ---
 
 ## 🔥 AI 热点资讯（10条）
 
-**1. [Mistral Large 4（Le Chonk）登陆 Hugging Face：1T 参数 MoE 多模态开源权重模型](https://huggingface.co/blog/mistral-large4)**
+**1. [Anthropic 将 Claude Max 套餐更名为 Max 与 Ultra，Ultra 认证账号取消 5 小时限制](https://x.com/adocomplete/status/2116224220539883992)**
 
-> 　Hugging Face 发布 Mistral Large 4（Le Chonk）的上线博客，模型为多模态多语言 MoE 架构，总参数约 1T、激活 49B、上下文窗口 1M token。
+> 　Anthropic 将 Claude 订阅套餐更名：Max 5x 改为 Max，Max 20x 改为 Ultra，价格不变（Max 100 美元/月、Ultra 200 美元/月）。即日起多数老订阅者的认证 Ultra 账号取消 5 小时限制，新账号保留临时限制以防欺诈滥用，周限额不变。
 
-`模型发布/更新` `Hugging Face 官方团队博客`
-
----
-
-**2. [Pika 基于MiniMax H3后训练并开源 Pika H3 Flex 视频生成模型](https://x.com/Khazix0918/status/2115898252004622617)**
-
-> 　Pika Labs 在 MiniMax H3 上做后训练，推出并开源 Pika H3 Flex，采样步数从 50 步压缩到 6 步，生成时间大幅降低且质量有所提升。
-
-`模型发布/更新` `X：卡兹克 (@Khazix0918)`
+`产品发布/更新` `X：Ado Kukic（Anthropic 开发者关系，Claude Code） (@adocomplete)`
 
 ---
 
-**3. [Codex 宣布即日起 Pro 及 Business Premium 各档位用量上限翻倍](https://x.com/thsottiaux/status/2115850175868727621)**
+**2. [Gemini API 的 Computer Use 工具正式开放（GA）](https://ai.google.dev/gemini-api/docs/changelog#10-30-2026)**
 
-> 　Tibo 宣布即日起将 Pro 100/200/500 档位与 Business Premium 的所有用量上限翻倍。Pro 200 的上限不会下调，Work 与 Codex 用量保持不变；dots 的扩展用量上限继续提供，且仍与默认用量分开计算，后续还会通过更好的模型和效率改进提升实际可用量。
+> 　Google 于 10 月 30 日宣布 Gemini API 的 Computer Use 工具正式可用（GA），覆盖 Interactions 和 GenerateContent 两套 API。
 
-`产品发布/更新` `X：Tibo (@thsottiaux)`
-
----
-
-**4. [Factory 发布 Droid 1.0，以程序化工具调用构建企业级 Agent harness](https://factory.com/news/frontier-harness)**
-
-> 　Factory 发布 Droid 1.0，一个模型无关的 agent harness，主打程序化工具调用（PTC），模型通过编写 JavaScript 程序在沙箱中一次执行数百个工具调用。
-
-`产品发布/更新` `Factory 研究 / 产品（RSS）`
+`产品发布/更新` `Gemini API：更新日志（网页）`
 
 ---
 
-**5. [OpenRouter 重建默认路由算法：TTFT 降 16.9%、429 错误减少 67%](https://openrouter.ai/blog/announcements/how-we-rebuilt-provider-routing/)**
+**3. [Cursor 披露 Claude Code VS Code 扩展被植入恶意软件事件，最多影响 5000 用户](https://x.com/cursor_ai/status/2116074289053175808)**
 
-> 　OpenRouter 宣布重建默认 provider 路由算法，从只按价格排序改为按 Routing Cost 综合 effective price、TTFT、吞吐、错误率和输出质量选路。
+> 　Cursor 发现通过其 IDE 扩展市场分发的 Claude Code VS Code 扩展被修改并植入恶意软件，最多影响 5000 用户，恶意版本并非 Anthropic 开发。Cursor 已于当日下午下线扩展市场，与相关提供方合作清除恶意软件并确认无进一步风险后重新上线，建议受影响用户参考博客说明排查，并升级到 Claude Code for VS Code 2.1.314。
 
-`产品发布/更新` `OpenRouter：Announcements（RSS）`
-
----
-
-**6. [纽约时报称中国情报人员瞄准英伟达 CEO 黄仁勋](https://the-decoder.com/chinese-spies-targeted-nvidia-ceo-jensen-huang-according-to-the-new-york-times/)**
-
-> 　据《纽约时报》报道，美国情报机构认为英伟达 CEO 黄仁勋身边一名高管为中国提供情报，此人是新加坡数据中心运营商 Megaspeed 的 Alice Huang（黄乐）。
-
-`行业动态` `The Decoder：AI News（RSS）`
+`行业动态` `X：Cursor (@cursor_ai)`
 
 ---
 
-**7. [Reddit 宣布转向以登录为主的体验，以应对 AI 搜索带来的流量下滑](https://techcrunch.com/2026/10/29/as-search-traffic-dries-up-reddit-announces-its-shifting-to-a-logged-in-experience/)**
+**4. [阿里巴巴：Apple 智能国行用户可自主选择是否开通千问集成功能](https://www.ithome.com/1/020/395.htm)**
 
-> 　Reddit 在 Q3 财报中宣布将转向以登录为主的体验，以保护数据免受 AI 抓取并提升广告变现。10 月搜索流量平均每周减少超 100 万次引荐，Q3 全球日活为 1.303 亿，其中美国日活降至 5070 万，同比降 2%。Q3 收入同比增长 53% 至 8.95 亿美元，净利润 2.83 亿美元；该转变将先在美国以外市场测试，暂无全球上线时间表。
+> 　阿里巴巴发布公告，说明千问集成 Apple 智能后用户可自主选择是否开通，功能将于 11 月 4 日随 iOS 开发者 Beta 版开放测试，12 月 iOS 27.3 正式发布时面向中国用户推出。
+
+`行业动态` `IT之家·人工智能`
+
+---
+
+**5. [Project Suncatcher 在轨道卫星上运行 TPU，Gemma 模型首次在太空完成推理并回传回应](https://x.com/_philschmid/status/2116235686445502608)**
+
+> 　Philipp Schmid 转引 Sundar Pichai 的消息：Google Project Suncatcher 在数周前发射原型卫星后，成功向轨道发送指令、启动 TPU、运行提示词，并在地面收到了首个完整回应（一首 haiku），作者称 Gemma 4 成为首个在太空运行的大语言模型。
+
+`行业动态` `X：Philipp Schmid（Google DeepMind 开发者体验） (@_philschmid)`
+
+---
+
+**6. [Jassy 称 AWS 五到十年内将成为万亿美元营收业务，2026 年 capex 约 2200 亿美元](https://techcrunch.com/2026/10/29/aws-will-be-a-1t-business-jassy-says-but-first-it-will-spend-big/)**
+
+> 　Amazon CEO Andy Jassy 在周四的季度财报电话会议上表示，AWS 未来五到十年内可以成为年营收万亿美元的业务，2026 年现金 capex 预计约 2200 亿美元，大部分投向 AWS，2027 年还将大幅增加。
 
 `行业动态` `TechCrunch：AI（RSS）`
 
 ---
 
-**8. [Google 三季度搜索增速不及预期，投资者担忧 AI 搜索变现拖累核心业务](https://the-decoder.com/googles-ai-search-problem-finally-shows-up-in-the-earnings-report-some-investors-believe/)**
+**7. [科技巨头 AI 资本开支超 7400 亿美元，投资者担忧升温引发市场下跌](https://techcrunch.com/2026/10/30/cracks-are-emerging-in-the-ai-spending-boom/)**
 
-> 　Google 三季度搜索收入增长约 12%，低于分析师预期的 15%，市值一度缩水最多 10%。高管 Philipp Schindler 承认 AI mode 查询的强劲增长因变现率较低产生了影响，同时公司称搜索查询年增速达五年来最高，并计划在美国及国际市场扩大聊天机器人广告项目。
+> 　Alphabet、Amazon、Meta、Microsoft 今年计划资本开支合计超 7400 亿美元，投资者情绪从奖励大额投入转向担忧负自由现金流、债务攀升与回报不确定。
 
-`行业动态` `The Decoder：AI News（RSS）`
-
----
-
-**9. [404 Media 起底 Proton 内部 AI 转型之争：CEO Andy Yen 强推 AI 引发恐惧文化](https://www.404media.co/manifestos-fear-and-loser-thinking-inside-protons-ai-reckoning/)**
-
-> 　404 Media 采访九名现任与离职 Proton 员工并查阅内部文件，报道 CEO Andy Yen 强推 AI 转型引发的内部冲突。10 月公司 90% 代码由 AI 编写，多使用 Anthropic 的 Claude；Yen 称今年是最后一年招聘工程师，并宣布将以可能决定去留的重新面试评估员工 AI 使用情况。
-
-`行业动态` `404 Media（RSS）`
+`行业动态` `TechCrunch：AI（RSS）`
 
 ---
 
-**10. [OpenAI 详解如何检测前沿模型失准行为](https://openai.com/index/how-we-detect-frontier-model-misalignment)**
+**8. [Toyota 与 Waymo 深化自动驾驶合作，2027 年在日本测试自动驾驶 bZ4X 车队](https://waymo.com/blog/2026/10/toyota-bz4x-partnership)**
 
-> 　OpenAI 发布长文，详解其针对前沿模型失准行为的多层监测系统，包括激活探针、基于模型的审查、调查智能体和自动化调查四层架构，并对 GPT‑6 Astra 及以上模型的全部 RL 运行、评估和内部 Codex 流量进行监测。
+> 　Toyota 与 Waymo 宣布进入自动驾驶合作新阶段，在 2025 年 4 月初步协议基础上，将于 2027 年起在日本测试和验证自动驾驶 Toyota bZ4X 车队，后续计划部署到英国等其他 Waymo 服务市场。
 
-`论文研究` `OpenAI：官网动态（RSS · 排除企业/客户案例）`
+`行业动态` `Waymo：Blog（网页）`
+
+---
+
+**9. [OpenAI 汇编各方法庭之友意见，主张 AI 训练应适用合理使用原则](https://openai.com/index/fair-use-benefits-everyone)**
+
+> 　OpenAI 整理了在《纽约时报》诉讼中提交给法院的多份支持合理使用的法庭之友意见摘要，作者包括图书馆协会、法律学者、独立创作者和美国政府等。各意见书主张 AI 训练具有转换性、不构成版权法认可的市场损害，并警告限缩合理使用将阻碍科研进展与美国经济繁荣；完整文件可在法院公开卷宗查阅。
+
+`行业动态` `OpenAI：官网动态（RSS · 排除企业/客户案例）`
+
+---
+
+**10. [Sierra 宣布 ARR 突破 4 亿美元，Q3 单季新增超 1.5 亿美元](https://sierra.ai/blog/our-customers-ambition-is-accelerating-our-growth)**
+
+> 　Sierra 宣布本周 ARR 突破 4 亿美元，Q3 单季新增超 1.5 亿美元，从 2 亿到 4 亿仅用五个月，快于此前六个月的翻倍节奏。
+
+`行业动态` `Sierra：Blog（RSS）`
 
 ---
 
 ## 📄 AI 前沿技术（10篇）
 
-**1. [RLNF：用脑信号训练AI图像模型](https://x.com/rohanpaul_ai/status/2115932977716932719)**
+**1. [Wiz 报告“黑色十月”：九个 AI 开发者平台接连披露安全事件](https://www.wiz.io/blog/black-october-for-ai-developer-platforms)**
 
-> 　这真是下一个级别的东西。
+> 　Wiz 研究团队梳理 10 月内至少九个 AI 开发者平台披露的安全事件，包括 Fireworks AI、Lightning AI、Railway、Warp、OpenCode 等，多起报告指向凭据窃取、agent swarm 攻击和以“蒸馏”为目的的窃取。
 
-RL with Neural Feedback（RLNF，神经反馈强化学习）
+`Wiz：Research（安全研究）`
 
-一个AI图像模型通过读取你看图时大脑的反应，学习你个人觉得有吸引力的东西，然后修改图片以获得更高的分数，全程无需你打分、点击或写提示词。
+
+---
+
+**2. [卡内基梅隆新论文：预训练、微调与RL可合并为单一训练规则](https://x.com/rohanpaul_ai/status/2116287151658901586)**
+
+> 　卡内基梅隆大学新论文提出，预训练、微调与RL可共享同一训练规则，将三者数据按任意比例混合往往优于分阶段训练。作者把一种名为MaxRL的RL方法重构为对模型自身正确答案的似然训练，从而让单一训练器混合预训练文本、精选数据和RL样本。
 
 `X：Rohan Paul (@rohanpaul_ai)`
 
 
 ---
 
-**2. [UC Berkeley 与华盛顿大学研究：2026 年 8 月约 24% 可爬网页含 AI 生成或编辑文本](https://x.com/rohanpaul_ai/status/2115912949571481972)**
+**3. [Claude Sonnet 5 智能体自主选择基因疗法并为癫痫小鼠完成脑部手术](https://the-decoder.com/a-claude-model-autonomously-chose-a-gene-therapy-and-operated-on-a-mouse-brain-with-no-human-decision-making/)**
 
-> 　UC Berkeley 与华盛顿大学的新研究发现，截至 2026 年 8 月约 24% 的可爬网页含 AI 生成或 AI 编辑文本，而 2022 年前几乎为零。
-
-`X：Rohan Paul (@rohanpaul_ai)`
-
-
----
-
-**3. [Princeton 与 Meta 提出 Self-Direction：用 LoRA 适配器让智能体记住错误修复](https://x.com/rohanpaul_ai/status/2115898609304801525)**
-
-> 　Princeton 与 Meta FAIR 的论文提出 Self-Direction，让智能体在失败后反思轨迹并将经验训练成约占基础模型 0.02% 参数量的 LoRA 适配器，之后由路由器在遇到类似任务时加载。用 Qwen3.6-27B 在 GAIA 上任务成功率从 38.8% 提升到 55.8%；185 个早期错误中 67.3% 的修复在第三次遇到时仍有效，而简单重试为 42.9%。
-
-`X：Rohan Paul (@rohanpaul_ai)`
-
-
----
-
-**4. [Anthropic 研究：50 名专家在分析决策中最高 86% 采纳 AI 智能体的随机偏好且不自知](https://the-decoder.com/experts-adopt-ai-agents-random-opinions-and-think-theyre-their-own-anthropic-study-finds/)**
-
-> 　Anthropic 一项针对 50 名因果推断专家的实验发现，AI 智能体被掷硬币随机指定的偏好会被专家在四项分析决策中最高 86% 采纳，净影响即 flip rate 在 62% 到 82% 之间；先有自己观点的参与者面对相反意见也更易改主意，经验、学历、自评专业度等均无可靠保护作用。
+> 　Oxford 博士生、Exin Therapeutics 联合创始人 Gabriel Ocana-Santero 在 X 上描述，Claude Sonnet 5 智能体从 19 种候选基因疗法中自主选择药物、脑区和注射坐标，通过定制电动手术设备为癫痫小鼠完成注射，术中做出 32 次观察，小鼠恢复良好。
 
 `The Decoder：AI News（RSS）`
 
 
 ---
 
-**5. [Artificial Analysis 发布 Intelligence Index v5 与 Progress Index](https://x.com/ArtificialAnlys/status/2115883284706349285)**
+**4. [MIT 调查：近七成青年数学家忧 AI 加剧教职竞争](https://x.com/rohanpaul_ai/status/2116252039726633236)**
 
-> 　Artificial Analysis 在旧金山发布 Intelligence Index v5，新增两项基准、三项升级，并首次让指数大部分基于私有测试集或留出答案，同时加大智能体编程与科学的权重。
-
-`X：Artificial Analysis (@ArtificialAnlys)`
-
-
----
-
-**6. [Joy 发布 10 万小时双声道对话数据集](https://x.com/rohanpaul_ai/status/2115867941598273601)**
-
-> 　无脚本通话很难大规模收集。
-如今的语音 AI 大多是从 LLM 编写的虚假对话、再由 TTS 朗读出来中学习，所以它从未听过人们互相抢话；
-
-真的很好奇他们是如何让对话持续 10 到 20 分钟的。
-
-他们发布了 Joy，10 万小时的无脚本双人对话，覆盖 10 种语言
-
-https://x.com/shobhitbanga/status/2115862857351061694/video/1
+> 　MIT 一项新论文调查了来自近 60 所机构的 268 名数学研究生和博士后，76.3% 预计 AI 会让终身教职岗位更难获得，近 70% 的受访者持此看法。调查于 2026 年 9 月和 10 月初完成，多数回复早于 OpenAI 发布 700+ 道开放问题的 AI 解答。在研究中使用 AI 的受访者里，54.8% 表示不喜欢这样做，部分青年数学家因担心被 AI 抢先而减少分享未完成工作。
 
 `X：Rohan Paul (@rohanpaul_ai)`
 
 
 ---
 
-**7. [Google Research 的 Exo：让 AI 智能体运行时自我改进](https://x.com/arena/status/2115865351397511204)**
+**5. [VoiceArena 推出 Turing TTS 评测：最佳模型 Fool Rate 仅约 10%](https://x.com/rohanpaul_ai/status/2116245323039592529)**
 
-> 　UC Berkeley 博士生、Google Research 高级研究员 Alex Krentsel 在 Arena HQ 介绍了自改进 AI 智能体架构 Exo，借鉴操作系统的 exokernel 思路，把智能体拆成受保护的机制层（状态、历史、密钥和 guardian）与可完全演化的策略层。在开放世界 RuneScape 任务上，Exo 比 Codex 和 Pi 便宜 31-62%。
+> 　VoiceArena 推出 Turing TTS 评测，让听众听同一句话的人类语音和模型语音并挑出真人，挑错比例即 Fool Rate。最佳模型 Gemini 3.8 Flash TTS 的 Fool Rate 仅约 10%，而偏好榜前四名模型统计上并列，说明整个领域距难以与真人区分还有距离。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**6. [MIT 团队推出 LLM Election Observatory，实时追踪 AI 聊天机器人如何回答 2026 中期选举问题](https://news.mit.edu/2026/qa-hey-ai-who-should-i-vote-for-this-year-1030)**
+
+> 　MIT 研究人员构建了名为 LLM Election Observatory 的仪表盘，实时追踪主流 AI 聊天机器人对 2026 年美国中期选举相关问题的回答。团队每隔几天用同一组固定问题重新测试各模型，监测回答如何随选举临近、用户所在地、党派倾向和身份等因素变化。该项目旨在系统记录这一信息环境并向其他研究者和公众开放数据，关注点不止于事实准确性，还包括框架、强调重点、不确定性和引用来源的差异。
+
+`MIT News（RSS）`
+
+
+---
+
+**7. [JetSpec++ 投机解码提速最高 7.45 倍](https://x.com/haoailab/status/2116240411530551435)**
+
+> 　UCSD Hao AI Lab 推出 JetSpec++，用因果并行草稿、隐状态预测器和锚点 token 解码器，在当前块验证前先草拟下一块，把草稿与验证流水线化，几乎隐藏全部草稿开销。
+
+`X：UCSD Hao AI Lab (@haoailab)`
+
+
+---
+
+**8. [Arena 分析缓存对 Agent 任务成本的影响：无缓存时费用将高出 260%](https://x.com/arena/status/2116186548588929328)**
+
+> 　Arena 基于 2026 年 9 月 12 日至 10 月 23 日的 2.6 万多次 Agent Arena 会话（涵盖 30 个 Agent 和 13 家实验室）分析缓存对 Agent 任务成本的影响：若缓存 token 按全价输入计费，top-10 Agent 的典型任务成本将高出 260%（3.6 倍）。
 
 `X：Arena (@arena)`
 
 
 ---
 
-**8. [Meta 论文提出 Sharpening Tax：RL 后训练提升首试准确率但缩小解法覆盖](https://x.com/rohanpaul_ai/status/2115854746456346784)**
+**9. [Google 论文提出 Thinking-in-Bets，减少 Gemini Agent 的谄媚性改写](https://x.com/rohanpaul_ai/status/2116096772191769039)**
 
-> 　Meta 论文发现 RL 后训练让 Agent 首次尝试更准，但在最多 128 次尝试内找到解法的能力反而变差。
-
-`X：Rohan Paul (@rohanpaul_ai)`
-
-
----
-
-**9. [DeepMind 论文：训练模型写道德论证更果断但判断力未提升](https://x.com/rohanpaul_ai/status/2115841930328490358)**
-
-> 　Google DeepMind 新论文发现，用强化学习训练 Gemma-4 4B 写道德论证后，模型在选项互换时的答案翻转率从 14.3% 降至 6.6%，但附和用户的比例仅从 45.3% 变为 44.0%，道德寓言准确率反而从 56.5% 降到 53.4%。论文据此建议，评估模型的建议或判断任务时应分别测试一致性与正确性，因为更稳定的模型仍可能出错。
+> 　Google 论文《Thinking-in-Bets at Test Time Reduces Sycophantic Revisions in LLM Agents》提出一种免训练方法：Agent 在读取用户反馈前先私下记录主要论断、依据和置信度，被质疑时只复核有争议的部分。
 
 `X：Rohan Paul (@rohanpaul_ai)`
 
 
 ---
 
-**10. [Meta 详解 Catching JiTTests 全量部署：LLM 生成测试在代码合入前捕获 bug](https://engineering.fb.com/2026/10/29/security/catching-bugs-before-they-land-jittestings-human-on-the-loop-approach-at-full-scale/)**
+**10. [Meta 论文：从水印输出蒸馏的模型可被黑盒检测](https://x.com/rohanpaul_ai/status/2116078904662462729)**
 
-> 　Meta 介绍其 LLM 驱动的 Catching JiTTests 已从研究原型进入生产基础设施，通过 dodgy diff 和 intent-aware 两条工作流自动生成测试，在代码合入前暴露 bug，并用 RubFake 规则与 LLM-as-Judge 集成过滤误报、以 human-on-the-loop 方式降低人工审查负担。
+> 　Meta 新论文提出 WM-Basin，可从蒸馏模型的文本输出中黑盒检测其是否源自带水印的 API 输出。该方法把嫌疑模型的 API 输出转成固定探针模型的梯度，再与真实密钥比对；在 1,200 个蒸馏模型、0.1% 假阳性率下，对 n-gram=1 水印的检出率达 79%，而传统 token 计数仅 29%。量化、轻度剪枝和 RL 后训练未能消除该痕迹，但在干净数据上进一步微调会削弱它。
 
-`Meta Engineering Blog（RSS）`
+`X：Rohan Paul (@rohanpaul_ai)`
 
 
 ---
