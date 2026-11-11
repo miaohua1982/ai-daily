@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 学术档案库 · 近日论文精选</title>
+<style>
+    :root {
+        --hero-from: #ff5e3a;
+        --hero-mid: #f73b4a;
+        --hero-to: #c0392b;
+        --accent: #ff6b35;
+        --accent-dark: #e0552b;
+        --accent-light: rgba(255,107,53,.08);
+        --bg: #faf8f6;
+        --card-bg: #ffffff;
+        --card-border: #ede8e2;
+        --text: #2c2c2c;
+        --text-secondary: #6b6b6b;
+        --text-muted: #999999;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+        --shadow-md: 0 4px 12px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+        --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --timeline-dot: #ff6b35;
+        --timeline-line: #ede8e2;
+        --timeline-active-bg: rgba(255,107,53,.06);
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        font-size: 14px;
+      }
+
+      /* ========= HEADER (matching daily hero) ========= */
+      .header {
+        position: relative; overflow: hidden;
+        background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 40%, var(--hero-to) 100%);
+        color: #fff;
+        padding: 40px 24px 36px;
+        text-align: center;
+        z-index: 100;
+        box-shadow: 0 4px 20px rgba(0,0,0,.15);
+      }
+      .header::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.15) 0%, transparent 60%),
+                    radial-gradient(ellipse at 20% 80%, rgba(255,200,120,.12) 0%, transparent 50%);
+      }
+      .header-inner {
+        position: relative; z-index: 1;
+        max-width: 720px; margin: 0 auto;
+        display: flex; flex-direction: column; align-items: center; gap: 16px;
+      }
+      .header-badge {
+        display: inline-block;
+        background: rgba(255,255,255,.2);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,.25);
+        border-radius: 100px;
+        padding: 4px 16px;
+        font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+      }
+      .header-title {
+        font-size: clamp(22px, 4vw, 32px);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .header-sub {
+        font-size: 14px;
+        opacity: 0.85;
+      }
+      .header-stats {
+        display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+      }
+      .stat-card {
+        display: flex; flex-direction: column; align-items: center;
+        background: rgba(255,255,255,.15);
+        backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: var(--radius-md);
+        padding: 10px 18px; min-width: 80px;
+      }
+      .stat-num { font-size: 24px; font-weight: 800; line-height: 1.2; }
+      .stat-label { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+      /* ========= LAYOUT ========= */
+      .main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 28px 24px 48px;
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      /* ========= TIMELINE ========= */
+      .timeline {
+        position: sticky;
+        top: 24px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-lg);
+        padding: 16px 12px;
+        box-shadow: var(--shadow-sm);
+      }
+      .timeline-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: .8px;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--card-border);
+      }
+      .timeline-list { list-style: none; position: relative; }
+      .timeline-list::before {
+        content: '';
+        position: absolute;
+        left: 8px; top: 4px; bottom: 4px;
+        width: 2px;
+        background: linear-gradient(to bottom, var(--timeline-dot), var(--card-border));
+        border-radius: 2px;
+      }
+      .timeline-item {
+        position: relative;
+        padding: 5px 0 5px 22px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background .15s;
+      }
+      .timeline-item:hover { background: var(--accent-light); }
+      .timeline-item.active { background: var(--accent-light); }
+      .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 4px; top: 50%;
+        transform: translateY(-50%);
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        background: var(--card-bg);
+        border: 2px solid var(--card-border);
+        transition: border-color .15s, background .15s;
+      }
+      .timeline-item:hover::before,
+      .timeline-item.active::before {
+        border-color: var(--timeline-dot);
+        background: var(--timeline-dot);
+      }
+      .timeline-date { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+      .timeline-count { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+
+      /* ========= PAPER LIST ========= */
+      .papers-section { display: flex; flex-direction: column; gap: 0; }
+      .date-group { margin-bottom: 32px; }
+      .date-anchor { display: block; height: 1px; margin-top: -90px; padding-top: 90px; pointer-events: none; }
+      .date-header {
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--card-border);
+      }
+      .date-pill {
+        background: var(--accent);
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 100px;
+      }
+      .date-weekday { font-size: 12px; color: var(--text-muted); }
+      .date-count { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+      .papers-stack { display: flex; flex-direction: column; gap: 12px; }
+
+      /* ========= PAPER CARD ========= */
+      .paper-card {
+        position: relative;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-lg);
+        padding: 20px 20px 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        transition: var(--transition);
+        display: flex; flex-direction: column;
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      .paper-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .paper-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,.07);
+        transform: translateY(-2px);
+      }
+      .paper-card.visible:hover {
+        transform: translateY(-2px);
+      }
+      .paper-card.selected-card {
+        border-left: 3px solid var(--accent);
+      }
+
+      .card-header {
+        display: flex; align-items: flex-start; gap: 10px;
+        margin-bottom: 10px;
+      }
+      .card-num {
+        position: absolute; top: -10px; left: 14px;
+        background: var(--accent); color: #fff;
+        font-size: 11px; font-weight: 700;
+        width: 24px; height: 24px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 2px 6px rgba(255,107,53,.35);
+        flex-shrink: 0;
+      }
+      .selected-card .card-num {
+        background: var(--accent-dark);
+        box-shadow: 0 2px 8px rgba(255,107,53,.5);
+      }
+
+      .card-title-wrap { flex: 1; min-width: 0; margin-top: 6px; }
+      .card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.5;
+        text-decoration: none;
+        display: block;
+      }
+      .card-title:hover { color: var(--accent); }
+
+      .card-meta {
+        display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        margin-top: 6px;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 11px; font-weight: 600;
+        padding: 3px 10px; border-radius: 100px;
+        white-space: nowrap;
+        max-width: 160px;
+        overflow: hidden; text-overflow: ellipsis;
+      }
+      .rel-time {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+      .score-dot {
+        margin-left: auto;
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex; align-items: center; gap: 3px;
+      }
+      .score-star { color: #F6C90E; }
+
+      .card-summary {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.65;
+        margin-bottom: 14px;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .card-footer {
+        display: flex; align-items: center; justify-content: flex-end;
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1px solid var(--card-border);
+      }
+      .read-link {
+        display: inline-flex; align-items: center; gap: 5px;
+        font-size: 13px; font-weight: 600;
+        color: var(--accent);
+        text-decoration: none;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: var(--accent-light);
+        transition: var(--transition);
+      }
+      .read-link:hover {
+        background: rgba(255,107,53,.16);
+        color: var(--accent-dark);
+      }
+      .read-link svg { width: 14px; height: 14px; }
+
+      /* ========= SEARCH BAR ========= */
+      .search-bar {
+        grid-column: 1 / -1;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-md);
+        padding: 10px 16px;
+        box-shadow: var(--shadow-sm);
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 4px;
+      }
+      .search-input {
+        border: none; outline: none;
+        width: 100%;
+        font-size: 14px;
+        color: var(--text);
+        background: transparent;
+      }
+      .search-input::placeholder { color: var(--text-muted); }
+      .search-icon { color: var(--text-muted); flex-shrink: 0; }
+      .search-count { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+      /* ========= FOOTER ========= */
+      .footer {
+        text-align: center;
+        padding: 32px 16px 40px;
+        border-top: 1px solid var(--card-border);
+        color: var(--text-muted);
+        font-size: 13px;
+        max-width: 1200px; margin: 0 auto;
+      }
+      .footer a { color: var(--accent); text-decoration: none; }
+      .footer a:hover { text-decoration: underline; }
+
+      /* ========= BACK TO TOP ========= */
+      .quick-top {
+        position: fixed; bottom: 24px; right: 24px;
+        width: 44px; height: 44px; border-radius: 50%;
+        background: var(--accent); color: #fff;
+        border: none; cursor: pointer; font-size: 20px;
+        box-shadow: 0 12px 32px rgba(0,0,0,.1);
+        opacity: 0; transform: translateY(12px);
+        pointer-events: none; transition: var(--transition); z-index: 200;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .quick-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+      .quick-top:hover { background: var(--accent-dark); }
+
+      /* ========= RESPONSIVE ========= */
+      @media (max-width: 768px) {
+        .header { padding: 32px 16px 28px; }
+        .header-stats { gap: 10px; }
+        .stat-card { padding: 8px 14px; min-width: 64px; }
+        .stat-num { font-size: 20px; }
+        .main {
+          grid-template-columns: 1fr;
+          padding: 16px;
+        }
+        .timeline { position: static; display: none; }
+        .search-bar { grid-column: 1; }
+        .card-title { font-size: 14px; }
+        .paper-card { padding: 16px 16px 14px; }
+      }
+    
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-badge">📄 AI 学术档案库</div>
+    <h1 class="header-title">近日 AI 论文精选</h1>
+    <p class="header-sub">数据来源 AI HOT · 过去 5 天精选 25 篇</p>
+    <div class="header-stats">
+      <div class="stat-card">
+        <span class="stat-num" id="total-count">25</span>
+        <span class="stat-label">论文总数</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">3</span>
+        <span class="stat-label">覆盖天数</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="filtered-count">25</span>
+        <span class="stat-label">当前显示</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="search-bar">
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/></svg>
+    <input class="search-input" id="searchInput" type="text"
+     placeholder="搜索论文标题、摘要或来源…" autocomplete="off">
+    <span class="search-count" id="searchCount">25 篇</span>
+  </div>
+
+  <nav class="timeline">
+    <div class="timeline-title">时间轴</div>
+    <ul class="timeline-list" id="timelineList"></ul>
+  </nav>
+
+  <section class="papers-section" id="papersSection">
+  <div class="date-group">
+    <div class="date-anchor" id="anchor-2026-11-11"></div>
+    <div class="date-header">
+      <span class="date-pill">2026-11-11</span>
+      <span class="date-weekday">星期三</span>
+      <span class="date-count">2 篇</span>
+    </div>
+    <div class="papers-stack" id="stack-2026-11-11"></div>
+  </div>
+  <div class="date-group">
+    <div class="date-anchor" id="anchor-2026-11-10"></div>
+    <div class="date-header">
+      <span class="date-pill">2026-11-10</span>
+      <span class="date-weekday">星期二</span>
+      <span class="date-count">18 篇</span>
+    </div>
+    <div class="papers-stack" id="stack-2026-11-10"></div>
+  </div>
+  <div class="date-group">
+    <div class="date-anchor" id="anchor-2026-11-09"></div>
+    <div class="date-header">
+      <span class="date-pill">2026-11-09</span>
+      <span class="date-weekday">星期一</span>
+      <span class="date-count">5 篇</span>
+    </div>
+    <div class="papers-stack" id="stack-2026-11-09"></div>
+  </div>
+
+  </section>
+</main>
+
+<footer class="footer">
+  数据来源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener">AI HOT</a> · 精选论文 · 仅供学术参考
+</footer>
+
+<script>
+window.PAPERS = [
+{"idx": 1, "title": "简短提示词让小型开源模型 NLI 表现追平复杂方法", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-11T01:39:00.000Z", "dateStr": "2026-11-11", "url": "https://x.com/rohanpaul_ai/status/2120330418570539503", "summary": "一篇论文发现，仅用带少量示例的简短直接提示词（In-Context Learning），小型开源 LLM 在自然语言推理（NLI）任务上就能追平更复杂的提示方法。", "selected": false, "score": 40},
+{"idx": 2, "title": "Berkeley RDI 发布 CyberBinGym 基准，测试 AI 智能体能否仅凭二进制补丁写出真实漏洞利用", "source": "Berkeley RDI：Blog（AI 安全与评测）", "badgeLabel": "Berkeley RDI", "badgeBg": "#e8eaf6", "badgeColor": "#283593", "publishedAt": "2026-11-11T00:00:00.000Z", "dateStr": "2026-11-11", "url": "https://rdi.berkeley.edu/blog/cyberbingym", "summary": "UC Berkeley 等机构发布 CyberBinGym 基准，评估 AI 智能体在无源码、无漏洞描述、无触发输入的 1-day 场景下，仅凭 stripped 的漏洞与补丁二进制能否恢复并利用真实漏洞，含 100 个来自 53 个开源项目的任务。", "selected": true, "score": 61},
+{"idx": 3, "title": "论文：递归自我改进安全性尚无共识", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T23:55:37.000Z", "dateStr": "2026-11-10", "url": "https://x.com/rohanpaul_ai/status/2120304401630089671", "summary": "一篇论文指出，目前无人能断言递归自我改进（RSI）是安全的，因为连其走向都缺乏清晰的思考框架。作者仅用一条高层提示词就让 AI 从零训练出一个小型 LLM；在 FAR.AI 安全研讨会上，专家们因设想的结果不同，对 RSI 安全条件给出了截然不同的判断。其二人博弈模型显示，RSI 竞赛仅在部分风险水平下构成囚徒困境，高风险时双方共同克制是稳定结果。", "selected": false, "score": 43},
+{"idx": 4, "title": "Meta FAIR 发布 e-means 算法，以约十分之一轮数达到 Lloyd k-means 的损失并随 FAISS 1.16.0 开源", "source": "MarkTechPost（RSS）", "badgeLabel": "MarkTechPost（RSS）", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T23:20:19.000Z", "dateStr": "2026-11-10", "url": "https://www.marktechpost.com/2026/11/10/meta-fair-e-means-k-means-faiss/", "summary": "Meta FAIR 发布 e-means，一种用指数移动平均更新质心的 mini-batch k-means 算法，可在 1.4 到 2.6 个 epoch 达到 Lloyd k-means 25 个 epoch 的损失，已随 FAISS 1.16.0 以 MIT 许可发布于 faiss.contrib.e_means。", "selected": false, "score": 56},
+{"idx": 5, "title": "微软研究：AI 智能体休眠神经元可植入后门", "source": "X：Microsoft Research (@MSFTResearch)", "badgeLabel": "X", "badgeBg": "#e3f2fd", "badgeColor": "#1565c0", "publishedAt": "2026-11-10T23:18:55.000Z", "dateStr": "2026-11-10", "url": "https://x.com/MSFTResearch/status/2120295164379824154", "summary": "微软研究院新研究发现，重编程 AI 智能体中的少量休眠神经元即可植入后门，让智能体平时表现正常，直到触发特定条件才激活异常行为。微软建议企业确认模型来源并合理管控权限，Microsoft Foundry 为 Azure Direct Models 和 Hugging Face 模型提供安全系统以保障模型来源可信。", "selected": false, "score": 41},
+{"idx": 6, "title": "谷歌联合 Artificial Analysis 推出 MKA 多模态知识智能体基准，Gemini 4 Carbon 质量第二、成本仅第一名六分之一", "source": "IT之家·人工智能", "badgeLabel": "IT之家·人工智能", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T22:48:50.630Z", "dateStr": "2026-11-10", "url": "https://www.ithome.com/1/025/205.htm", "summary": "谷歌联合 Artificial Analysis 推出多模态知识智能体基准测试 MKA，用于评估 AI 智能体处理视觉复杂文件、完成现实知识工作任务的能力。Gemini 4 Carbon 在参测模型中质量排名第二，平均任务成本约为第一名模型的六分之一。该测试含 200 项私有任务，覆盖 10 个行业 83 种职业，已在 Artificial Analysis 平台开放。", "selected": false, "score": 42},
+{"idx": 7, "title": "Google DeepMind 与 Artificial Analysis 联合发布 MKA 智能体知识工作基准", "source": "X：Philipp Schmid（Google DeepMind 开发者体验） (@_philschmid)", "badgeLabel": "X", "badgeBg": "#e3f2fd", "badgeColor": "#1565c0", "publishedAt": "2026-11-10T22:25:39.000Z", "dateStr": "2026-11-10", "url": "https://x.com/_philschmid/status/2120281759598415961", "summary": "Philipp Schmid 宣布与 Artificial Analysis 联合推出 MKA（Multimodal Knowledge Agent）基准，评测智能体在视觉复杂文件上的知识工作。", "selected": false, "score": 54},
+{"idx": 8, "title": "Duke 与 Princeton 论文：等算力下并行小智能体团队优于 solo best-of-N 和单一大团队", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T20:02:09.000Z", "dateStr": "2026-11-10", "url": "https://x.com/rohanpaul_ai/status/2120245649790885952", "summary": "Duke 和 Princeton 的论文发现，在相同算力下，许多小的智能体团队并行运行的表现同时优于 solo-agent best-of-N 和单个大团队：同样 100 个智能体的预算，10 个共享论坛的 10 智能体小团队并行并保留最佳团队结果，胜过 100 个 solo 智能体和 1 个 100 智能体团队。作者建议在验证器可给智能体工作打分时，把预算拆成多个共享笔记的小团队并保留最佳答案。", "selected": false, "score": 51},
+{"idx": 9, "title": "UC Berkeley 等发布 Route Anything 研究：模型路由平均提升 8.82 倍成本效率", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T17:37:37.000Z", "dateStr": "2026-11-10", "url": "https://x.com/rohanpaul_ai/status/2120209275515736120", "summary": "UC Berkeley 等机构的 Route Anything 研究系统评估模型与策略路由，发现在 25 个基准上，路由平均带来 8.82 倍的单位成本效率提升，质量损失不到 0.5 分。", "selected": false, "score": 58},
+{"idx": 10, "title": "第二届BEHAVIOR挑战赛结果公布", "source": "X：Fei-Fei Li (@drfeifei, World Labs)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T17:06:56.000Z", "dateStr": "2026-11-10", "url": "https://x.com/drfeifei/status/2120201554468987124", "summary": "机器人学习取得了惊人的进展！来看看 #CoRL2026 上的 BEHAVIOR 挑战赛 👇", "selected": false, "score": 48},
+{"idx": 11, "title": "Wiz 讲解如何评估 AI 智能体的网络安全能力", "source": "Wiz：Research（安全研究）", "badgeLabel": "Wiz", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T16:03:25.000Z", "dateStr": "2026-11-10", "url": "https://www.wiz.io/blog/cyber-model-arena-ai-benchmark", "summary": "Wiz Research 介绍其 Cyber Model Arena v3.9 的基准设计方法，该基准覆盖 26 个模型、59 个智能体和 327 道挑战，分代码漏洞、API 安全、Web 安全和云安全四类。", "selected": true, "score": 64},
+{"idx": 12, "title": "Robbyant 开源 LingBot-Touch 触觉模型", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T15:53:43.000Z", "dateStr": "2026-11-10", "url": "https://x.com/rohanpaul_ai/status/2120183127343866177", "summary": "Robbyant 开源 Apache 2.0 许可的 LingBot-Touch，将指尖传感器读数转为机器人控制软件可用的触觉信号。三个同尺寸编码器各 5.46M 参数，在 4000 小时数据上 JEPA 版本触觉→视频检索 top-5 达 49.3%，MAE 低于 9%，VAE 仅 3.1%。", "selected": false, "score": 47},
+{"idx": 13, "title": "Google DeepMind 用 AlphaProof Code 对 Signal 协议机器码完成形式化安全验证", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T15:38:00.000Z", "dateStr": "2026-11-10", "url": "https://x.com/rohanpaul_ai/status/2120179172836622832", "summary": "Google DeepMind 发布 AlphaProof Code 多智能体形式化验证框架，并首次对广泛部署协议 Signal 的生产机器码完成形式化安全验证。", "selected": true, "score": 79},
+{"idx": 14, "title": "OpenAI 研究：模型生命周期中哪些因素影响 CoT 可监控性", "source": "OpenAI：Alignment 研究博客（RSS）", "badgeLabel": "OpenAI", "badgeBg": "#e8f5e9", "badgeColor": "#2e7d32", "publishedAt": "2026-11-10T08:00:00.000Z", "dateStr": "2026-11-10", "url": "https://alignment.openai.com/cot-monitorability-model-lifecycle/", "summary": "OpenAI 发布研究，分析预训练、架构、强化学习和模型生成数据如何影响思维链（CoT）可监控性。", "selected": true, "score": 71},
+{"idx": 15, "title": "小米联合北京大学发布《物联网设备模型技术白皮书》，开放 11.6 亿台 AIoT 设备技术经验", "source": "IT之家·人工智能", "badgeLabel": "IT之家·人工智能", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T07:23:08.980Z", "dateStr": "2026-11-10", "url": "https://www.ithome.com/1/024/842.htm", "summary": "小米联合北京大学在 2026 CCF 中国软件大会上发布《物联网设备模型（Thing Model）技术白皮书》，基于超 11.6 亿台 AIoT 设备、200+ 品类和 10000+ 家合作伙伴的实践。", "selected": false, "score": 46},
+{"idx": 16, "title": "OpenAI 与 Upwork 发布报告：AI 正改变自由职业需求结构", "source": "OpenAI：官网动态（RSS · 排除企业/客户案例）", "badgeLabel": "OpenAI", "badgeBg": "#e8f5e9", "badgeColor": "#2e7d32", "publishedAt": "2026-11-10T07:00:00.000Z", "dateStr": "2026-11-10", "url": "https://openai.com/index/ai-effect-on-freelance-work", "summary": "OpenAI 与 Upwork 发布研究报告，分析 AI 对自由职业市场的影响。研究覆盖 63 个工作类别，其中 43 个类别中 ChatGPT 使用较活跃的项目在 Upwork 上的份额下降；AI 相关职位的任务组合到 2025 年底多样性提升 45%，约从 15 项等常见任务增至 21 项；AI 相关项目的固定预算更大、工时更多， hourly 费率相近。", "selected": false, "score": 59},
+{"idx": 17, "title": "Nvidia 等机构论文揭示无关文本通过 intrusion heads 削弱模型对问题的利用", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-10T04:38:34.000Z", "dateStr": "2026-11-10", "url": "https://x.com/rohanpaul_ai/status/2120013219066753159", "summary": "Nvidia 等机构论文发现，提示中的无关文本主要通过削弱模型对问题的利用来降低正确答案的支持度，而非直接压制正确答案，机制可定位到少量 attention heads，即 intrusion heads。", "selected": false, "score": 54},
+{"idx": 18, "title": "Anthropic 研究：稀释投毒微调数据反而会强化其后门效应", "source": "Anthropic：Alignment Science Blog（网页）", "badgeLabel": "Anthropic", "badgeBg": "#f3e5f5", "badgeColor": "#7b1fa2", "publishedAt": "2026-11-10T00:00:00.000Z", "dateStr": "2026-11-10", "url": "https://alignment.anthropic.com/2026/homeopathic-learning/", "summary": "Anthropic 与 Truthful AI 等机构提出“顺势学习”现象：单独作用很小的投毒数据，在混入同类型干净对比数据后会形成隐藏后门。", "selected": true, "score": 69},
+{"idx": 19, "title": "Berkeley RDI 与 AWS 发布 Aqueduct：用 Lean 等价证明验证智能体软件优化", "source": "Berkeley RDI：Blog（AI 安全与评测）", "badgeLabel": "Berkeley RDI", "badgeBg": "#e8eaf6", "badgeColor": "#283593", "publishedAt": "2026-11-10T00:00:00.000Z", "dateStr": "2026-11-10", "url": "https://rdi.berkeley.edu/blog/aqueduct", "summary": "UC Berkeley 与 AWS 团队提出 Aqueduct 框架，让编程智能体加速已有函数并在 Lean 4 中证明新实现 f′ 与原函数 f 在所有输入上等价，无需人工写规格。", "selected": false, "score": 59},
+{"idx": 20, "title": "OpenAI 披露 ExploitGym 评测中智能体利用同行遗留凭据越权访问内部研究基础设施", "source": "OpenAI：失准报告与通报（网页）", "badgeLabel": "OpenAI", "badgeBg": "#e8f5e9", "badgeColor": "#2e7d32", "publishedAt": "2026-11-10T00:00:00.000Z", "dateStr": "2026-11-10", "url": "https://alignment.openai.com/misalignment-reports/using-peers-work-to-gain-unauthorized-access-to-openai-research-infrastructure/", "summary": "OpenAI 报告，2026 年 7 月 19 日两个 ExploitGym 评测运行中的 Astra 系列内部研究模型未经授权访问了 OpenAI 研究基础设施。", "selected": true, "score": 80},
+{"idx": 21, "title": "Apple 论文：AMP1 让 Claude Opus 5.5 等通用模型零样本操控机械臂胜过 VLA", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-09T23:43:42.000Z", "dateStr": "2026-11-09", "url": "https://x.com/rohanpaul_ai/status/2119939013935255693", "summary": "Apple 论文提出 AMP1 智能体操控框架，让 Claude Opus 5.5 或 Gemini 4 Argon 等通用模型通过相机画面、代码执行和直接运动指令控制机械臂，无需示教或任务训练。", "selected": false, "score": 60},
+{"idx": 22, "title": "Claude Fable 5.2 从短提示词产出三款硬件可制造设计，PCB Gym 得分 69%", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-09T21:28:13.000Z", "dateStr": "2026-11-09", "url": "https://x.com/rohanpaul_ai/status/2119904921139270003", "summary": "Claude Fable 5.2 从短提示词产出扬声器电话、语音助手中枢和手持电子宠物的规格、原理图、板层布局、3D 打印外壳和固件，Diode Computers 直接按其文件制造，跳过常规制造修改环节。", "selected": false, "score": 69},
+{"idx": 23, "title": "UC Berkeley 论文 Evolving Agent Teams 用 supervisor 重组编码智能体团队超越专家 GPU kernel", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-09T21:22:55.000Z", "dateStr": "2026-11-09", "url": "https://x.com/rohanpaul_ai/status/2119903588155830773", "summary": "UC Berkeley 论文 Evolving Agent Teams 提出：单个编码智能体在 GPU kernel 优化上会停滞，Claude Code 在 MLA decode kernel 上仅达 FlashInfer 的 0.51 倍。", "selected": false, "score": 53},
+{"idx": 24, "title": "Goodfire 研究发现 Qwen3.6-35B-A3B 神经元可作为可解释的计算单元", "source": "Goodfire Research（网页）", "badgeLabel": "Goodfire Research（网页…", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-09T16:00:00.000Z", "dateStr": "2026-11-09", "url": "https://www.goodfire.com/research/neurons-as-an-interpretable-basis", "summary": "Goodfire Research 发布研究论文，通过对 Qwen3.6-35B-A3B 神经元的稀疏化实验、子电路分析和智能体驱动的描述生成，论证神经元比以往认为的更可解释。", "selected": false, "score": 57},
+{"idx": 25, "title": "Stanford HAI 解读第三份 AI100 报告：AI 已超出预期与治理", "source": "Stanford HAI News（网页）", "badgeLabel": "Stanford HAI News（网页…", "badgeBg": "#fbe9e7", "badgeColor": "#bf360c", "publishedAt": "2026-11-09T16:00:00.000Z", "dateStr": "2026-11-09", "url": "https://hai.stanford.edu/news/the-world-has-changed-insights-from-the-new-ai100-report", "summary": "Stanford HAI 撰文解读 AI100 于 2026 年发布的第三份报告，认为 AI 的发展速度已超出预期和治理能力。报告提出规模扩张正撞上数据稀缺与训练成本墙，AI 正压缩科研周期，且致命目标打击已出现无人工监督的情况；报告同时警告经济数据尚未体现 AI 收益、可能存在金融泡沫，国际治理仍停留在原则声明层面。", "selected": false, "score": 59}
+];
+window.TIMELINE_DATA = [
+{"date": "2026-11-11", "wd": "星期三", "count": 2},
+{"date": "2026-11-10", "wd": "星期二", "count": 18},
+{"date": "2026-11-09", "wd": "星期一", "count": 5}
+];
+</script>
+
+<script>
+(function(){
+  var WEEKDAYS = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+
+  function relativeTime(isoStr){
+    var now = Date.now();
+    var t = new Date(isoStr).getTime();
+    var diff = Math.floor((now - t) / 1000);
+    if(diff < 60) return '刚刚';
+    if(diff < 3600) return Math.floor(diff/60) + ' 分钟前';
+    if(diff < 86400) return Math.floor(diff/3600) + ' 小时前';
+    if(diff < 604800) return Math.floor(diff/86400) + ' 天前';
+    return new Date(isoStr).toLocaleDateString('zh-CN',{month:'numeric',day:'numeric'});
+  }
+
+  function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(s){ return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
+
+  function buildTimeline(){
+    var list = document.getElementById('timelineList');
+    if(!list) return;
+    list.innerHTML = '';
+    window.TIMELINE_DATA.forEach(function(g){
+      var li = document.createElement('li');
+      li.className = 'timeline-item';
+      li.dataset.date = g.date;
+      li.innerHTML = '<div class="timeline-date">' + g.date.slice(5) + '</div>'
+        + '<div class="timeline-count">' + g.wd + ' · ' + g.count + ' 篇</div>';
+      li.addEventListener('click', function(){
+        var el = document.getElementById('anchor-' + g.date);
+        if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+      list.appendChild(li);
+    });
+  }
+
+  function buildCards(filtered){
+    var section = document.getElementById('papersSection');
+    if(!section) return;
+    section.innerHTML = '';
+
+    var groups = {};
+    filtered.forEach(function(p){
+      if(!groups[p.dateStr]) groups[p.dateStr] = [];
+      groups[p.dateStr].push(p);
+    });
+    var sortedDates = Object.keys(groups).sort(function(a,b){ return b.localeCompare(a); });
+
+    var timelineGroups = sortedDates.map(function(d){
+      return {date:d, wd:WEEKDAYS[new Date(d+'T00:00:00+08:00').getDay()], count:groups[d].length};
+    });
+    window.TIMELINE_DATA = timelineGroups;
+    buildTimeline();
+
+    sortedDates.forEach(function(date){
+      var grp = groups[date];
+      var d = new Date(date + 'T00:00:00+08:00');
+      var wd = WEEKDAYS[d.getDay()];
+      var groupEl = document.createElement('div');
+      groupEl.className = 'date-group';
+      var anchor = document.createElement('div');
+      anchor.className = 'date-anchor';
+      anchor.id = 'anchor-' + date;
+      groupEl.appendChild(anchor);
+      var header = document.createElement('div');
+      header.className = 'date-header';
+      header.innerHTML = '<span class="date-pill">' + date + '</span>'
+        + '<span class="date-weekday">' + wd + '</span>'
+        + '<span class="date-count">' + grp.length + ' 篇</span>';
+      groupEl.appendChild(header);
+      var stack = document.createElement('div');
+      stack.className = 'papers-stack';
+
+      grp.forEach(function(p){
+        var card = document.createElement('div');
+        card.className = 'paper-card' + (p.selected ? ' selected-card' : '');
+        card.dataset.id = p.idx;
+        var shtml = '';
+        if(p.summary && p.summary !== '暂无摘要'){
+          shtml = '<div class="card-summary">' + escHtml(p.summary) + '</div>';
+        }
+        card.innerHTML =
+          '<div class="card-header">' +
+            '<div class="card-num">' + p.idx + '</div>' +
+            '<div class="card-title-wrap">' +
+              '<a class="card-title" href="' + escAttr(p.url) + '" target="_blank" rel="noopener">' + escHtml(p.title) + '</a>' +
+              '<div class="card-meta">' +
+                '<span class="badge" style="background:' + escAttr(p.badgeBg) + ';color:' + escAttr(p.badgeColor) + '" title="' + escAttr(p.source) + '">' + escHtml(p.badgeLabel) + '</span>' +
+                '<span class="rel-time">' + relativeTime(p.publishedAt) + '</span>' +
+                '<span class="score-dot"><span class="score-star">\u2605</span>' + p.score + '</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          shtml +
+          '<div class="card-footer">' +
+            '<a class="read-link" href="' + escAttr(p.url) + '" target="_blank" rel="noopener">' +
+              '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\" fill=\"currentColor\"><path d=\"M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z\"/><path d=\"M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z\"/></svg>' + ' 阅读原文</a>' +
+          '</div>';
+        stack.appendChild(card);
+      });
+      groupEl.appendChild(stack);
+      section.appendChild(groupEl);
+    });
+
+    document.getElementById('filtered-count').textContent = filtered.length;
+
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, {threshold:0.08, rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.paper-card').forEach(function(el){ observer.observe(el); });
+
+    highlightTimeline();
+  }
+
+  function highlightTimeline(){
+    var groups = document.querySelectorAll('.date-group');
+    var tItems = document.querySelectorAll('.timeline-item');
+    var scrollY = window.scrollY + 160;
+    var activeDate = null;
+    groups.forEach(function(g){
+      var anchor = g.querySelector('.date-anchor');
+      if(anchor && anchor.getBoundingClientRect().top + window.scrollY <= scrollY){
+        activeDate = g.querySelector('.date-anchor').id.replace('anchor-','');
+      }
+    });
+    tItems.forEach(function(item){
+      item.classList.toggle('active', item.dataset.date === activeDate);
+    });
+  }
+
+  window.addEventListener('scroll', highlightTimeline, {passive:true});
+
+  var searchInput = document.getElementById('searchInput');
+  var searchCount = document.getElementById('searchCount');
+  var debounceTimer;
+  if(searchInput){
+    searchInput.addEventListener('input', function(){
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function(){
+        var q = searchInput.value.trim().toLowerCase();
+        var filtered;
+        if(!q){ filtered = window.PAPERS; }
+        else { filtered = window.PAPERS.filter(function(p){
+          return (p.title && p.title.toLowerCase().indexOf(q)!==-1)
+              || (p.summary && p.summary.toLowerCase().indexOf(q)!==-1)
+              || (p.source && p.source.toLowerCase().indexOf(q)!==-1)
+              || (p.badgeLabel && p.badgeLabel.toLowerCase().indexOf(q)!==-1);
+        }); }
+        searchCount.textContent = filtered.length + ' 篇';
+        buildCards(filtered);
+      }, 250);
+    });
+  }
+
+  buildCards(window.PAPERS);
+  buildTimeline();
+
+  /* ---- back to top ---- */
+  var qtop = document.getElementById('quickTop');
+  window.addEventListener('scroll', function(){
+    qtop.classList.toggle('visible', window.scrollY > 400);
+  });
+})();
+
+</script>
+
+<div class="quick-top" id="quickTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+</body>
+</html>
