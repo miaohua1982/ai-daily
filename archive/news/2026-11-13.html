@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI HOT 晨报 — 2026年11月13日 · 星期五</title>
+<style>
+    :root {
+      --hero-from: #ff5e3a;
+      --hero-mid: #f73b4a;
+      --hero-to: #c0392b;
+      --accent: #ff6b35;
+      --accent-dark: #e0552b;
+      --bg: #faf8f6;
+      --card-bg: #ffffff;
+      --card-border: #ede8e2;
+      --text: #2c2c2c;
+      --text-secondary: #6b6b6b;
+      --text-muted: #999999;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 40%, var(--hero-to) 100%);
+      color: #fff; padding: 56px 24px 48px; text-align: center;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(255,200,120,.12) 0%, transparent 50%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block; background: rgba(255,255,255,.2);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.25); border-radius: 100px;
+      padding: 4px 16px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px;
+    }
+    .hero h1 { font-size: clamp(28px,5vw,44px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero-sub { font-size: 16px; opacity: 0.85; margin-bottom: 24px; }
+    .hero-stats { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .hero-stat {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(255,255,255,.15); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      border-radius: 12px; padding: 12px 20px; min-width: 80px;
+    }
+    .hero-stat-num { font-size: 28px; font-weight: 800; line-height: 1.2; }
+    .hero-stat-lbl { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .nav-wrap {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border); padding: 0 16px;
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 4px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-link {
+      flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 100px; font-size: 13.5px; font-weight: 600;
+      color: var(--text-secondary); text-decoration: none; transition: 0.3s; white-space: nowrap; border: 1px solid transparent;
+    }
+    .nav-link:hover { background: #f5f0eb; color: var(--accent-dark); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .nav-cnt { font-size: 11px; opacity: 0.6; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 48px; }
+    .section { margin-bottom: 48px; scroll-margin-top: 72px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--card-border); }
+    .section-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; transform: rotate(45deg); }
+    .section h2 { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .section-count { font-size: 14px; color: var(--text-muted); margin-left: auto; }
+    .section-empty { text-align: center; padding: 32px 16px; color: var(--text-muted); background: var(--card-bg); border-radius: 16px; border: 1px dashed var(--card-border); }
+    .section-empty-icon { font-size: 32px; margin-bottom: 8px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 16px; }
+    .card {
+      position: relative; background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 20px 20px 16px;
+      transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      display: flex; flex-direction: column; opacity: 0; transform: translateY(24px);
+    }
+    .card.revealed { opacity: 1; transform: translateY(0); }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.07); transform: translateY(-2px); }
+    .card.revealed:hover { transform: translateY(-2px); }
+    .card-num {
+      position: absolute; top: -10px; left: 16px; background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(255,107,53,.35);
+    }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; margin-top: 6px; }
+    .card-title { font-size: 15px; font-weight: 700; line-height: 1.5; color: var(--text); flex: 1; }
+    .card-source { flex-shrink: 0; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+    .source-x { background: #f0f0f0; color: #555; }
+    .source-blog { background: #e8f4fd; color: #1a73e8; }
+    .source-wechat { background: #e8f8e8; color: #2e7d32; }
+    .source-media { background: #fff3e0; color: #e65100; }
+    .source-hn { background: #fce4ec; color: #c62828; }
+    .source-gh { background: #f3e5f5; color: #6a1b9a; }
+    .card-summary { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 14px; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .card-time { font-size: 12px; color: var(--text-muted); }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;
+      color: var(--accent); text-decoration: none; padding: 6px 14px; border-radius: 100px;
+      background: rgba(255,107,53,.08); transition: 0.3s;
+    }
+    .card-link:hover { background: rgba(255,107,53,.16); color: var(--accent-dark); }
+    .card-link svg { width: 14px; height: 14px; }
+    .footer { text-align: center; padding: 32px 16px 40px; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 13px; max-width: 1100px; margin: 0 auto; }
+    .footer strong { color: var(--text-secondary); }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .quick-top {
+      position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 20px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.1); opacity: 0; transform: translateY(12px);
+      pointer-events: none; transition: 0.3s; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quick-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .quick-top:hover { background: var(--accent-dark); }
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 36px; }
+      .hero-stats { gap: 12px; }
+      .hero-stat { padding: 10px 14px; min-width: 64px; }
+      .hero-stat-num { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .section h2 { font-size: 17px; }
+      .nav-link { padding: 6px 12px; font-size: 12px; }
+    }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">☀️ AI HOT 晨报</div>
+    <h1>2026年11月13日 · 星期五</h1>
+    <p class="hero-sub">共 12 条资讯</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">12</span>
+        <span class="hero-stat-lbl">今日总条数</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-wrap" id="nav">
+  <div class="nav-inner">
+    <a href="#sec-ai-models" class="nav-link">
+      <span class="nav-dot" style="background:#6366f1"></span>模型发布/更新
+      <span class="nav-cnt">1</span>
+    </a>
+    <a href="#sec-ai-products" class="nav-link">
+      <span class="nav-dot" style="background:#0891b2"></span>产品发布/更新
+      <span class="nav-cnt">4</span>
+    </a>
+    <a href="#sec-industry" class="nav-link">
+      <span class="nav-dot" style="background:#d97706"></span>行业动态
+      <span class="nav-cnt">5</span>
+    </a>
+    <a href="#sec-paper" class="nav-link">
+      <span class="nav-dot" style="background:#7c3aed"></span>论文研究
+      <span class="nav-cnt">0</span>
+    </a>
+    <a href="#sec-tip" class="nav-link">
+      <span class="nav-dot" style="background:#059669"></span>技巧与观点
+      <span class="nav-cnt">2</span>
+    </a>
+  </div>
+</nav>
+
+<main class="main" id="main">
+<section class="section" id="sec-ai-models">
+  <div class="section-header">
+    <div class="section-dot" style="background:#6366f1"></div>
+    <h2>模型发布/更新</h2>
+    <span class="section-count">1 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">1</span>
+  <div class="card-top">
+    <h3 class="card-title">Google DeepMind 发布 Gemini 4 Hydrogen</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">Google DeepMind 发布 Gemini 4 Hydrogen，定位快速执行日常编码与智能体工作流，面向 G…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://deepmind.google/blog/introducing-gemini-4-hydrogen/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-ai-products">
+  <div class="section-header">
+    <div class="section-dot" style="background:#0891b2"></div>
+    <h2>产品发布/更新</h2>
+    <span class="section-count">4 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">2</span>
+  <div class="card-top">
+    <h3 class="card-title">Anthropic 推出 Claude Meetings，Claude 以参会者身份加入视频会议</h3>
+    <span class="card-source source-media">Claude</span>
+  </div>
+  <p class="card-summary">Anthropic 推出 Claude Meetings beta，Claude 可作为可见参会者加入视频通话，在会中…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://claude.com/blog/claude-meetings" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">3</span>
+  <div class="card-top">
+    <h3 class="card-title">Anthropic 建议把 Claude Opus 5.5 作为知识工作的日常主力模型</h3>
+    <span class="card-source source-media">Claude</span>
+  </div>
+  <p class="card-summary">Anthropic 宣布 Claude Opus 5.5 成为 Pro、Max、Ultra 和 Team 套餐的默认模…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://claude.com/blog/using-claude-opus-5-5-as-your-daily-driver-for-knowledge-work" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">4</span>
+  <div class="card-top">
+    <h3 class="card-title">Google 智能眼镜开放预购，12 月 10 日发货</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">Josh Woodward 宣布 Google 智能眼镜开启预购，用户可在 https://glasses.googl…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://x.com/joshwoodward/status/2120990821902397885" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">5</span>
+  <div class="card-top">
+    <h3 class="card-title">Replit Agent 新增代购能力和 Google Ads 投放功能</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">Replit 给 Replit Agent 新增两项能力：通过 Stripe Link 和 Visa 为企业代购物资，…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://replit.com/blog/replit-agent-ads-commerce" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-industry">
+  <div class="section-header">
+    <div class="section-dot" style="background:#d97706"></div>
+    <h2>行业动态</h2>
+    <span class="section-count">5 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">6</span>
+  <div class="card-top">
+    <h3 class="card-title">NVIDIA 宣布 CEO 变动：Jensen Huang 辞任，CFO Colette Kress 出任临时 CEO</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">NVIDIA 董事会宣布 Jensen Huang 即刻辞去总裁、CEO 及董事职务，CFO Colette Kres…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">7</span>
+  <div class="card-top">
+    <h3 class="card-title">Anthropic 官宣首次公开募股（IPO）</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">Anthropic 官方宣布启动首次公开募股（IPO），并公布入口 ipo.anthropic.com。Anthrop…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://x.com/AnthropicAI/status/2120841731302154708" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">8</span>
+  <div class="card-top">
+    <h3 class="card-title">Jensen Huang 辞任 Nvidia CEO 后对 AI 经济的五点影响分析</h3>
+    <span class="card-source source-media">Tomasz</span>
+  </div>
+  <p class="card-summary">Tomasz Tunguz 分析 Jensen Huang 即日辞任 Nvidia 总裁、CEO 及董事后对 AI 行…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://tomtunguz.com/the-impact-of-jensens-resignation/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">9</span>
+  <div class="card-top">
+    <h3 class="card-title">民主党对 Nvidia 对华芯片销售启动调查，致函质疑黄仁勋与特朗普的安排</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">民主党议员 Rep. Richard Neal 和 Sen. Ron Wyden 就特朗普政府处理 Nvidia 对华…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://techcrunch.com/2026/11/12/democrats-launch-nvidia-investigation-write-scathing-letter-on-huangs-scheme-with-trump/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">10</span>
+  <div class="card-top">
+    <h3 class="card-title">Rohan Paul 类比乔布斯被逐，评 NVIDIA 放走黄仁勋</h3>
+    <span class="card-source source-x">X</span>
+  </div>
+  <p class="card-summary">Lex Fridman 发文称 NVIDIA 让黄仁勋离开对美国和人类都是巨大错误，堪比 Apple 当年解雇 Ste…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://x.com/rohanpaul_ai/status/2120994977421705296" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+<section class="section" id="sec-paper">
+  <div class="section-header">
+    <div class="section-dot" style="background:#7c3aed"></div>
+    <h2>论文研究</h2>
+    <span class="section-count">0 条</span>
+  </div>
+  <div class="section-empty">
+    <div class="section-empty-icon">📄</div>
+    <p>今日无论文研究相关资讯</p>
+  </div>
+</section>
+
+<section class="section" id="sec-tip">
+  <div class="section-header">
+    <div class="section-dot" style="background:#059669"></div>
+    <h2>技巧与观点</h2>
+    <span class="section-count">2 条</span>
+  </div>
+  <div class="card-grid">
+<article class="card" data-reveal>
+  <span class="card-num">11</span>
+  <div class="card-top">
+    <h3 class="card-title">OpenRouter 详解自纠错网站本地化流水线：GPT-6.1 Sol 翻译 7 种语言全站约 $460</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">OpenRouter 上线简体中文、日语等 7 种语言 Beta 本地化，并详解配套的自纠错翻译流水线：GPT-6.1…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://openrouter.ai/blog/announcements/openrouter-in-8-languages/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+<article class="card" data-reveal>
+  <span class="card-num">12</span>
+  <div class="card-top">
+    <h3 class="card-title">OpenRouter 实测六模型并给出四层防护，解决 AI Agent 无限循环烧钱问题</h3>
+    <span class="card-source source-blog">RSS</span>
+  </div>
+  <p class="card-summary">OpenRouter 发布教程，讲解 AI Agent 因工具反复失败而陷入无限循环的成因，并给出四层防护：doom-…</p>
+  <div class="card-footer">
+    <span class="card-time">3 小时前</span>
+    <a class="card-link" href="https://openrouter.ai/blog/tutorials/ai-agent-infinite-loop/" target="_blank" rel="noopener noreferrer">
+      阅读原文
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+    </a>
+  </div>
+</article>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>共 <strong>12</strong> 条资讯 · 数据来源：<a href="https://aihot.virxact.com" target="_blank" rel="noopener noreferrer">AI HOT</a></p>
+</footer>
+
+<button class="quick-top" id="quickTop" title="回到顶部">↑</button>
+
+<script>    (function(){
+      var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){ entry.target.classList.add('revealed'); observer.unobserve(entry.target); }
+        });
+      },{threshold:0.12,rootMargin:'0px 0px -20px 0px'});
+      document.querySelectorAll('[data-reveal]').forEach(function(el){ observer.observe(el); });
+
+      var qt = document.getElementById('quickTop'), ticking=false;
+      function onScroll(){ if(!ticking){ requestAnimationFrame(function(){ qt.classList.toggle('visible',window.scrollY>400); ticking=false; }); ticking=true; } }
+      window.addEventListener('scroll',onScroll,{passive:true});
+      qt.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+
+      document.querySelectorAll('.nav-link').forEach(function(link){
+        link.addEventListener('click',function(e){ e.preventDefault(); var t=document.querySelector(this.getAttribute('href')); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); });
+      });
+
+      var sections=[],navLinks=document.querySelectorAll('.nav-link');
+      document.querySelectorAll('.section').forEach(function(s){ sections.push({id:s.id,el:s}); });
+      function highlightNav(){ requestAnimationFrame(function(){ var y=window.scrollY+120,cur=sections[0]&&sections[0].id; for(var i=sections.length-1;i>=0;i--) if(sections[i].el.offsetTop<=y){cur=sections[i].id;break;} navLinks.forEach(function(l){ var a=l.getAttribute('href')==='#'+cur; l.style.color=a?'var(--accent)':''; l.style.background=a?'rgba(255,107,53,.08)':''; }); }); }
+      window.addEventListener('scroll',highlightNav,{passive:true});
+    })();</script>
+
+</body>
+</html>
