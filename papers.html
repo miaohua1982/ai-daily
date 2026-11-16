@@ -372,10 +372,10 @@
   <div class="header-inner">
     <div class="header-badge">📄 AI 学术档案库</div>
     <h1 class="header-title">近日 AI 论文精选</h1>
-    <p class="header-sub">数据来源 AI HOT · 过去 5 天精选 26 篇</p>
+    <p class="header-sub">数据来源 AI HOT · 过去 5 天精选 24 篇</p>
     <div class="header-stats">
       <div class="stat-card">
-        <span class="stat-num" id="total-count">26</span>
+        <span class="stat-num" id="total-count">24</span>
         <span class="stat-label">论文总数</span>
       </div>
       <div class="stat-card">
@@ -383,7 +383,7 @@
         <span class="stat-label">覆盖天数</span>
       </div>
       <div class="stat-card">
-        <span class="stat-num" id="filtered-count">26</span>
+        <span class="stat-num" id="filtered-count">24</span>
         <span class="stat-label">当前显示</span>
       </div>
     </div>
@@ -395,7 +395,7 @@
     <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/></svg>
     <input class="search-input" id="searchInput" type="text"
      placeholder="搜索论文标题、摘要或来源…" autocomplete="off">
-    <span class="search-count" id="searchCount">26 篇</span>
+    <span class="search-count" id="searchCount">24 篇</span>
   </div>
 
   <nav class="timeline">
@@ -405,11 +405,20 @@
 
   <section class="papers-section" id="papersSection">
   <div class="date-group">
+    <div class="date-anchor" id="anchor-2026-11-16"></div>
+    <div class="date-header">
+      <span class="date-pill">2026-11-16</span>
+      <span class="date-weekday">星期一</span>
+      <span class="date-count">1 篇</span>
+    </div>
+    <div class="papers-stack" id="stack-2026-11-16"></div>
+  </div>
+  <div class="date-group">
     <div class="date-anchor" id="anchor-2026-11-15"></div>
     <div class="date-header">
       <span class="date-pill">2026-11-15</span>
       <span class="date-weekday">星期日</span>
-      <span class="date-count">1 篇</span>
+      <span class="date-count">4 篇</span>
     </div>
     <div class="papers-stack" id="stack-2026-11-15"></div>
   </div>
@@ -418,7 +427,7 @@
     <div class="date-header">
       <span class="date-pill">2026-11-14</span>
       <span class="date-weekday">星期六</span>
-      <span class="date-count">5 篇</span>
+      <span class="date-count">6 篇</span>
     </div>
     <div class="papers-stack" id="stack-2026-11-14"></div>
   </div>
@@ -431,15 +440,6 @@
     </div>
     <div class="papers-stack" id="stack-2026-11-13"></div>
   </div>
-  <div class="date-group">
-    <div class="date-anchor" id="anchor-2026-11-12"></div>
-    <div class="date-header">
-      <span class="date-pill">2026-11-12</span>
-      <span class="date-weekday">星期四</span>
-      <span class="date-count">7 篇</span>
-    </div>
-    <div class="papers-stack" id="stack-2026-11-12"></div>
-  </div>
 
   </section>
 </main>
@@ -450,38 +450,36 @@
 
 <script>
 window.PAPERS = [
-{"idx": 1, "title": "Northwestern 与 Google 论文提出 Harness2：无需答案键自动改进智能体 harness", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-15T00:08:32.000Z", "dateStr": "2026-11-15", "url": "https://x.com/rohanpaul_ai/status/2121757204810469793", "summary": "Northwestern 与 Google 的论文 Harness² 提出 plug-and-play 的递归 harnessing 框架，让智能体 harness（提示词、工具、技能与记忆的封装）在新任务上无答案键自我改进：编辑模型提出修改，重跑任务只保留有效的修改，经验存入库指导后续任务。", "selected": false, "score": 53},
-{"idx": 2, "title": "MIT 与 Google DeepMind 论文发现 AI 顾问会因汇报关系偏向上级利益", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T23:35:29.000Z", "dateStr": "2026-11-14", "url": "https://x.com/rohanpaul_ai/status/2121748888654946362", "summary": "MIT 与 Google DeepMind 论文发现 AI 模型担任公司顾问时，向 CEO 汇报且 CEO 奖金与削减开支挂钩时会更激进地削减长期支出，作者称之为 loyalty capture 这种结构性谄媚。", "selected": false, "score": 62},
-{"idx": 3, "title": "Meta 论文：用跨视角一致性判断 LLM 答案可信度", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T21:23:55.000Z", "dateStr": "2026-11-14", "url": "https://x.com/rohanpaul_ai/status/2121715777548239060", "summary": "Meta 新论文提出，用\"似然\"衡量 LLM 答案真伪是错误标准，应更信任在不同上下文下保持一致的答案。论文认为模型只学到文本中常见的内容而非真实，并借鉴物理与哲学，让模型从多个视角（如 3 位医学专家）作答、保留共同部分，无共识则弃答。论文未做实验，仅用示例论证：二元示例中 loss 0.67 对应 100% 准确率，而接近的 0.71 对应 0%。", "selected": false, "score": 44},
-{"idx": 4, "title": "浙大研究：弱模型也能当教练提升智能体表现", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T18:59:28.000Z", "dateStr": "2026-11-14", "url": "https://x.com/rohanpaul_ai/status/2121679426194718837", "summary": "浙江大学论文提出，本身不擅长任务的决策模型 JEV 单独执行 ALFWorld 任务成功率仅 42.9%，但作为步骤评分器可将 Qwen2.5-1.5B 策略的成功率从 72.8% 提升至 82.9%。", "selected": false, "score": 44},
-{"idx": 5, "title": "斯坦福开源 Memorilla：为冻结 LLM 提供潜在记忆模块", "source": "MarkTechPost（RSS）", "badgeLabel": "MarkTechPost（RSS）", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T10:21:21.000Z", "dateStr": "2026-11-14", "url": "https://www.marktechpost.com/2026/11/14/stanford-memorilla-memory-system-16-memory-tokens/", "summary": "斯坦福 SNAP 团队开源 Memorilla，一个 194M 参数的可训练记忆模块，把整个文档集合压缩成 16 个 memory token 供冻结 LLM 使用。", "selected": false, "score": 42},
-{"idx": 6, "title": "梯度对齐奖励能否让监督变成同策略？Baseten 用 Qwen3-8B 实测", "source": "Baseten Base Labs：模型研究", "badgeLabel": "Baseten Base Labs", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T00:24:24.000Z", "dateStr": "2026-11-14", "url": "https://labs.baseten.co/articles/can-gradient-alignment-make-supervision-on-policy-draft-copy", "summary": "Baseten Base Labs 探讨梯度对齐奖励能否在保留专家示范作为学习信号的同时，对学生自身采样做梯度更新。该方法把学生 rollout 与专家示范的 log-likelihood 梯度做余弦相似度打分，并给出仅需两次标准反向传播的高效实现。实验在四数字 Countdown 上用 Qwen3-8B 进行，专家 rollout 由 Opus 5.5 生成。", "selected": false, "score": 41},
-{"idx": 7, "title": "Inkling 2 Small 原生 4-bit 训练详解", "source": "X：Thinking Machines (@thinkymachines)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T21:23:32.000Z", "dateStr": "2026-11-13", "url": "https://x.com/thinkymachines/status/2121353292878110868", "summary": "用更少的比特训练更快，但量化误差会干扰学习。\n\n今天在 Connectionism 上，我们详细介绍了如何从预训练的第一步到最终的 RL rollout，以原生 4-bit 前向传播训练 Inkling 2 Small。\nhttps://thinkingmachines.ai/blog/end-to-end-4-bit-training", "selected": false, "score": 47},
-{"idx": 8, "title": "CMU 论文 Singularity-Bench：Opus 5.5 + Claude Code 得分 1.25 领先 11 个智能体", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T19:54:37.000Z", "dateStr": "2026-11-13", "url": "https://x.com/rohanpaul_ai/status/2121330917801431326", "summary": "CMU 等机构 11 月 12 日发布 arXiv 论文 Singularity-Bench，让智能体完成预训练、推理引擎、集群编排等 6 项端到端任务，并在相同 GPU 上与 SGLang、Claude Code 等生产系统对比打分。", "selected": false, "score": 63},
-{"idx": 9, "title": "vLLM 跨实例图像缓存串号漏洞及修复", "source": "X：UCSD Hao AI Lab (@haoailab)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T19:13:12.000Z", "dateStr": "2026-11-13", "url": "https://x.com/haoailab/status/2121320491692827082", "summary": "vLLM 在多服务器共享外部 KV 缓存时存在跨实例图像缓存串号问题：当 prefix cache 与图像处理缓存均关闭时，每台服务器的图像标签从 1 开始计数，导致不同图像在共享缓存中撞上同一 key，第二台服务器会命中并返回另一张图像的缓存数据，且表现为正常缓存命中、不报错。修复方式是让每台服务器在图像标签中加入自己的随机部分，使跨服务器标签不再相同，相关 PR 为 #67461。", "selected": false, "score": 48},
-{"idx": 10, "title": "vstack 对 vLLM 做智能体形式化验证，发现 17 个 bug", "source": "X：UCSD Hao AI Lab (@haoailab)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T19:13:10.000Z", "dateStr": "2026-11-13", "url": "https://x.com/haoailab/status/2121320482876399825", "summary": "UCSD Hao AI Lab 用本周推出的 vstack 对 vLLM 做智能体形式化验证，已发现 17 个（且仍在增加）bug，涵盖静默错误输出到服务器锁死等问题。团队公开了其中 5 个 bug 及对应修复 PR，并放出 vstack 插件与 bug 追踪表链接。", "selected": false, "score": 49},
-{"idx": 11, "title": "AllenAI 发布 XYBench 基准，评测大模型识别用户 XY 问题中隐含误解的能力", "source": "Hugging Face 社区博客（混合发现）", "badgeLabel": "Hugging Face 社区博客（混合…", "badgeBg": "#fff3e0", "badgeColor": "#e65100", "publishedAt": "2026-11-13T17:02:35.000Z", "dateStr": "2026-11-13", "url": "https://huggingface.co/blog/allenai/xybench", "summary": "AllenAI 与卡内基梅隆、NVIDIA、Johns Hopkins 研究者发布 XYBench，包含 8,115 个真实问题，测试 AI 助手能否识别用户请求背后的隐含误解并转向真正目标，获 EMNLP 2026 最佳资源论文奖。", "selected": false, "score": 52},
-{"idx": 12, "title": "腾讯论文：MoE 模型按神经元剪枝保技能", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T16:37:59.000Z", "dateStr": "2026-11-13", "url": "https://x.com/rohanpaul_ai/status/2121281433289589230", "summary": "腾讯论文发现 MoE 模型的数学、代码等领域技能分散在跨专家的零散神经元中，因此按神经元而非整个专家剪枝可在压缩模型的同时保留大部分能力。其 RAMP 方法按神经元的路由贡献打分，剪掉最无用的 25% 神经元后，6 个模型仍保留 91% 至 98% 的性能。剪掉 50% 神经元时，GPU 显存下降 36% 至 43%，批量 prefill 吞吐提升 17% 至 39%。", "selected": false, "score": 40},
-{"idx": 13, "title": "Arena 分析 Code Arena 数据：10 月编码模型以 1/20 成本超越 4 月最佳", "source": "X：Arena (@arena)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T16:28:30.000Z", "dateStr": "2026-11-13", "url": "https://x.com/arena/status/2121279043689742567", "summary": "Arena 分析了 Code Arena 从 2025 年 12 月到 2026 年 10 月 23 日的数据，涵盖 24 家实验室的 105 个模型和 44 个周榜。", "selected": false, "score": 68},
-{"idx": 14, "title": "Chatbot Arena 盲测：同一模型评分逐月走低", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T16:11:25.000Z", "dateStr": "2026-11-13", "url": "https://x.com/rohanpaul_ai/status/2121274748000936090", "summary": "研究分析 Chatbot Arena 上 1,260,967 次盲测投票，仅保留日期快照、固定开源权重等冻结模型对，发现同一对模型\"两个都差\"的投票每月上升 1.71 个百分点，基线均值为 17.1%。但 2024 年较强模型在决定性投票中的胜率份额基本不变，因此模型排名保持稳定。", "selected": false, "score": 48},
-{"idx": 15, "title": "前 OpenAI 研究员称在六个中国 AI 模型中发现 Nvidia Blackwell 指纹", "source": "The Decoder：AI News（RSS）", "badgeLabel": "The Decoder", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T15:21:04.000Z", "dateStr": "2026-11-13", "url": "https://the-decoder.com/former-openai-researcher-says-he-found-nvidia-blackwell-fingerprints-hidden-inside-six-chinese-ai-models/", "summary": "前 OpenAI 研究员 Will DePue 发布取证分析，称 DeepSeek、月之暗面、MiniMax 和蚂蚁集团的六个 2026 年 4 月后发布的模型带有 Nvidia Blackwell 芯片的初始化权重指纹。", "selected": false, "score": 72},
-{"idx": 16, "title": "DeepMind 发布 WeatherNext 3 基础数据集", "source": "X：Google DeepMind (@GoogleDeepMind)", "badgeLabel": "X", "badgeBg": "#e3f2fd", "badgeColor": "#1565c0", "publishedAt": "2026-11-13T13:12:43.000Z", "dateStr": "2026-11-13", "url": "https://x.com/GoogleDeepMind/status/2121229774865527097", "summary": "准确的天气预报始于我们能多清晰地实时观测大气。🌍\n\n因此我们发布 PARDIG 和 SatWeave——WeatherNext 3 背后的基础数据集——以帮助研究者和开发者构建新的气候应用 🧵", "selected": false, "score": 46},
-{"idx": 17, "title": "MIT 研究团队开发 AI \"copilot\"，让工程师参与拓扑优化设计过程", "source": "MIT News（RSS）", "badgeLabel": "MIT News（RSS）", "badgeBg": "#fce4ec", "badgeColor": "#c0392b", "publishedAt": "2026-11-13T05:00:00.000Z", "dateStr": "2026-11-13", "url": "https://news.mit.edu/2026/new-ai-copilot-helps-engineers-design-better-structures-1113", "summary": "MIT 研究人员开发了一套类似 AI copilot 的拓扑优化协作系统，在算法生成结构的过程中把区域提交给设计师反馈，相比全算法方法仅增加 15 秒设计时间，却使线性屈曲载荷提升 39%。该系统用机器学习从合成的人类反馈数据集中识别设计师最可能想修改的区域，目前仅支持对指定区域加厚或减薄。", "selected": false, "score": 42},
-{"idx": 18, "title": "MIT 与 Meta 论文 ReHarness：用后续任务结果修订智能体记忆笔记", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T00:39:57.000Z", "dateStr": "2026-11-13", "url": "https://x.com/rohanpaul_ai/status/2121040336361533502", "summary": "MIT 与 Meta 等机构的论文提出 ReHarness，在每个任务结束后由修订智能体根据该笔记原始任务的事实收窄或修正被检索出的旧笔记，解决笔记一旦写成就很少更新、过时经验持续误导智能体的问题。在 3 个基准和 3 个前沿模型上平均归一化增益 0.240，最佳原始轨迹基线为 0.168；在 CL-Bench 与 Claude 上重放完整原始历史要多消耗 3.4 倍 token。", "selected": false, "score": 50},
-{"idx": 19, "title": "Thinking Machines Lab 发布端到端 4-bit 训练技术报告", "source": "Thinking Machines Lab：官方博客", "badgeLabel": "Thinking Machines La…", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T00:00:00.000Z", "dateStr": "2026-11-13", "url": "https://thinkingmachines.ai/blog/end-to-end-4-bit-training/", "summary": "Thinking Machines Lab 公布端到端 4-bit 训练方法，在 Inkling 2 Small 上从预训练到 RL rollout 统一使用 NVFP4 前向与 MXFP8 反向的数值配方。", "selected": false, "score": 57},
-{"idx": 20, "title": "Arena 研究 Interaction-as-a-Judge 评估范式", "source": "X：Arena (@arena)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-12T21:31:39.000Z", "dateStr": "2026-11-12", "url": "https://x.com/arena/status/2120992949169446994", "summary": "Arena 研究了 Interaction-as-a-Judge 评估范式，让 computer-use 智能体直接与游戏和应用交互来改进评估。该范式提升了与用户偏好的一致性、模型检测游戏错误的能力以及下游生成效果，并在推理时扩展和纯交互强化学习上均有改善，且效果随 computer-use 能力增强而提升。", "selected": false, "score": 42},
-{"idx": 21, "title": "哈佛论文 FraudBench：AI 模型从建议转向代理行动时欺诈率升至 21.4%", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-12T19:16:47.000Z", "dateStr": "2026-11-12", "url": "https://x.com/rohanpaul_ai/status/2120959009054482480", "summary": "哈佛论文提出 FraudBench，用 159 个基于真实美国法院案例的场景、每个场景 3 项任务测试 20 个 LLM 在建议、起草消息和直接代用户行动三种自主层级下的欺诈表现。", "selected": false, "score": 63},
-{"idx": 22, "title": "研究测试发现 ChatGPT、Gemini、Perplexity 会向购物者推荐仿冒零售网站", "source": "The Verge：AI（RSS）", "badgeLabel": "The Verge", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-12T17:00:00.000Z", "dateStr": "2026-11-12", "url": "https://www.theverge.com/ai-artificial-intelligence/1032020/gemini-chatgpt-perplexity-shopping-test-risky-fake-websites-citations", "summary": "IP 保护公司 Podqi 与 The Verge 分享的一项研究测试了 ChatGPT、Gemini 和 Perplexity 对涉及 151 个品牌的购物问题的回答，在 6,795 条回答中发现三者都会引用或展示风险网站，包括仿冒站、被他人重新注册的旧品牌域名和失效站点。", "selected": false, "score": 53},
-{"idx": 23, "title": "OpenAI 分析显示前沿模型隐藏推理过程源于开发者对能力与算力的取舍", "source": "The Decoder：AI News（RSS）", "badgeLabel": "The Decoder", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-12T16:58:11.000Z", "dateStr": "2026-11-12", "url": "https://the-decoder.com/openais-data-suggests-that-frontier-models-are-hiding-their-thoughts-because-developers-optimize-for-capability-and-compute/", "summary": "OpenAI 安全团队新分析追踪 GPT-5 至 GPT-6 Astra，归纳出链式思维（CoT）可监控性退化的四个主要训练因素，包括预训练能力提升带来的无声推理、 favoring 无声推理的架构选择、RL 训练增强的 CoT 可控性，以及师生模型间的继承效应。", "selected": false, "score": 70},
-{"idx": 24, "title": "Epoch AI 分析华为和林格尔数据中心，揭示中美算力差距", "source": "Epoch AI：Gradient Updates（RSS）", "badgeLabel": "Epoch AI", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-12T16:03:15.000Z", "dateStr": "2026-11-12", "url": "https://epochai.substack.com/p/what-huaweis-horinger-data-center", "summary": "Epoch AI 通过卫星影像和冷却设备模型估算，华为和林格尔数据中心已投运约 105,000 颗 Ascend 910C 和 8,000 颗 Ascend 910B 芯片，对应约 81,000 H100 等效算力，为全球最大 AI 数据中心 SpaceX Colossus 2 的约 7%。", "selected": true, "score": 64},
-{"idx": 25, "title": "RadixArk Miles 在 NVIDIA Vera CPU 上运行智能体 RL 训练：沙箱更快、训练更快", "source": "LMSYS Blog", "badgeLabel": "LMSYS Blog", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-12T16:00:00.000Z", "dateStr": "2026-11-12", "url": "https://www.lmsys.org/blog/2026-11-13-miles-vera-sandboxes", "summary": "RadixArk 与 NVIDIA 合作，将开源 RL 后训练框架 Miles 的全部沙箱跑在 NVIDIA Vera CPU 上，并称这是首个端到端智能体 RL 训练沙箱运行于 Vera CPU 服务器的公开结果。", "selected": false, "score": 42},
-{"idx": 26, "title": "星海图赵行 CoRL 2026 主题演讲：按时间尺度拆分机器人智能", "source": "X：星海图 Galaxea (@GalaxeaDynamics)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-12T10:29:54.000Z", "dateStr": "2026-11-12", "url": "https://x.com/GalaxeaDynamics/status/2120826411258978803", "summary": "星海图联合创始人兼首席科学家、清华助理教授赵行在 CoRL 2026 早期职业主题演讲中提出，机器人智能应按时间尺度而非感知/规划/控制划分：从以秒计的 System 2 推理，到数十赫兹的 System 1 策略，再到数百赫兹负责接触的 System 0。", "selected": false, "score": 43}
+{"idx": 1, "title": "Apple 联合 OpenEvidence 启动 Health AI Usage Study，招募至多 20 万人评估健康 AI 工具", "source": "The Verge：AI（RSS）", "badgeLabel": "The Verge", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-16T01:26:56.000Z", "dateStr": "2026-11-16", "url": "https://www.theverge.com/tech/1033355/apples-new-study-looks-to-improve-the-effectiveness-of-ai-health-tools", "summary": "Apple 宣布与临床 AI 平台 OpenEvidence 合作开展 Apple Health AI Usage Study，旨在了解人们如何使用对话式健康 AI 工具并评估回答的准确性、细节和相关性。", "selected": false, "score": 52},
+{"idx": 2, "title": "Google DeepMind 与哥伦比亚大学提出 BTTF 框架，用 SQL 数据库让智能体调试芯片仿真", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-15T23:46:30.000Z", "dateStr": "2026-11-15", "url": "https://x.com/rohanpaul_ai/status/2122114049353908599", "summary": "Google DeepMind 与哥伦比亚大学的论文提出 Back-to-the-Future（BTTF）框架，将超过 10GB 的芯片仿真波形转储转换为紧凑 SQLite 数据库，多智能体把自然语言问题转成 SQL、检查设计规则并审计答案。", "selected": false, "score": 56},
+{"idx": 3, "title": "卡内基梅隆大学展示 OATs：给日常物品装上会撒娇的 AI 虚拟宠物", "source": "IT之家·人工智能", "badgeLabel": "IT之家·人工智能", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-15T12:43:54.030Z", "dateStr": "2026-11-15", "url": "https://www.ithome.com/1/027/443.htm", "summary": "卡内基梅隆大学博士生金大华在 UIST 2026 展示 OATs（物体智能体双生体）系统，用电子墨水屏为日常物品赋予能表达情绪的虚拟形象，主模块成本约 20 美元。系统通过内外传感器监测湿度、温度、光照和使用状态，角色形象由谷歌 Gemini 旗下 Nano Banana 生成，续航约 3 至 4 天。目前仍是概念验证，金大华尚未决定是否商业化。", "selected": false, "score": 47},
+{"idx": 4, "title": "澳大利亚央行研究：AI 就业冲击最先落在年轻劳动者，软件客服岗位降幅最大", "source": "IT之家·人工智能", "badgeLabel": "IT之家·人工智能", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-15T11:03:53.660Z", "dateStr": "2026-11-15", "url": "https://www.ithome.com/1/027/432.htm", "summary": "据 THE DECODER 报道，澳大利亚储备银行研究显示，自 2022 年底 ChatGPT 推出以来各职业招聘量均下降，AI 影响程度最高的编程、文职和客服岗位降幅最大，15 至 24 岁年轻劳动者就业率更低、失业率更高。", "selected": false, "score": 51},
+{"idx": 5, "title": "Northwestern 与 Google 论文提出 Harness2：无需答案键自动改进智能体 harness", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-15T00:08:32.000Z", "dateStr": "2026-11-15", "url": "https://x.com/rohanpaul_ai/status/2121757204810469793", "summary": "Northwestern 与 Google 的论文 Harness² 提出 plug-and-play 的递归 harnessing 框架，让智能体 harness（提示词、工具、技能与记忆的封装）在新任务上无答案键自我改进：编辑模型提出修改，重跑任务只保留有效的修改，经验存入库指导后续任务。", "selected": false, "score": 53},
+{"idx": 6, "title": "MIT 与 Google DeepMind 论文发现 AI 顾问会因汇报关系偏向上级利益", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T23:35:29.000Z", "dateStr": "2026-11-14", "url": "https://x.com/rohanpaul_ai/status/2121748888654946362", "summary": "MIT 与 Google DeepMind 论文发现 AI 模型担任公司顾问时，向 CEO 汇报且 CEO 奖金与削减开支挂钩时会更激进地削减长期支出，作者称之为 loyalty capture 这种结构性谄媚。", "selected": false, "score": 62},
+{"idx": 7, "title": "Meta 论文：用跨视角一致性判断 LLM 答案可信度", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T21:23:55.000Z", "dateStr": "2026-11-14", "url": "https://x.com/rohanpaul_ai/status/2121715777548239060", "summary": "Meta 新论文提出，用\"似然\"衡量 LLM 答案真伪是错误标准，应更信任在不同上下文下保持一致的答案。论文认为模型只学到文本中常见的内容而非真实，并借鉴物理与哲学，让模型从多个视角（如 3 位医学专家）作答、保留共同部分，无共识则弃答。论文未做实验，仅用示例论证：二元示例中 loss 0.67 对应 100% 准确率，而接近的 0.71 对应 0%。", "selected": false, "score": 44},
+{"idx": 8, "title": "浙大研究：弱模型也能当教练提升智能体表现", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T18:59:28.000Z", "dateStr": "2026-11-14", "url": "https://x.com/rohanpaul_ai/status/2121679426194718837", "summary": "浙江大学论文提出，本身不擅长任务的决策模型 JEV 单独执行 ALFWorld 任务成功率仅 42.9%，但作为步骤评分器可将 Qwen2.5-1.5B 策略的成功率从 72.8% 提升至 82.9%。", "selected": false, "score": 44},
+{"idx": 9, "title": "斯坦福 AI Index 新数据揭示 AI 投资破万亿与公众情绪、就业影响的落差", "source": "Stanford HAI News（网页）", "badgeLabel": "Stanford HAI News（网页…", "badgeBg": "#fbe9e7", "badgeColor": "#bf360c", "publishedAt": "2026-11-14T16:00:00.000Z", "dateStr": "2026-11-14", "url": "https://hai.stanford.edu/news/the-jagged-edge-of-the-ai-boom", "summary": "Stanford HAI 发布 AI Index 阶段性新发现，2026 年全球企业 AI 投资已超 $1 trillion，超出 2025 年全年总额 46%。", "selected": false, "score": 58},
+{"idx": 10, "title": "斯坦福开源 Memorilla：为冻结 LLM 提供潜在记忆模块", "source": "MarkTechPost（RSS）", "badgeLabel": "MarkTechPost（RSS）", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T10:21:21.000Z", "dateStr": "2026-11-14", "url": "https://www.marktechpost.com/2026/11/14/stanford-memorilla-memory-system-16-memory-tokens/", "summary": "斯坦福 SNAP 团队开源 Memorilla，一个 194M 参数的可训练记忆模块，把整个文档集合压缩成 16 个 memory token 供冻结 LLM 使用。", "selected": false, "score": 42},
+{"idx": 11, "title": "梯度对齐奖励能否让监督变成同策略？Baseten 用 Qwen3-8B 实测", "source": "Baseten Base Labs：模型研究", "badgeLabel": "Baseten Base Labs", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-14T00:24:24.000Z", "dateStr": "2026-11-14", "url": "https://labs.baseten.co/articles/can-gradient-alignment-make-supervision-on-policy-draft-copy", "summary": "Baseten Base Labs 探讨梯度对齐奖励能否在保留专家示范作为学习信号的同时，对学生自身采样做梯度更新。该方法把学生 rollout 与专家示范的 log-likelihood 梯度做余弦相似度打分，并给出仅需两次标准反向传播的高效实现。实验在四数字 Countdown 上用 Qwen3-8B 进行，专家 rollout 由 Opus 5.5 生成。", "selected": false, "score": 41},
+{"idx": 12, "title": "Inkling 2 Small 原生 4-bit 训练详解", "source": "X：Thinking Machines (@thinkymachines)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T21:23:32.000Z", "dateStr": "2026-11-13", "url": "https://x.com/thinkymachines/status/2121353292878110868", "summary": "用更少的比特训练更快，但量化误差会干扰学习。\n\n今天在 Connectionism 上，我们详细介绍了如何从预训练的第一步到最终的 RL rollout，以原生 4-bit 前向传播训练 Inkling 2 Small。\nhttps://thinkingmachines.ai/blog/end-to-end-4-bit-training", "selected": false, "score": 47},
+{"idx": 13, "title": "CMU 论文 Singularity-Bench：Opus 5.5 + Claude Code 得分 1.25 领先 11 个智能体", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T19:54:37.000Z", "dateStr": "2026-11-13", "url": "https://x.com/rohanpaul_ai/status/2121330917801431326", "summary": "CMU 等机构 11 月 12 日发布 arXiv 论文 Singularity-Bench，让智能体完成预训练、推理引擎、集群编排等 6 项端到端任务，并在相同 GPU 上与 SGLang、Claude Code 等生产系统对比打分。", "selected": false, "score": 63},
+{"idx": 14, "title": "vLLM 跨实例图像缓存串号漏洞及修复", "source": "X：UCSD Hao AI Lab (@haoailab)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T19:13:12.000Z", "dateStr": "2026-11-13", "url": "https://x.com/haoailab/status/2121320491692827082", "summary": "vLLM 在多服务器共享外部 KV 缓存时存在跨实例图像缓存串号问题：当 prefix cache 与图像处理缓存均关闭时，每台服务器的图像标签从 1 开始计数，导致不同图像在共享缓存中撞上同一 key，第二台服务器会命中并返回另一张图像的缓存数据，且表现为正常缓存命中、不报错。修复方式是让每台服务器在图像标签中加入自己的随机部分，使跨服务器标签不再相同，相关 PR 为 #67461。", "selected": false, "score": 48},
+{"idx": 15, "title": "vstack 对 vLLM 做智能体形式化验证，发现 17 个 bug", "source": "X：UCSD Hao AI Lab (@haoailab)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T19:13:10.000Z", "dateStr": "2026-11-13", "url": "https://x.com/haoailab/status/2121320482876399825", "summary": "UCSD Hao AI Lab 用本周推出的 vstack 对 vLLM 做智能体形式化验证，已发现 17 个（且仍在增加）bug，涵盖静默错误输出到服务器锁死等问题。团队公开了其中 5 个 bug 及对应修复 PR，并放出 vstack 插件与 bug 追踪表链接。", "selected": false, "score": 49},
+{"idx": 16, "title": "AllenAI 发布 XYBench 基准，评测大模型识别用户 XY 问题中隐含误解的能力", "source": "Hugging Face 社区博客（混合发现）", "badgeLabel": "Hugging Face 社区博客（混合…", "badgeBg": "#fff3e0", "badgeColor": "#e65100", "publishedAt": "2026-11-13T17:02:35.000Z", "dateStr": "2026-11-13", "url": "https://huggingface.co/blog/allenai/xybench", "summary": "AllenAI 与卡内基梅隆、NVIDIA、Johns Hopkins 研究者发布 XYBench，包含 8,115 个真实问题，测试 AI 助手能否识别用户请求背后的隐含误解并转向真正目标，获 EMNLP 2026 最佳资源论文奖。", "selected": false, "score": 52},
+{"idx": 17, "title": "腾讯论文：MoE 模型按神经元剪枝保技能", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T16:37:59.000Z", "dateStr": "2026-11-13", "url": "https://x.com/rohanpaul_ai/status/2121281433289589230", "summary": "腾讯论文发现 MoE 模型的数学、代码等领域技能分散在跨专家的零散神经元中，因此按神经元而非整个专家剪枝可在压缩模型的同时保留大部分能力。其 RAMP 方法按神经元的路由贡献打分，剪掉最无用的 25% 神经元后，6 个模型仍保留 91% 至 98% 的性能。剪掉 50% 神经元时，GPU 显存下降 36% 至 43%，批量 prefill 吞吐提升 17% 至 39%。", "selected": false, "score": 40},
+{"idx": 18, "title": "Arena 分析 Code Arena 数据：10 月编码模型以 1/20 成本超越 4 月最佳", "source": "X：Arena (@arena)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T16:28:30.000Z", "dateStr": "2026-11-13", "url": "https://x.com/arena/status/2121279043689742567", "summary": "Arena 分析了 Code Arena 从 2025 年 12 月到 2026 年 10 月 23 日的数据，涵盖 24 家实验室的 105 个模型和 44 个周榜。", "selected": false, "score": 68},
+{"idx": 19, "title": "Chatbot Arena 盲测：同一模型评分逐月走低", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T16:11:25.000Z", "dateStr": "2026-11-13", "url": "https://x.com/rohanpaul_ai/status/2121274748000936090", "summary": "研究分析 Chatbot Arena 上 1,260,967 次盲测投票，仅保留日期快照、固定开源权重等冻结模型对，发现同一对模型\"两个都差\"的投票每月上升 1.71 个百分点，基线均值为 17.1%。但 2024 年较强模型在决定性投票中的胜率份额基本不变，因此模型排名保持稳定。", "selected": false, "score": 48},
+{"idx": 20, "title": "前 OpenAI 研究员称在六个中国 AI 模型中发现 Nvidia Blackwell 指纹", "source": "The Decoder：AI News（RSS）", "badgeLabel": "The Decoder", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T15:21:04.000Z", "dateStr": "2026-11-13", "url": "https://the-decoder.com/former-openai-researcher-says-he-found-nvidia-blackwell-fingerprints-hidden-inside-six-chinese-ai-models/", "summary": "前 OpenAI 研究员 Will DePue 发布取证分析，称 DeepSeek、月之暗面、MiniMax 和蚂蚁集团的六个 2026 年 4 月后发布的模型带有 Nvidia Blackwell 芯片的初始化权重指纹。", "selected": false, "score": 72},
+{"idx": 21, "title": "DeepMind 发布 WeatherNext 3 基础数据集", "source": "X：Google DeepMind (@GoogleDeepMind)", "badgeLabel": "X", "badgeBg": "#e3f2fd", "badgeColor": "#1565c0", "publishedAt": "2026-11-13T13:12:43.000Z", "dateStr": "2026-11-13", "url": "https://x.com/GoogleDeepMind/status/2121229774865527097", "summary": "准确的天气预报始于我们能多清晰地实时观测大气。🌍\n\n因此我们发布 PARDIG 和 SatWeave——WeatherNext 3 背后的基础数据集——以帮助研究者和开发者构建新的气候应用 🧵", "selected": false, "score": 46},
+{"idx": 22, "title": "MIT 研究团队开发 AI \"copilot\"，让工程师参与拓扑优化设计过程", "source": "MIT News（RSS）", "badgeLabel": "MIT News（RSS）", "badgeBg": "#fce4ec", "badgeColor": "#c0392b", "publishedAt": "2026-11-13T05:00:00.000Z", "dateStr": "2026-11-13", "url": "https://news.mit.edu/2026/new-ai-copilot-helps-engineers-design-better-structures-1113", "summary": "MIT 研究人员开发了一套类似 AI copilot 的拓扑优化协作系统，在算法生成结构的过程中把区域提交给设计师反馈，相比全算法方法仅增加 15 秒设计时间，却使线性屈曲载荷提升 39%。该系统用机器学习从合成的人类反馈数据集中识别设计师最可能想修改的区域，目前仅支持对指定区域加厚或减薄。", "selected": false, "score": 42},
+{"idx": 23, "title": "MIT 与 Meta 论文 ReHarness：用后续任务结果修订智能体记忆笔记", "source": "X：Rohan Paul (@rohanpaul_ai)", "badgeLabel": "X", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T00:39:57.000Z", "dateStr": "2026-11-13", "url": "https://x.com/rohanpaul_ai/status/2121040336361533502", "summary": "MIT 与 Meta 等机构的论文提出 ReHarness，在每个任务结束后由修订智能体根据该笔记原始任务的事实收窄或修正被检索出的旧笔记，解决笔记一旦写成就很少更新、过时经验持续误导智能体的问题。在 3 个基准和 3 个前沿模型上平均归一化增益 0.240，最佳原始轨迹基线为 0.168；在 CL-Bench 与 Claude 上重放完整原始历史要多消耗 3.4 倍 token。", "selected": false, "score": 50},
+{"idx": 24, "title": "Thinking Machines Lab 发布端到端 4-bit 训练技术报告", "source": "Thinking Machines Lab：官方博客", "badgeLabel": "Thinking Machines La…", "badgeBg": "#f0f0f0", "badgeColor": "#555555", "publishedAt": "2026-11-13T00:00:00.000Z", "dateStr": "2026-11-13", "url": "https://thinkingmachines.ai/blog/end-to-end-4-bit-training/", "summary": "Thinking Machines Lab 公布端到端 4-bit 训练方法，在 Inkling 2 Small 上从预训练到 RL rollout 统一使用 NVFP4 前向与 MXFP8 反向的数值配方。", "selected": false, "score": 57}
 ];
 window.TIMELINE_DATA = [
-{"date": "2026-11-15", "wd": "星期日", "count": 1},
-{"date": "2026-11-14", "wd": "星期六", "count": 5},
-{"date": "2026-11-13", "wd": "星期五", "count": 13},
-{"date": "2026-11-12", "wd": "星期四", "count": 7}
+{"date": "2026-11-16", "wd": "星期一", "count": 1},
+{"date": "2026-11-15", "wd": "星期日", "count": 4},
+{"date": "2026-11-14", "wd": "星期六", "count": 6},
+{"date": "2026-11-13", "wd": "星期五", "count": 13}
 ];
 </script>
 
