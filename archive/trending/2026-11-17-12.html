@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>当日热点 — 2026-11-17 12:53 · 星期二</title>
+<style>
+    :root {
+      --hero-from: #ff5e3a;
+      --hero-mid: #f73b4a;
+      --hero-to: #c0392b;
+      --accent: #ff6b35;
+      --accent-dark: #e0552b;
+      --bg: #faf8f6;
+      --card-bg: #ffffff;
+      --card-border: #ede8e2;
+      --text: #2c2c2c;
+      --text-secondary: #6b6b6b;
+      --text-muted: #999999;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 40%, var(--hero-to) 100%);
+      color: #fff; padding: 56px 24px 48px; text-align: center;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(255,200,120,.12) 0%, transparent 50%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block; background: rgba(255,255,255,.2);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.25); border-radius: 100px;
+      padding: 4px 16px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px;
+    }
+    .hero h1 { font-size: clamp(28px,5vw,44px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .hero-sub { font-size: 16px; opacity: 0.85; margin-bottom: 24px; }
+    .hero-stats { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .hero-stat {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(255,255,255,.15); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      border-radius: 12px; padding: 12px 20px; min-width: 80px;
+    }
+    .hero-stat-num { font-size: 28px; font-weight: 800; line-height: 1.2; }
+    .hero-stat-lbl { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .nav-wrap {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border); padding: 0 16px;
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 4px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-link {
+      flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 100px; font-size: 13.5px; font-weight: 600;
+      color: var(--text-secondary); text-decoration: none; transition: 0.3s; white-space: nowrap; border: 1px solid transparent;
+    }
+    .nav-link:hover { background: #f5f0eb; color: var(--accent-dark); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .nav-cnt { font-size: 11px; opacity: 0.6; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 48px; }
+    .section { margin-bottom: 48px; scroll-margin-top: 72px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--card-border); }
+    .section-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; transform: rotate(45deg); }
+    .section h2 { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .section-count { font-size: 14px; color: var(--text-muted); margin-left: auto; }
+    .section-empty { text-align: center; padding: 32px 16px; color: var(--text-muted); background: var(--card-bg); border-radius: 16px; border: 1px dashed var(--card-border); }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 16px; }
+    .card {
+      position: relative; background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 20px 20px 16px;
+      transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      display: flex; flex-direction: column; opacity: 0; transform: translateY(24px);
+    }
+    .card.revealed { opacity: 1; transform: translateY(0); }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.07); transform: translateY(-2px); }
+    .card.revealed:hover { transform: translateY(-2px); }
+    .card-num {
+      position: absolute; top: -10px; left: 16px; background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(255,107,53,.35);
+    }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; margin-top: 6px; }
+    .card-title { font-size: 15px; font-weight: 700; line-height: 1.5; color: var(--text); flex: 1; }
+    .card-source { flex-shrink: 0; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+    .source-x { background: #f0f0f0; color: #555; }
+    .source-blog { background: #e8f4fd; color: #1a73e8; }
+    .source-wechat { background: #e8f8e8; color: #2e7d32; }
+    .source-media { background: #fff3e0; color: #e65100; }
+    .source-hn { background: #fce4ec; color: #c62828; }
+    .source-gh { background: #f3e5f5; color: #6a1b9a; }
+    .score-badge {
+      font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px;
+    }
+    .score-high { background: #e8f8e8; color: #2e7d32; }
+    .score-mid { background: #fff3e0; color: #e65100; }
+    .score-low { background: #fce4ec; color: #c62828; }
+    .card-footer { display: flex; align-items: center; gap: 12px; margin-top: auto; flex-wrap: wrap; }
+    .card-time { font-size: 12px; color: var(--text-muted); }
+    .card-link {
+      display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;
+      color: var(--accent); text-decoration: none; padding: 6px 14px; border-radius: 100px;
+      background: rgba(255,107,53,.08); transition: 0.3s;
+    }
+    .card-link:hover { background: rgba(255,107,53,.16); color: var(--accent-dark); }
+    .card-link svg { width: 14px; height: 14px; }
+    .footer { text-align: center; padding: 32px 16px 40px; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 13px; max-width: 1100px; margin: 0 auto; }
+    .footer strong { color: var(--text-secondary); }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .quick-top {
+      position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 20px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.1); opacity: 0; transform: translateY(12px);
+      pointer-events: none; transition: 0.3s; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quick-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .quick-top:hover { background: var(--accent-dark); }
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 36px; }
+      .hero-stats { gap: 12px; }
+      .hero-stat { padding: 10px 14px; min-width: 64px; }
+      .hero-stat-num { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .section h2 { font-size: 17px; }
+      .nav-link { padding: 6px 12px; font-size: 12px; }
+    }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🔥 当日热点</div>
+    <h1>63 条热点资讯</h1>
+    <p class="hero-sub">全网热点雷达 · 关键词过滤 · 智能聚合</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">63</span>
+        <span class="hero-stat-lbl">命中条数</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">5</span>
+        <span class="hero-stat-lbl">分组数</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">星期二</span>
+        <span class="hero-stat-lbl">2026-11-17 12:53</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-wrap" id="nav">
+  <div class="nav-inner">
+    <a href="#sec-国际局势" class="nav-link">
+      <span class="nav-dot" style="background:#6366f1"></span>国际局势
+      <span class="nav-cnt">35</span>
+    </a>
+    <a href="#sec-财经资讯" class="nav-link">
+      <span class="nav-dot" style="background:#0891b2"></span>财经资讯
+      <span class="nav-cnt">18</span>
+    </a>
+    <a href="#sec-ai大模型" class="nav-link">
+      <span class="nav-dot" style="background:#d97706"></span>AI大模型
+      <span class="nav-cnt">5</span>
+    </a>
+    <a href="#sec-智能汽车" class="nav-link">
+      <span class="nav-dot" style="background:#7c3aed"></span>智能汽车
+      <span class="nav-cnt">1</span>
+    </a>
+    <a href="#sec-机器人与具身智能" class="nav-link">
+      <span class="nav-dot" style="background:#059669"></span>机器人与具身智能
+      <span class="nav-cnt">4</span>
+    </a>
+  </div>
+</nav>
+
+<main class="main" id="main">
+    <section class="section" id="sec-国际局势">
+      <div class="section-header">
+        <div class="section-dot" style="background:#6366f1"></div>
+        <h2>国际局势</h2>
+        <span class="section-count">35 条</span>
+      </div>
+      <div class="card-grid">
+        <article class="card" data-reveal>
+          <span class="card-num">1</span>
+          <div class="card-top">
+            <h3 class="card-title">特朗普宣布即将访华 将与中俄元首会晤</h3>
+            <span class="card-source source-x">今日头条</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.toutiao.com/trending/7708922337889881642/" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">2</span>
+          <div class="card-top">
+            <h3 class="card-title">特朗普将成首位到访深圳的在任美总统</h3>
+            <span class="card-source source-x">今日头条</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.toutiao.com/trending/7707948105454501931/" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">3</span>
+          <div class="card-top">
+            <h3 class="card-title">越共中央总书记苏林抵达深圳</h3>
+            <span class="card-source source-x">今日头条</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.toutiao.com/trending/7708923411052888585/" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">4</span>
+          <div class="card-top">
+            <h3 class="card-title">俄方公布普京参加APEC峰会行程</h3>
+            <span class="card-source source-x">今日头条</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.toutiao.com/trending/7708947050305424938/" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">5</span>
+          <div class="card-top">
+            <h3 class="card-title">中俄美元首即将会晤释放强烈信号</h3>
+            <span class="card-source source-x">今日头条</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.toutiao.com/trending/7708680514529644083/" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">6</span>
+          <div class="card-top">
+            <h3 class="card-title">据塔斯社：当地官员表示，俄罗斯击退了针对乌法和萨拉瓦特工业区的无人机袭击。</h3>
+            <span class="card-source source-x">金十数据</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://flash.jin10.com/detail/20261117124244006800" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">7</span>
+          <div class="card-top">
+            <h3 class="card-title">据伊朗法尔斯通讯社：伊朗外长阿拉格齐在马斯喀特与阿曼外长会晤。</h3>
+            <span class="card-source source-x">金十数据</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://flash.jin10.com/detail/20261117123941901800" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">8</span>
+          <div class="card-top">
+            <h3 class="card-title">习近平会见越共中央总书记、国家主席苏林</h3>
+            <span class="card-source source-x">财联社</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.cls.cn/detail/2536325" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">9</span>
+          <div class="card-top">
+            <h3 class="card-title">APEC领导人会议周期间将继续围绕贸易议题寻求“最大公约数”</h3>
+            <span class="card-source source-x">华尔街见闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://wallstreetcn.com/livenews/3200981" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">10</span>
+          <div class="card-top">
+            <h3 class="card-title">也门胡塞武装：控制曼德海峡的目标已经达成</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/17/7dc2548d2c474a49a1d0427c50c3a14b.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">11</span>
+          <div class="card-top">
+            <h3 class="card-title">法国极右翼领导人：若当选总统，将不再向乌克兰提供财政援助</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/17/9c75a808909b4c0c94a39d2dad642a59.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">12</span>
+          <div class="card-top">
+            <h3 class="card-title">普京高度评价俄朝战斗友谊</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/17/f4901fadaf104d9c8525fb1f6c7e305f.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">13</span>
+          <div class="card-top">
+            <h3 class="card-title">艾森科特要求内塔尼亚胡立刻下台</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/16/bec7f771ab634cc9ae7965e69e69f527.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">14</span>
+          <div class="card-top">
+            <h3 class="card-title">爱沙尼亚打算关闭与俄边境，俄批其“恐俄症发作”</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/16/782fa27ccbb648828549938a25e498cf.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">15</span>
+          <div class="card-top">
+            <h3 class="card-title">西专家文章：中期选举或成美政治体系重塑开端</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/16/2b88684187ad4813b00b2793a25477d7.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">16</span>
+          <div class="card-top">
+            <h3 class="card-title">美F-15EX战斗机开始在冲绳部署</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/16/d4f315d93ebc413ea7b2a435ec8ba6ee.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">17</span>
+          <div class="card-top">
+            <h3 class="card-title">美媒：四方安全对话机制“命悬一线”</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/16/00d411b1776340eb842ddee418cadf61.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">18</span>
+          <div class="card-top">
+            <h3 class="card-title">伊朗：一艘超级油轮在霍尔木兹海峡触雷沉没</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/16/445aea5185cd4d99b9b70e082f8463a3.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">19</span>
+          <div class="card-top">
+            <h3 class="card-title">卡尼与习近平会晤：加中关系更具可预测性和稳定性</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/china/202611/1785684.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">20</span>
+          <div class="card-top">
+            <h3 class="card-title">俄总统助理：普京周三与习近平讨论能源、金融及AI合作</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/china/202611/1785682.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">21</span>
+          <div class="card-top">
+            <h3 class="card-title">台外交次长：140亿美元对台军售何时获批取决于特朗普</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/taiwan/202611/1785680.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">22</span>
+          <div class="card-top">
+            <h3 class="card-title">内忧外患下展开亚洲行 特朗普会习近平面临新考验</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/politics/202611/1785679.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">23</span>
+          <div class="card-top">
+            <h3 class="card-title">习近平今上午会见卡尼 为卡尼任加总理后第三次会面</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/china/202611/1785678.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">24</span>
+          <div class="card-top">
+            <h3 class="card-title">菲律宾外长：中国仍致力完成南中国海行为准则谈判</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/china/202611/1785676.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">25</span>
+          <div class="card-top">
+            <h3 class="card-title">卡尼周二会晤习近平 商讨粮食、能源及金融服务合作</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/china/202611/1785675.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">26</span>
+          <div class="card-top">
+            <h3 class="card-title">中美俄元首周四会晤 中方促共同合作应对全球挑战</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/politics/202611/1785666.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">27</span>
+          <div class="card-top">
+            <h3 class="card-title">罗斯福号抵达中东 美军形成三航母部署</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/politics/202611/1785663.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">28</span>
+          <div class="card-top">
+            <h3 class="card-title">美国索要三倍驻军费 日本拟砍半应对</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/politics/202611/1785662.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">29</span>
+          <div class="card-top">
+            <h3 class="card-title">美国白宫：特朗普访华先会晤习近平 再参加中俄美元首会面</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/politics/202611/1685649.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">30</span>
+          <div class="card-top">
+            <h3 class="card-title">谢锋希望香港充分发挥独特优势 打造中美合作共赢新高地</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/hkMacao/202611/1685643.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">31</span>
+          <div class="card-top">
+            <h3 class="card-title">APEC中国时间｜对话俄罗斯学者：中俄美元首会晤传递什么新信号？</h3>
+            <span class="card-source source-x">澎湃新闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.thepaper.cn/newsDetail_forward_34489422" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">32</span>
+          <div class="card-top">
+            <h3 class="card-title">圆桌｜中俄美元首历史性首次会晤在即，三国权威学者谈大国关系新契机</h3>
+            <span class="card-source source-x">澎湃新闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.thepaper.cn/newsDetail_forward_34490498" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">33</span>
+          <div class="card-top">
+            <h3 class="card-title">中俄美三国元首将在深圳会晤，外交部：历史首次面对面会晤，有开创性意义</h3>
+            <span class="card-source source-x">澎湃新闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.thepaper.cn/newsDetail_forward_34489919" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">34</span>
+          <div class="card-top">
+            <h3 class="card-title">释新闻｜拿顿巴斯换北约成员资格，乌克兰面临一道两难选择题</h3>
+            <span class="card-source source-x">澎湃新闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.thepaper.cn/newsDetail_forward_34490414" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">35</span>
+          <div class="card-top">
+            <h3 class="card-title">特朗普：期待参加中俄美元首会晤</h3>
+            <span class="card-source source-x">澎湃新闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.thepaper.cn/newsDetail_forward_34489736" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="sec-财经资讯">
+      <div class="section-header">
+        <div class="section-dot" style="background:#0891b2"></div>
+        <h2>财经资讯</h2>
+        <span class="section-count">18 条</span>
+      </div>
+      <div class="card-grid">
+        <article class="card" data-reveal>
+          <span class="card-num">36</span>
+          <div class="card-top">
+            <h3 class="card-title">10月货物进出口同比增长31.2%</h3>
+            <span class="card-source source-x">微博热搜</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://s.weibo.com/weibo?q=%2310%E6%9C%88%E8%B4%A7%E7%89%A9%E8%BF%9B%E5%87%BA%E5%8F%A3%E5%90%8C%E6%AF%94%E5%A2%9E%E9%95%BF31.2%25%23&amp;t=31&amp;band_rank=9&amp;Refer=top" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">37</span>
+          <div class="card-top">
+            <h3 class="card-title">超4500亿国家队资金扫货A股</h3>
+            <span class="card-source source-x">今日头条</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.toutiao.com/trending/7708757117192405531/" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">38</span>
+          <div class="card-top">
+            <h3 class="card-title">股债金一起跌，避险的钱去哪了？</h3>
+            <span class="card-source source-x">金十数据</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://flash.jin10.com/detail/20261117124205979800" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">39</span>
+          <div class="card-top">
+            <h3 class="card-title">欧洲斯托克50指数期货下跌0.7%；英国富时100指数期货下跌0.85%；德国DAX指数期货下跌0.6%。</h3>
+            <span class="card-source source-x">金十数据</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://flash.jin10.com/detail/20261117123951558800" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">40</span>
+          <div class="card-top">
+            <h3 class="card-title">美联储哈玛克重申支持小幅、渐进式加息，高盛预计2027年石油市场将“大量过剩”，嘉盛市场晴雨表显示，美国原油空头占比接近60%，现货金银多头占比仍高于80%。</h3>
+            <span class="card-source source-x">金十数据</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://flash.jin10.com/detail/20261117123851502800" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">41</span>
+          <div class="card-top">
+            <h3 class="card-title">港股午评：恒生指数跌0.77% 恒生科技指数跌0.46%</h3>
+            <span class="card-source source-x">财联社</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.cls.cn/detail/2536345" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">42</span>
+          <div class="card-top">
+            <h3 class="card-title">财联社11月17日电，Mercuria公司称全球铜市场处于“极度失衡”状态，预测铜精矿产量增长受限讲持续至2028年。</h3>
+            <span class="card-source source-x">财联社</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.cls.cn/detail/2536340" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">43</span>
+          <div class="card-top">
+            <h3 class="card-title">财联社11月17日电，截至目前，南向资金净买入额达20亿港元。
+</h3>
+            <span class="card-source source-x">财联社</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.cls.cn/detail/2536336" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">44</span>
+          <div class="card-top">
+            <h3 class="card-title">中指研究院：10月重点城市二手房市场保持较高活跃度 成交量同比增幅有所扩⼤</h3>
+            <span class="card-source source-x">财联社</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.cls.cn/detail/2536335" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">45</span>
+          <div class="card-top">
+            <h3 class="card-title">上海前10个月对APEC其他经济体进出口2.76万亿元 同比增长22.9%</h3>
+            <span class="card-source source-x">财联社</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.cls.cn/detail/2536328" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">46</span>
+          <div class="card-top">
+            <h3 class="card-title">上证指数早盘收报3602.07点，跌0.01%。
+
+深证成指早盘收报10764.88点，涨0.69%。
+
+创业板指早盘收报2336.80点，涨0.72%。
+
+沪深300早盘收报3981.91点，涨0.05%。
+
+科创50早盘收报1253.91点，涨3.31%。
+
+中证500早盘收报6375.49点，涨1.24%。
+
+中证1000早盘收报6225.56点，涨0.99%。</h3>
+            <span class="card-source source-x">华尔街见闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://wallstreetcn.com/livenews/3201002" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">47</span>
+          <div class="card-top">
+            <h3 class="card-title">11月17日午间收评：科创50指数半日涨超3%，半导体产业链集体反弹</h3>
+            <span class="card-source source-x">华尔街见闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://wallstreetcn.com/livenews/3201001" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">48</span>
+          <div class="card-top">
+            <h3 class="card-title">国债期货早盘收盘，30年期主力合约涨0.58%，10年期主力合约涨0.14%，5年期主力合约涨0.08%，2年期主力合约涨0.01%。</h3>
+            <span class="card-source source-x">华尔街见闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://wallstreetcn.com/livenews/3200999" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">49</span>
+          <div class="card-top">
+            <h3 class="card-title">A股半导体板块集体拉升，伟测科技20cm涨停，华虹宏力、清溢光电涨超10%，燕东微、灿芯股份、长川科技跟涨。</h3>
+            <span class="card-source source-x">华尔街见闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://wallstreetcn.com/livenews/3200996" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">50</span>
+          <div class="card-top">
+            <h3 class="card-title">科创50指数涨超3%，创业板指涨超1%，深成指涨0.6%，沪指接近翻红，半导体芯片、消费电子、小家电等方向领涨，沪深京三市上涨个股超3300只。</h3>
+            <span class="card-source source-x">华尔街见闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://wallstreetcn.com/livenews/3200991" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">51</span>
+          <div class="card-top">
+            <h3 class="card-title">美联储加息预期上升 国际金价跌至一年来新低</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/16/35e65d7fef1c49c8bcec1c808232c606.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">52</span>
+          <div class="card-top">
+            <h3 class="card-title">美元储备下滑趋势或将加速</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/16/b601c016809049c0b270d435085c8b38.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">53</span>
+          <div class="card-top">
+            <h3 class="card-title">分析｜怎么看10月消费、投资数据有所波动？</h3>
+            <span class="card-source source-x">澎湃新闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.thepaper.cn/newsDetail_forward_34490327" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="sec-ai大模型">
+      <div class="section-header">
+        <div class="section-dot" style="background:#d97706"></div>
+        <h2>AI大模型</h2>
+        <span class="section-count">5 条</span>
+      </div>
+      <div class="card-grid">
+        <article class="card" data-reveal>
+          <span class="card-num">54</span>
+          <div class="card-top">
+            <h3 class="card-title">百度首席执行官李彦宏：对多数公司而言AI尚未帮助提升营收和利润。
+
+如果人工智能无法帮助提升利润，相关泡沫风险将加剧。</h3>
+            <span class="card-source source-x">华尔街见闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://wallstreetcn.com/livenews/3200998" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">55</span>
+          <div class="card-top">
+            <h3 class="card-title">欧盟首届AI峰会瞄准“技术转折点”</h3>
+            <span class="card-source source-x">参考消息</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://ckxxapp.ckxx.net/pages/2026/11/16/92ca255512e14e04b93869e7d0159b87.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">56</span>
+          <div class="card-top">
+            <h3 class="card-title">中国主要AI企业削弱新模型网络攻击能力</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/china/202611/1785674.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">57</span>
+          <div class="card-top">
+            <h3 class="card-title">美国收紧AI晶片出口管制 防中国借海外数据中心获取算力</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/politics/202611/1785670.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">58</span>
+          <div class="card-top">
+            <h3 class="card-title">传黄仁勋拟回巢 美财长：英伟达须对外选帅彻底重整</h3>
+            <span class="card-source source-x">联合早报</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.zaochenbao.com/news/politics/202611/1785664.html" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="sec-智能汽车">
+      <div class="section-header">
+        <div class="section-dot" style="background:#7c3aed"></div>
+        <h2>智能汽车</h2>
+        <span class="section-count">1 条</span>
+      </div>
+      <div class="card-grid">
+        <article class="card" data-reveal>
+          <span class="card-num">59</span>
+          <div class="card-top">
+            <h3 class="card-title">小米辟谣汽车召回短信</h3>
+            <span class="card-source source-x">财联社</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.cls.cn/detail/2536338" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="sec-机器人与具身智能">
+      <div class="section-header">
+        <div class="section-dot" style="background:#059669"></div>
+        <h2>机器人与具身智能</h2>
+        <span class="section-count">4 条</span>
+      </div>
+      <div class="card-grid">
+        <article class="card" data-reveal>
+          <span class="card-num">60</span>
+          <div class="card-top">
+            <h3 class="card-title">深圳街头上演人形机器人舞蹈大秀</h3>
+            <span class="card-source source-x">今日头条</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://www.toutiao.com/trending/7708756375739941385/" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">61</span>
+          <div class="card-top">
+            <h3 class="card-title">俄记者被深圳的机器人浓度惊到</h3>
+            <span class="card-source source-x">今日头条</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-mid">关联度：0.70</span>
+            <a class="card-link" href="https://www.toutiao.com/trending/7708761912548360755/" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">62</span>
+          <div class="card-top">
+            <h3 class="card-title">宇树科技董事长兼首席执行官王兴兴：机器人行业当前的机遇与现实挑战</h3>
+            <span class="card-source source-x">金十数据</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.90</span>
+            <a class="card-link" href="https://flash.jin10.com/detail/20261117123603456800" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+        <article class="card" data-reveal>
+          <span class="card-num">63</span>
+          <div class="card-top">
+            <h3 class="card-title">宇树科技创始人王兴兴：机器人将推动算力需求达到超乎想象的水平。</h3>
+            <span class="card-source source-x">华尔街见闻</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-time"></span>
+            <span class="score-badge score-high">关联度：0.80</span>
+            <a class="card-link" href="https://wallstreetcn.com/livenews/3201005" target="_blank" rel="noopener noreferrer">
+              阅读原文
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+</main>
+
+<footer class="footer">
+  <p>数据来源 <strong>NewsNow</strong> · 最后生成 <time>2026-11-17 12:53</time> · <a href="../index.html">返回首页</a></p>
+</footer>
+
+<button class="quick-top" id="quickTop" aria-label="回到顶部">↑</button>
+
+<script>
+    // 滚动揭示动画
+    const cards = document.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('revealed'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    cards.forEach(c => observer.observe(c));
+
+    // 回到顶部
+    const quickTop = document.getElementById('quickTop');
+    window.addEventListener('scroll', () => {
+      quickTop.classList.toggle('visible', window.scrollY > 400);
+    });
+    quickTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // 导航高亮
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 100) {
+          current = sec.id;
+        }
+      });
+      navLinks.forEach(a => {
+        const isActive = a.getAttribute('href') === '#' + current;
+        a.style.background = isActive ? 'rgba(255,107,53,.1)' : '';
+        a.style.color = isActive ? 'var(--accent-dark)' : '';
+      });
+    });
+</script>
+
+</body>
+</html>
