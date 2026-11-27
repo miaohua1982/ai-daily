@@ -1,94 +1,158 @@
 # 📰 每日 AI 情报
 
-> 2026年11月26日 · 周四
+> 2026年11月27日 · 周五
 
 ---
 
-## 🔥 AI 热点资讯（10条）
+## 🔥 AI 热点资讯（9条）
 
-**1. [Sand.ai 发布 480B 视频模型 MAGI-2，作者实测称质量接近 Seedance 2.3 水准且价格仅为其 1/10](https://mp.weixin.qq.com/s/JkZM9s6tC_Wz5MKeYcccxw)**
+**1. [蚂蚁 inclusionAI 开源 Ming-Image-0.2-Design 图像生成模型](https://huggingface.co/inclusionAI/Ming-Image-0.2-Design)**
 
-> 　Sand.ai 凌晨发布 480B 全模态视频模型 MAGI-2，作者实测后认为其质量达到 Seedance 2.3 左右水准，1080P 下每秒 0.5 元、价格约为 Seedance 2.5 的 1/10。
+> 　蚂蚁 inclusionAI 在 Hugging Face 发布并开源 Ming-Image-0.2-Design，改进复杂构图、光照和文字渲染，可用于电商主图、UI 设计稿和空间效果图。
 
-`模型发布/更新` `公众号：数字生命卡兹克`
-
----
-
-**2. [腾讯开源模型 Hy4 Flash 上线 Fireworks serverless](https://fireworks.ai/blog/hy4-flash-on-fireworks/)**
-
-> 　腾讯新开源模型 Hy4 Flash 现已在 Fireworks serverless 上可用。该模型为 MoE 架构，总参数约 220B、每 token 激活约 12B，1M token 上下文窗口（Fireworks 上线时为 512K），支持文本和图像输入，面向文档处理、研究、办公和 Agent 工作流。
-
-`产品发布/更新` `Fireworks AI（网页）`
+`模型发布/更新` `蚂蚁 inclusionAI：HuggingFace 新模型`
 
 ---
 
-**3. [千问APP免费开放千问Go打电话服务，经授权可代打电话和定时来电](https://mp.weixin.qq.com/s/jZumD5cprhI7bgmOI7mUEw)**
+**2. [OpenAI 测试私有推理功能](https://x.com/gdb/status/2125824585027272727)**
 
-> 　千问APP宣布千问Go打电话服务免费开放，用户告知打给谁、要办什么事并经授权后，AI可代为拨打电话、沟通需求。文中示例包括定时提醒朋友带饮料、定时来电叫醒起床、代订包间或询问快递等场景，并邀请用户在评论区分享想安排的任务。
+> 　私有推理——机密计算，在模型处理提示词和响应时对其进行严格控制，现已进入测试阶段：
 
-`产品发布/更新` `公众号：千问APP（阿里）`
-
----
-
-**4. [Pydantic AI 发布终端编码智能体 Pax 与 Harness beta，迈向 1.0](https://pydantic.dev/articles/pax-harness-beta)**
-
-> 　Pydantic AI 发布终端编码智能体 Pax（pydantic-ai-pax），基于 Harness SDK，全部功能以插件形式组织，可 /plugins 开关 coder、sandbox、mcp、Logfire 观测等，并支持 --agent 换成代码库里任意 Pydantic AI Agent。
-
-`产品发布/更新` `Pydantic AI 官方文章`
+`产品发布/更新` `X：Greg Brockman (@gdb)`
 
 ---
 
-**5. [OpenClaw 2026.11.10 发布，新增 Deep Research、Knowledge 记忆系统与 Browser handoff](https://x.com/openclaw/status/2125591827600531554)**
+**3. [FT 报道 Nvidia 暂停向东南亚四国发运服务器](https://x.com/rohanpaul_ai/status/2125847124600656142)**
 
-> 　OpenClaw 发布 2026.11.10 版本，新增聊天内 Deep Research、新的 OpenClaw 记忆系统 Knowledge，以及 Browser handoff 功能。本次版本包含 7,671 个 PR、349 位贡献者，完整说明见 https://docs.openclaw.ai/releases/2026.11.10。
+> 　据 FT 报道，Nvidia 已通知 Dell、Supermicro 等制造伙伴停止向马来西亚、新加坡、泰国和印尼发运服务器，原因是美国要求这些国家及巴西的先进 AI 芯片需申请许可。此前中国 AI 实验室通过当地云厂商租用 Nvidia 算力绕开直接出口禁令，云厂商现有 90 天证明无受限用户但缺乏申请指引；Nvidia 2025 年经新加坡部门入账 $104B，同比增长 72%。
 
-`产品发布/更新` `X：OpenClaw (@openclaw)`
-
----
-
-**6. [42 州总检察长介入 Character.AI 破产程序，反对拍卖用户私密聊天记录](https://techcrunch.com/2026/11/25/state-ags-fight-character-ais-plan-to-auction-off-users-private-chats/)**
-
-> 　42 州总检察长介入 Character.AI 的破产程序，试图阻止其拍卖用户私密聊天数据。相关声明称数据集包含超过 2100 万美国账户的聊天记录，其中逾 210 万属于未成年人，还涉及 IP 地址等信息；目前唯一披露的匿名竞拍方为 2026 年 11 月 13 日在特拉华州注册的 Smirks and Pangs Acquisition LLC，拍卖定于 12 月 1 日。
-
-`行业动态` `TechCrunch：AI（RSS）`
+`行业动态` `X：Rohan Paul (@rohanpaul_ai)`
 
 ---
 
-**7. [黄仁勋回归后 Nvidia 仍面临 Megaspeed 芯片出口合规调查](https://techcrunch.com/2026/11/25/the-questions-jensen-huang-and-nvidia-will-still-have-to-answer-about-megaspeed/)**
+**4. [OEMpocalypse Part 2：利用 Knox DualDAR 漏洞链 root Galaxy S23 与 S26 旗舰机](https://calif.io/research/oempocalypse-part-2)**
 
-> 　TechCrunch 分析指出，黄仁勋回归 Nvidia CEO 后，公司仍面临多方对其 GPU 出口合规问题的调查。新加坡数据中心运营商 Megaspeed 被指违反美国出口管制，将先进 GPU 转运至中国。美国司法部于 2024 年启动调查，新加坡方面于 2025 年展开类似调查，加州总检察长办公室及美国证券交易委员会也关注 Nvidia 的相关披露。Nvidia 表示将停止向中国销售许可芯片，并计划设立首席合规官及董事会出口管制委员会。
+> 　Calif Research 发布 OEMpocalypse 系列第二篇，通过 Knox DualDAR 的 confused-deputy 漏洞与内核驱动页 UAF 组成两阶段利用链，从零权限应用在 Galaxy S23、S26 EU、S26 US 和 S26 Ultra 四款机型上高可靠获取 root。
 
-`行业动态` `TechCrunch：AI（RSS）`
-
----
-
-**8. [矩阵乘法指数被证明精确为 9/4](https://x.com/gdb/status/2125418102049628201)**
-
-> 　Greg Brockman 转发 OpenAI 的 Sebastien Bubeck 消息：在 10 月 6 日发布给出矩阵乘法指数 9/4 新上界后，模型继续工作于下界并宣布 9/4 是紧的，下界此前毫无已知结果。Bubeck 称这是他从未想过有生之年能看到的结果，并指出根据 Yin Tat Lee 等人的旧结果，这也意味着线性规划可在 n^{9/4} 时间内求解。
-
-`论文研究` `X：Greg Brockman (@gdb)`
+`论文研究` `Calif：Research（AI 漏洞研究）`
 
 ---
 
-**9. [MIT 与 Microsoft 论文：GitHub Copilot 使初级软件工程师招聘下降约 40%](https://x.com/rohanpaul_ai/status/2125461932111229203)**
+**5. [Calif 披露 Tor Browser 15.0.22 UAF 漏洞链可致真实 IP 泄露](https://calif.io/research/tortilla-with-onion)**
 
-> 　MIT 和 Microsoft 的新论文《AI-Assisted Programming and Labor Demand》利用 5,414 家跨国公司（覆盖 38% 美国程序员）的 GitHub 合同审查时点构造自然实验，估计 Copilot 采用对劳动力需求的影响。
+> 　Calif 在 OpenAI Patch the Planet 项目下发布研究，展示恶意网站可通过 UAF 漏洞链绕过 Tor Browser 15.0.22 默认防御，泄露用户真实 IP。
 
-`论文研究` `X：Rohan Paul (@rohanpaul_ai)`
+`论文研究` `Calif：Research（AI 漏洞研究）`
 
 ---
 
-**10. [Mantic 与 Thinking Machines 训练可扩展预测智能体，成本降 15 倍](https://thinkingmachines.ai/news/training-a-scalable-forecasting-agent/)**
+**6. [Dario Amodei 澄清不主张向 AI 交出人类自由意志](https://x.com/elonmusk/status/2125669066388209784)**
 
-> 　Mantic 与 Thinking Machines 在 Tinker 上对 Inkling 2 Small 做后训练，得到一个端到端完成研究与预测的预测智能体，其准确度接近 Fable 5.2 (medium)，单次预测成本降低 15 倍。
+> 　Anthropic 的 Dario Amodei 发长文否认其主张“向 AI 交出人类自由意志”，称其文章一贯主张 AI 须受合法民主程序治理。他区分了全球治理层面的交权与具体任务的自动化，后者持混合态度，包括对递归自我改进设限、警惕端到端部署带来的就业冲击，并称 Anthropic 曾拒绝让自家模型用于自主武器；文末批评部分 AI CEO 只喊“人类控制”等口号而无实质行动。Elon Musk 转发并评论 Interesting。
 
-`论文研究` `Thinking Machines Lab：News（网页）`
+`技巧与观点` `X：Elon Musk (@elonmusk, xAI)`
+
+---
+
+**7. [Karpathy 用 Claude Code 和 Opus 5.5 把美国真实数据做成文明风格游戏地图](https://x.com/adocomplete/status/2125994186252161315)**
+
+> 　Karpathy 分享用 Claude Code 桌面版加 Opus 5.5（开启 ultracode）构建的美国文明风格游戏地图，7 小时生成 45K 行代码，整合 Census、BEA、BLS、EIA、NOAA 等 31 个真实数据源，统一到 25 km 六边形网格。GDP 映射为金产量、城市按真实产业分化，含 19 个视图、524 个都市的 City View 和覆盖 3,100+ 县的 Explorer，已部署在 https://karpathy.ai/usaciv/。作者 Ado 转发并感叹。
+
+`技巧与观点` `X：Ado Kukic（Anthropic 开发者关系，Claude Code） (@adocomplete)`
+
+---
+
+**8. [卡兹克把《人生意义设计课》做成AI Prompt，帮你设计人生的意义](https://mp.weixin.qq.com/s/d-MoIMsMdxtR9qw3dn-8sg)**
+
+> 　公众号作者卡兹克将斯坦福《人生意义设计课》新书的核心方法改编成一个多轮对话Prompt，通过四个阶段6到9个问题，最终生成一份5000到7000字的《个人意义设计手册》。他用GPT-6.2完整实测并展示了手册内容，包括意义地图、思维误区重构、罗盘价值观和可执行的意义时刻设计，全程约20到30分钟。
+
+`技巧与观点` `公众号：数字生命卡兹克`
+
+---
+
+**9. [Philipp Schmid 撰文解释为何在 Skills 与 CLI 兴起后仍更看好 MCP](https://x.com/_philschmid/status/2125945282072297794)**
+
+> 　Philipp Schmid 撰文解释为何在 Skills 和 CLI 流行后依然看好 MCP：Linear 和 Notion 的 agent 每周创建约 240 万条 issue 和页面，Atlassian 每天 MCP 工具调用超 500 万次，其中 44% 用户来自软件团队之外，Notion 报告 60 倍 MCP 流量增长。
+
+`技巧与观点` `X：Philipp Schmid（Google DeepMind 开发者体验） (@_philschmid)`
 
 ---
 
 ## 📄 AI 前沿技术（10篇）
 
-**1. [Anthropic 研究员 Luke Sernau 与 Claude 将黎曼猜想 Lean 证明从 1740 万行精简至 7.6 万行](https://www.ithome.com/1/032/611.htm)**
+**1. [Microsoft 论文分析编码智能体补丁为何比人类大 2.33 倍](https://x.com/rohanpaul_ai/status/2126153340593844647)**
+
+> 　Rohan Paul 转述 Microsoft 论文：Agent 补丁改动行数是人类开发者的 2.33 倍，但多数额外编辑是测试和文档，实际必要代码比例与人类相当。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**2. [Amazon 论文：前沿模型能自建 Agent harness，但自我修订在未见任务上几乎无提升](https://x.com/rohanpaul_ai/status/2126127228329300257)**
+
+> 　Amazon 论文《Can LLMs Improve Their Own Harness?》测试 9 个模型设置（含 GPT-5.6 Sol 和 Claude Opus 5）各自 3 次从零构建 ARC-AGI-3 游戏 harness，并基于 5 个练习游戏自我修订两次，在 20 个未见游戏上评分。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**3. [NVIDIA 论文：让模型自主管理上下文使 GPT-6.1 Sol 在 32K 预算下得分从 21% 升至 56%](https://x.com/rohanpaul_ai/status/2126118827264294915)**
+
+> 　Rohan Paul 转述 NVIDIA 技术报告，其开源 Agent 框架 NOOA 让模型通过 API 自主总结并检索历史，与框架自动压缩对比。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**4. [Anthropic 研究：多数被训练遗忘网络攻击知识的模型其实仍记得](https://x.com/rohanpaul_ai/status/2126088997017706717)**
+
+> 　Anthropic 研究人员发现，在 23 个被训练遗忘网络攻击知识的模型中，有 14 个仍把正确答案排在首位。由于相关事实似乎通过跨多个主题共享的神经元被召回，作者认为训练后施加的遗忘可能永远无法泛化，危险知识或许需要在训练过程中被隔离。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**5. [华盛顿大学与微软：失败教训拓宽工具搜索，成功经验提速](https://x.com/rohanpaul_ai/status/2126066219086475459)**
+
+> 　华盛顿大学与微软的论文发现，智能体从失败中总结的教训会拓宽其工具搜索范围，而从成功中总结的经验则让它更快。他们构建的 DualPM 在每次运行后分别写下成功与失败教训，每 20 个任务合并为 2 个有上限的列表，并用 GPT-5.5 在每类设置 720 个多领域工具使用任务上测试。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**6. [Scale AI 与 CMU 研究：小批量下 PPO 优于 GRPO](https://x.com/rohanpaul_ai/status/2126032236487319905)**
+
+> 　Scale AI 与卡内基梅隆大学研究者用超 1200 次训练运行（其中 96 次为 LLM）对比 PPO 与 GRPO，发现小 RL 批量下带 critic 的 PPO 更强，GRPO 随批量增大追平。
+
+`X：Rohan Paul (@rohanpaul_ai)`
+
+
+---
+
+**7. [腾讯 AI 平台 ORIDTP 从头设计双靶点多肽，成果以第一单位登上 Nature](https://www.ithome.com/1/033/125.htm)**
+
+> 　腾讯宣布其生命科学实验室的 AI for Science 研究成果于 11 月 25 日以第一单位登上《Nature》主刊，挑战高活性双靶点治疗性多肽的从头设计。
+
+`IT之家·人工智能`
+
+
+---
+
+**8. [OpenAI 宣称证明矩阵乘法指数 ω 恰好为 9/4](https://www.ithome.com/1/033/050.htm)**
+
+> 　OpenAI 11 月 24 日宣称证明矩阵乘法指数 ω≥9/4，结合此前 10 月证得的 ω≤9/4，从而得到 ω=9/4。ω 描述 n×n 矩阵相乘最优算法运算次数随 n 增长的渐进幂指数，与机器学习、图像处理及一系列复杂度问题相关；预印本发布在 GitHub openai/math 仓库。文章提示 ω 是渐进量，实际应用还受常数因子、内存访问、并行计算和硬件结构影响。
+
+`IT之家·人工智能`
+
+
+---
+
+**9. [Anthropic 研究员 Luke Sernau 与 Claude 将黎曼猜想 Lean 证明从 1740 万行精简至 7.6 万行](https://www.ithome.com/1/032/611.htm)**
 
 > 　Anthropic 研究员 Luke Sernau 与同事及 Claude 发布 grh-lean 项目，将此前 1740 万行的黎曼猜想与广义黎曼猜想 Lean 形式化证明重写为约 7.6 万行的紧凑版和约 30 万行的可读版，代码量削减 99.56%。
 
@@ -97,83 +161,11 @@
 
 ---
 
-**2. [LingSante-Live：蚂蚁百灵提出面向持续健康协作的多模态交互架构](https://mp.weixin.qq.com/s/kmuRdsd67fgM5suZaRm9gw)**
+**10. [LingSante-Live：蚂蚁百灵提出面向持续健康协作的多模态交互架构](https://mp.weixin.qq.com/s/kmuRdsd67fgM5suZaRm9gw)**
 
 > 　蚂蚁百灵提出 LingSante-Live 实时多模态健康交互架构，以全双工交互为中枢，融合持续视觉观测、非接触生理感知、可视化引导与后台 Agent，实现前台快速响应、后台深度推理并行。在 100 个病例的模拟问诊评测中，其响应及时性（4.80 分）、诊断正确性（4.56 分）和治疗建议实用性（4.85 分）均居三款产品首位。健康问诊、健康自检及医学报告解读能力已在阿福音视频通话产品落地。
 
 `公众号：蚂蚁百灵（Ling）`
-
-
----
-
-**3. [Johns Hopkins 与 Together AI 论文：低推理 effort 起步失败再升级可比固定最高档省 41.5% GPQA 成本](https://x.com/rohanpaul_ai/status/2125762008876519662)**
-
-> 　Johns Hopkins 与 Together AI 论文测量 8 个模型（含 GPT-5.6 和 Claude Sonnet 5）在各 reasoning effort 档位的表现与成本，发现更高 effort 总体准确率上升，但会做错低 effort 能解对的题，最高档成本最高达最低档的 42 倍。
-
-`X：Rohan Paul (@rohanpaul_ai)`
-
-
----
-
-**4. [Calif 披露 Tor Browser 15.0.22 UAF 漏洞链可致真实 IP 泄露](https://calif.io/research/tortilla-with-onion)**
-
-> 　Calif 在 OpenAI Patch the Planet 项目下发布研究，展示恶意网站可通过 UAF 漏洞链绕过 Tor Browser 15.0.22 默认防御，泄露用户真实 IP。
-
-`Calif：Research（AI 漏洞研究）`
-
-
----
-
-**5. [OEMpocalypse Part 2：利用 Knox DualDAR 漏洞链 root Galaxy S23 与 S26 旗舰机](https://calif.io/research/oempocalypse-part-2)**
-
-> 　Calif Research 发布 OEMpocalypse 系列第二篇，通过 Knox DualDAR 的 confused-deputy 漏洞与内核驱动页 UAF 组成两阶段利用链，从零权限应用在 Galaxy S23、S26 EU、S26 US 和 S26 Ultra 四款机型上高可靠获取 root。
-
-`Calif：Research（AI 漏洞研究）`
-
-
----
-
-**6. [Stanford 研究：Santa Clara County 无律师代理的诉状 72% 有 AI 起草痕迹](https://x.com/rohanpaul_ai/status/2125729779295146123)**
-
-> 　Stanford 研究估计 Santa Clara County 无律师代理起诉的诉状中 72% 有 AI 起草痕迹，较 2024 年的 19% 大幅上升。研究人员分析了美国 4 个州法院的 127,518 起诉讼，律师撰写的诉状 AI 痕迹同期从 5% 升至 34%，San Francisco 为 36%。
-
-`X：Rohan Paul (@rohanpaul_ai)`
-
-
----
-
-**7. [Artificial Analysis 发布 AA-Robotics-Sim v0.1 榜单](https://x.com/ArtificialAnlys/status/2125683694103064979)**
-
-> 　Artificial Analysis 发布 AA-Robotics-Sim v0.1，让大语言模型在原生框架中直接控制模拟的 Unitree G1 人形机器人，覆盖具身推理、抓取放置、装配、工具使用与移动等 10 项任务。
-
-`X：Artificial Analysis (@ArtificialAnlys)`
-
-
----
-
-**8. [NTU 论文：RLVB 让 AI 智能体学会等待再作答](https://x.com/rohanpaul_ai/status/2125674862459130075)**
-
-> 　新加坡南洋理工大学（NTU Singapore）论文发现 AI 智能体常在自身记录仍列有多种可能答案时就提前给出结论，并提出 RLVB（Reinforcement Learning with Verifiable Beliefs）方法，在证据不足时奖励继续查找、证据充分后再作答。
-
-`X：Rohan Paul (@rohanpaul_ai)`
-
-
----
-
-**9. [Baseten 提出 Speculative Encoding：单一网络实现多模型间 K/V 缓存翻译](https://labs.baseten.co/articles/speculative-encoding-many-to-many-cache-translation)**
-
-> 　Baseten Base Labs 提出 Speculative Encoding，用单个网络直接跨模型翻译隐藏状态，覆盖 4 个模型家族共 7 个模型的全部 42 种源-目标组合，在最长 8k token 文档上保留目标模型 96.9% 的原生准确率。
-
-`Baseten Base Labs：模型研究`
-
-
----
-
-**10. [Wiz 拆解智能体攻击框架 ARTEX 与 Cairn 的 Intent ID 泄漏机制](https://www.wiz.io/blog/agentic-offensive-frameworks-intent-ids-artex-cairn)**
-
-> 　Wiz Research 发布分析，解释智能体攻击框架（agentic offensive frameworks）的 Intent ID 机制：框架将攻击拆分为带递增数字 ID 的 intent，模型在创建文件、注册账号、GitHub workflow、User-Agent 等操作时会把 ID 泄漏到目标侧日志。
-
-`Wiz：Research（安全研究）`
 
 
 ---
