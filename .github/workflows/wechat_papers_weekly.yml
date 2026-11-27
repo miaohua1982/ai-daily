@@ -2,9 +2,9 @@ name: Publish Weekly Papers to WeChat Draft
 
 on:
   schedule:
-    # Beijing time Sunday 17:00 = UTC Sunday 09:00
-    # 周日收官运行：自然周窗口（本周一~周日）数据基本齐全
-    - cron: '0 9 * * 0'
+    # Beijing time Sunday 10:17 = UTC Sunday 02:17
+    # 避开整点并提前触发，为 GitHub Actions 排队预留时间。
+    - cron: '17 2 * * 0'
   workflow_dispatch:
 
 permissions:
